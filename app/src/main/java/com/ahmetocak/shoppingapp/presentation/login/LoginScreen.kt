@@ -65,7 +65,7 @@ private fun LoginScreenContent(modifier: Modifier) {
 }
 
 @Composable
-fun RegisterNowSection(modifier: Modifier) {
+private fun RegisterNowSection(modifier: Modifier) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -84,7 +84,7 @@ fun RegisterNowSection(modifier: Modifier) {
 }
 
 @Composable
-fun ForgotPasswordButton() {
+private fun ForgotPasswordButton() {
     TextButton(onClick = { /*TODO*/ }) {
         Text(
             text = stringResource(id = R.string.forgot_password),
@@ -95,7 +95,7 @@ fun ForgotPasswordButton() {
 }
 
 @Composable
-fun LoginButton(modifier: Modifier) {
+private fun LoginButton(modifier: Modifier) {
     Button(
         modifier = modifier.fillMaxWidth(),
         onClick = { /*TODO*/ },
@@ -108,7 +108,7 @@ fun LoginButton(modifier: Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RememberMeBox(modifier: Modifier) {
+private fun RememberMeBox(modifier: Modifier) {
     var checked by rememberSaveable {
         mutableStateOf(false)
     }

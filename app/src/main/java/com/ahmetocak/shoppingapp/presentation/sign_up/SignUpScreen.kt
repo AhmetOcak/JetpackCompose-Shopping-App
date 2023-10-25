@@ -53,7 +53,7 @@ private fun SignUpScreenContent(modifier: Modifier) {
 }
 
 @Composable
-fun SignUpButton(modifier: Modifier) {
+private fun SignUpButton(modifier: Modifier) {
     Button(
         modifier = modifier.fillMaxWidth(),
         onClick = { /*TODO*/ },

@@ -58,7 +58,7 @@ private fun ProductScreenContent(modifier: Modifier) {
 }
 
 @Composable
-fun ProductDetails(modifier: Modifier, title: String, description: String, price: Double) {
+private fun ProductDetails(modifier: Modifier, title: String, description: String, price: Double) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
@@ -117,7 +117,7 @@ private fun AddToCartSection(modifier: Modifier, price: Double) {
 }
 
 @Composable
-fun ProductImage(modifier: Modifier) {
+private fun ProductImage(modifier: Modifier) {
     AsyncImage(
         modifier = modifier,
         model = ImageRequest.Builder(LocalContext.current)
