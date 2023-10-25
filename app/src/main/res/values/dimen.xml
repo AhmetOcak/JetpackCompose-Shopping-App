@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="one_level_margin">8dp</dimen>
+    <dimen name="two_level_margin">16dp</dimen>
+    <dimen name="three_level_margin">24dp</dimen>
+    <dimen name="four_level_margin">32dp</dimen>
+    <dimen name="five_level_margin">40dp</dimen>
+    <dimen name="six_level_margin">48dp</dimen>
+    <dimen name="seven_level_margin">56dp</dimen>
+    <dimen name="eight_level_margin">64dp</dimen>
+    <dimen name="nine_level_margin">72dp</dimen>
+    <dimen name="ten_level_margin">80dp</dimen>
+    <dimen name="eleven_level_margin">88dp</dimen>
+    <dimen name="twelve_level_margin">96dp</dimen>
+</resources>

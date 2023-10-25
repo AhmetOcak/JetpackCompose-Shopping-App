@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">ShoppingApp</string>
+
+    <!-- Login Screen -->
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="register_now">Register now</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="remember_me">Remember me</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
 </resources>
