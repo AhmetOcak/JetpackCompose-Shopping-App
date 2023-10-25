@@ -10,4 +10,6 @@
     <string name="enter_email">Enter Email</string>
     <string name="enter_password">Enter Password</string>
     <string name="welcome_register">Register now !</string>
+    <string name="verify_password">Verify Password</string>
+    <string name="sign_up">Sign Up</string>
 </resources>

@@ -27,7 +27,8 @@ import com.ahmetocak.shoppingapp.R
 fun AuthEnterPasswordOtf(
     modifier: Modifier,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    isVerifyVersion: Boolean = false
 ) {
     var visibility by rememberSaveable { mutableStateOf(false) }
 
@@ -38,7 +39,15 @@ fun AuthEnterPasswordOtf(
         value = value,
         onValueChange = onValueChange,
         label = {
-            Text(text = stringResource(id = R.string.enter_password))
+            Text(
+                text = stringResource(
+                    id = if (isVerifyVersion) {
+                        R.string.verify_password
+                    } else {
+                        R.string.enter_password
+                    }
+                )
+            )
         },
         trailingIcon = {
             IconButton(onClick = { visibility = !visibility }) {
