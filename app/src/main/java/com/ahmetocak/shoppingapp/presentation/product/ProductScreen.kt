@@ -87,11 +87,7 @@ fun ProductDetails(modifier: Modifier, title: String, description: String, price
 @Composable
 private fun AddToCartSection(modifier: Modifier, price: Double) {
     Row(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(
-                top = dimensionResource(id = R.dimen.two_level_margin)
-            ),
+        modifier = modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
