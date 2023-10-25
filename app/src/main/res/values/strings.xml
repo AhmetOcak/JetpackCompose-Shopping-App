@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ShoppingApp</string>
 
-    <!-- Login Screen -->
+    <string name="hello_again">Hello again !</string>
     <string name="no_account">Don\'t have an account?</string>
     <string name="register_now">Register now</string>
     <string name="forgot_password">Forgot Password?</string>
