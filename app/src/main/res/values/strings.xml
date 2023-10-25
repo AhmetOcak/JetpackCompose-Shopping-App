@@ -12,4 +12,7 @@
     <string name="welcome_register">Register now !</string>
     <string name="verify_password">Verify Password</string>
     <string name="sign_up">Sign Up</string>
+    <string name="discover_products">Discover Products</string>
+    <string name="all">All</string>
+    <string name="add_to_cart">Add to cart</string>
 </resources>
