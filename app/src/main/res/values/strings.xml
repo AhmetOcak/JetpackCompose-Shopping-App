@@ -9,4 +9,5 @@
     <string name="remember_me">Remember me</string>
     <string name="enter_email">Enter Email</string>
     <string name="enter_password">Enter Password</string>
+    <string name="welcome_register">Register now !</string>
 </resources>

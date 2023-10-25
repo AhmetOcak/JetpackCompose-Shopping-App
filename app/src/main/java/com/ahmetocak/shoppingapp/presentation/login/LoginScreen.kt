@@ -10,16 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -31,17 +25,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.ui.components.AuthBackground
+import com.ahmetocak.shoppingapp.ui.components.AuthEnterEmailOtf
+import com.ahmetocak.shoppingapp.ui.components.AuthEnterPasswordOtf
 import com.ahmetocak.shoppingapp.ui.components.WelcomeText
 
 @Composable
@@ -63,16 +55,14 @@ private fun LoginScreenContent(modifier: Modifier) {
         verticalArrangement = Arrangement.Bottom
     ) {
         WelcomeText(modifier = modifier, text = stringResource(id = R.string.hello_again))
-        EnterEmailSection(modifier = modifier)
-        EnterPasswordSection(modifier = modifier)
+        AuthEnterEmailOtf(modifier = modifier, value = "", onValueChange = {})
+        AuthEnterPasswordOtf(modifier = modifier, value = "", onValueChange = {})
         RememberMeBox(modifier = modifier)
         LoginButton(modifier = modifier)
         ForgotPasswordButton()
         RegisterNowSection(modifier = modifier)
     }
 }
-
-
 
 @Composable
 fun RegisterNowSection(modifier: Modifier) {
@@ -139,61 +129,7 @@ fun RememberMeBox(modifier: Modifier) {
     }
 }
 
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun EnterEmailSection(modifier: Modifier) {
-    OutlinedTextField(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = dimensionResource(id = R.dimen.one_level_margin)),
-        value = "",
-        onValueChange = {},
-        label = {
-            Text(text = stringResource(id = R.string.enter_email))
-        },
-        trailingIcon = {
-            Icon(imageVector = Icons.Filled.Email, contentDescription = null)
-        }
-    )
-}
 
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun EnterPasswordSection(modifier: Modifier) {
-    var visibility by rememberSaveable { mutableStateOf(false) }
-
-    OutlinedTextField(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = dimensionResource(id = R.dimen.one_level_margin)),
-        value = "",
-        onValueChange = {},
-        label = {
-            Text(text = stringResource(id = R.string.enter_password))
-        },
-        trailingIcon = {
-            IconButton(onClick = { visibility = !visibility }) {
-                Icon(
-                    painter = painterResource(
-                        id = if (visibility) {
-                            R.drawable.ic_visibility
-                        } else {
-                            R.drawable.ic_visibility_off
-                        }
-                    ),
-                    contentDescription = null
-                )
-            }
-        },
-        visualTransformation = if (visibility) {
-            VisualTransformation.None
-        } else {
-            PasswordVisualTransformation()
-        },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true
-    )
-}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
