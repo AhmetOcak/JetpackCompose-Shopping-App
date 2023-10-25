@@ -19,7 +19,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.ui.components.AuthBackground
+import com.ahmetocak.shoppingapp.ui.components.WelcomeText
 
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier) {
@@ -62,7 +62,7 @@ private fun LoginScreenContent(modifier: Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
     ) {
-        WelcomeText(modifier = modifier)
+        WelcomeText(modifier = modifier, text = stringResource(id = R.string.hello_again))
         EnterEmailSection(modifier = modifier)
         EnterPasswordSection(modifier = modifier)
         RememberMeBox(modifier = modifier)
@@ -192,17 +192,6 @@ private fun EnterPasswordSection(modifier: Modifier) {
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true
-    )
-}
-
-@Composable
-private fun WelcomeText(modifier: Modifier) {
-    Text(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = dimensionResource(id = R.dimen.one_level_margin)),
-        text = "Hello again !",
-        style = MaterialTheme.typography.headlineLarge
     )
 }
 
