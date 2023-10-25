@@ -15,4 +15,7 @@
     <string name="discover_products">Discover Products</string>
     <string name="all">All</string>
     <string name="add_to_cart">Add to cart</string>
+    <string name="sub_total">Subtotal:</string>
+    <string name="delivery_fee">Delivery Fee:</string>
+    <string name="checkout">Checkout for </string>
 </resources>
