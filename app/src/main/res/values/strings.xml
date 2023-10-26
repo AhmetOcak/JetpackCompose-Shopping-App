@@ -18,4 +18,10 @@
     <string name="sub_total">Subtotal:</string>
     <string name="delivery_fee">Delivery Fee:</string>
     <string name="checkout">Checkout for </string>
+    <string name="card_num">Card Number</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="cvc">CVC</string>
+    <string name="delivery">Delivery</string>
+    <string name="total">Total</string>
+    <string name="payment">Payment</string>
 </resources>
