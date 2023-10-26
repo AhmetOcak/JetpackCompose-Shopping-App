@@ -44,13 +44,13 @@ private fun FavoritesScreenContent(modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
+            .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyVerticalGrid(
             modifier = modifier.fillMaxSize(),
             columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.one_level_margin)),
+            contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.two_level_margin)),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.two_level_margin)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.two_level_margin))
         ) {

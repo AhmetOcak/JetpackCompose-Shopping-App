@@ -49,8 +49,8 @@ private fun ChartScreenContent(modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin))
-            .padding(bottom = dimensionResource(id = R.dimen.one_level_margin))
+            .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
+            .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
     ) {
         ChartList(modifier = modifier.weight(4f))
         CheckoutDetails(modifier = modifier.weight(1f))
@@ -117,7 +117,10 @@ private fun ChartList(modifier: Modifier) {
             Divider(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(vertical = dimensionResource(id = R.dimen.one_level_margin))
+                    .padding(
+                        top = dimensionResource(id = R.dimen.two_level_margin),
+                        bottom = dimensionResource(id = R.dimen.one_level_margin)
+                    )
             )
         }
     }

@@ -66,7 +66,7 @@ private fun ProductDetails(modifier: Modifier, title: String, description: Strin
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
+                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
             text = title,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
@@ -76,7 +76,7 @@ private fun ProductDetails(modifier: Modifier, title: String, description: Strin
                 .weight(3f)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
+                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
             text = description
         )
         Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Color.Black)
@@ -92,7 +92,7 @@ private fun AddToCartSection(modifier: Modifier, price: Double) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.one_level_margin)),
+            modifier = Modifier.padding(start = dimensionResource(id = R.dimen.two_level_margin)),
             text = "$$price",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
@@ -102,7 +102,7 @@ private fun AddToCartSection(modifier: Modifier, price: Double) {
                 .fillMaxWidth()
                 .padding(
                     start = dimensionResource(id = R.dimen.four_level_margin),
-                    end = dimensionResource(id = R.dimen.one_level_margin)
+                    end = dimensionResource(id = R.dimen.two_level_margin)
                 ),
             onClick = { /*TODO*/ },
             contentPadding = PaddingValues(vertical = 12.dp),

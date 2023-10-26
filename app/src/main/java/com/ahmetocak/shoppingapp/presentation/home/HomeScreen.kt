@@ -58,7 +58,6 @@ fun ProductList(modifier: Modifier) {
     LazyVerticalGrid(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = dimensionResource(id = R.dimen.one_level_margin))
             .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(dimensionResource(id = R.dimen.one_level_margin)),
@@ -83,7 +82,7 @@ fun CategoryList(modifier: Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .padding(top = dimensionResource(id = R.dimen.two_level_margin)),
-        contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
+        contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
     ) {
         item {
@@ -127,8 +126,8 @@ private fun Category(
 private fun PageTitle(modifier: Modifier) {
     Text(
         modifier = modifier.padding(
-            start = dimensionResource(id = R.dimen.one_level_margin),
-            top = dimensionResource(id = R.dimen.one_level_margin)
+            start = dimensionResource(id = R.dimen.two_level_margin),
+            top = dimensionResource(id = R.dimen.two_level_margin)
         ),
         text = stringResource(id = R.string.discover_products),
         style = MaterialTheme.typography.headlineMedium
