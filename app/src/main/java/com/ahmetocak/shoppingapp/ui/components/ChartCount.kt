@@ -61,7 +61,7 @@ fun ChartItemNumber() {
                 Color.Black
             },
             resourceId = R.drawable.ic_add,
-            enabled = true,
+            enabled = count < 10,
             borderColor = if (count < 10) {
                 colorResource(id = R.color.green)
             } else {
