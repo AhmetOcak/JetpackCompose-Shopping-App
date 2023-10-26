@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -25,7 +24,6 @@ import com.ahmetocak.shoppingapp.R
 @Composable
 fun ChartItemNumber() {
     var count by rememberSaveable { mutableIntStateOf(1) }
-    var tint by rememberSaveable { mutableStateOf(true) }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin)),
@@ -35,17 +33,16 @@ fun ChartItemNumber() {
             onClick = {
                 if (count != 1) {
                     count--
-                    tint = false
                 }
             },
-            tint = if (!tint) {
+            tint = if (count != 1) {
                 colorResource(id = R.color.green)
             } else {
                 Color.Black
             },
             resourceId = R.drawable.ic_remove,
             enabled = count != 1,
-            borderColor = if (!tint) {
+            borderColor = if (count != 1) {
                 colorResource(id = R.color.green)
             } else {
                 Color.Gray
@@ -54,17 +51,18 @@ fun ChartItemNumber() {
         Text(text = "$count")
         IcBtn(
             onClick = {
-                count++
-                tint = true
+                if (count < 10) {
+                    count++
+                }
             },
-            tint = if (tint) {
+            tint = if (count < 10) {
                 colorResource(id = R.color.green)
             } else {
                 Color.Black
             },
             resourceId = R.drawable.ic_add,
             enabled = true,
-            borderColor = if (tint) {
+            borderColor = if (count < 10) {
                 colorResource(id = R.color.green)
             } else {
                 Color.Gray
