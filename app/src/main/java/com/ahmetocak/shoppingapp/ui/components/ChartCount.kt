@@ -9,7 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -23,7 +23,7 @@ import com.ahmetocak.shoppingapp.R
 
 @Composable
 fun ChartItemNumber() {
-    var count by rememberSaveable { mutableIntStateOf(1) }
+    var count by rememberSaveable { mutableStateOf(1) }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin)),

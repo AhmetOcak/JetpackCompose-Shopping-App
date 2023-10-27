@@ -80,7 +80,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.1")
 
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
 
     // Coil
     implementation("io.coil-kt:coil:2.1.0")
