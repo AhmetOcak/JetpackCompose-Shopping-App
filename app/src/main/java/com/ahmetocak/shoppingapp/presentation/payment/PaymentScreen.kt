@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
 
 @Composable
 fun PaymentScreen(modifier: Modifier = Modifier) {
@@ -65,17 +66,7 @@ private fun PaymentScreenContent(modifier: Modifier) {
 @Composable
 private fun PaymentButton(modifier: Modifier) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        Button(
-            modifier = modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ },
-            contentPadding = PaddingValues(vertical = 16.dp),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.payment),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
+        ShoppingButton(onClick = { /*TODO*/ }, buttonText = stringResource(id = R.string.payment))
     }
 }
 

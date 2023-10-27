@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,6 +36,7 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.ui.components.AuthBackground
 import com.ahmetocak.shoppingapp.ui.components.AuthEnterEmailOtf
 import com.ahmetocak.shoppingapp.ui.components.AuthEnterPasswordOtf
+import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
 import com.ahmetocak.shoppingapp.ui.components.WelcomeText
 
 @Composable
@@ -58,7 +61,11 @@ private fun LoginScreenContent(modifier: Modifier) {
         AuthEnterEmailOtf(modifier = modifier, value = "", onValueChange = {})
         AuthEnterPasswordOtf(modifier = modifier, value = "", onValueChange = {})
         RememberMeBox(modifier = modifier)
-        LoginButton(modifier = modifier)
+        ShoppingButton(
+            modifier = modifier,
+            onClick = {},
+            buttonText = stringResource(id = R.string.login)
+        )
         ForgotPasswordButton()
         RegisterNowSection(modifier = modifier)
     }
@@ -94,18 +101,6 @@ private fun ForgotPasswordButton() {
     }
 }
 
-@Composable
-private fun LoginButton(modifier: Modifier) {
-    Button(
-        modifier = modifier.fillMaxWidth(),
-        onClick = { /*TODO*/ },
-        shape = RoundedCornerShape(4.dp),
-        contentPadding = PaddingValues(8.dp)
-    ) {
-        Text(text = stringResource(id = R.string.login))
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RememberMeBox(modifier: Modifier) {
@@ -128,7 +123,6 @@ private fun RememberMeBox(modifier: Modifier) {
         Text(text = stringResource(id = R.string.remember_me))
     }
 }
-
 
 
 @Preview(showBackground = true, showSystemUi = true)
