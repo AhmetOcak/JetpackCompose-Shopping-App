@@ -62,10 +62,14 @@ fun NavGraph(
             startDestination = startDestination
         ) {
             composable(route = NavScreen.LoginScreen.route) {
-                LoginScreen()
+                LoginScreen(
+                    onNavigateSignUp = { navController.navigate(NavScreen.SignUpScreen.route) }
+                )
             }
             composable(route = NavScreen.SignUpScreen.route) {
-                SignUpScreen()
+                SignUpScreen(
+                    onNavigate = { navController.navigateUp() }
+                )
             }
             composable(route = NavScreen.HomeScreen.route) {
                 HomeScreen()
