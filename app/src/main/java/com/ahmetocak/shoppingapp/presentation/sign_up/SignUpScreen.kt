@@ -65,7 +65,8 @@ fun SignUpScreen(modifier: Modifier = Modifier, onNavigate: () -> Unit) {
             uiState.verifyPasFieldErrorMessage ?: stringResource(id = R.string.verify_password)
         },
         onSignUpClick = { viewModel.signUp(onNavigate) },
-        isLoading = uiState.isLoading
+        isLoading = uiState.isLoading,
+        isSignUpEnd = uiState.isSignUpEnd
     )
 }
 
@@ -85,7 +86,8 @@ private fun SignUpScreenContent(
     passwordLabel: String,
     verifyPasswordLabel: String,
     onSignUpClick: () -> Unit,
-    isLoading: Boolean
+    isLoading: Boolean,
+    isSignUpEnd: Boolean
 ) {
     AuthBackground(modifier = modifier)
 
@@ -93,7 +95,7 @@ private fun SignUpScreenContent(
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
-    } else {
+    } else if (!isSignUpEnd) {
         Column(
             modifier = modifier
                 .fillMaxSize()

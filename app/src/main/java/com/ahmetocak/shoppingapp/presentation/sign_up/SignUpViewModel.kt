@@ -90,7 +90,9 @@ class SignUpViewModel @Inject constructor(
                         if (signUpTask.isSuccessful) {
                             firebaseRepository.sendEmailVerification()?.addOnCompleteListener { verificationTask ->
                                 if (verificationTask.isSuccessful) {
-                                    _uiState.update { it.copy(isLoading = false) }
+                                    _uiState.update {
+                                        it.copy(isLoading = false, isSignUpEnd = true)
+                                    }
                                     onNavigate()
                                 } else {
                                     _uiState.update {
@@ -137,6 +139,7 @@ class SignUpViewModel @Inject constructor(
 data class SignUpUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
+    val isSignUpEnd: Boolean = false,
     val emailFieldErrorMessage: String? = null,
     val passwordFieldErrorMessage: String? = null,
     val verifyPasFieldErrorMessage: String? = null
