@@ -2,11 +2,9 @@ package com.ahmetocak.shoppingapp.presentation.sign_up
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,6 +18,7 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.ui.components.AuthBackground
 import com.ahmetocak.shoppingapp.ui.components.AuthEnterEmailOtf
 import com.ahmetocak.shoppingapp.ui.components.AuthEnterPasswordOtf
+import com.ahmetocak.shoppingapp.ui.components.FullScreenCircularLoading
 import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
 import com.ahmetocak.shoppingapp.ui.components.WelcomeText
 
@@ -93,9 +92,7 @@ private fun SignUpScreenContent(
     AuthBackground(modifier = modifier)
 
     if (isLoading) {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
+        FullScreenCircularLoading()
     } else if (!isSignUpEnd) {
         Column(
             modifier = modifier
