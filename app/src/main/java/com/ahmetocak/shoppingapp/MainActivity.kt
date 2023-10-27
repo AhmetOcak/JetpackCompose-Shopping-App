@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.ahmetocak.shoppingapp.common.navigation.NavGraph
-import com.ahmetocak.shoppingapp.common.navigation.NavScreen
+import com.ahmetocak.shoppingapp.core.navigation.NavGraph
+import com.ahmetocak.shoppingapp.core.navigation.NavScreen
 import com.ahmetocak.shoppingapp.ui.theme.ShoppingAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavGraph(startDestination = NavScreen.LoginScreen.route)
+                    NavGraph(startDestination = NavScreen.SignUpScreen.route)
                 }
             }
         }

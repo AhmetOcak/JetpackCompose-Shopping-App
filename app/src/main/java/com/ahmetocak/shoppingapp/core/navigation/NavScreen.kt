@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.common.navigation
+package com.ahmetocak.shoppingapp.core.navigation
 
 sealed class NavScreen(val route: String) {
     object LoginScreen : NavScreen(route = NavRoutes.login_screen)

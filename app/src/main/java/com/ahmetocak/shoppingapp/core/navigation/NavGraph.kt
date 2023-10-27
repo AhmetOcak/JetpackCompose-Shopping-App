@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.common.navigation
+package com.ahmetocak.shoppingapp.core.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
