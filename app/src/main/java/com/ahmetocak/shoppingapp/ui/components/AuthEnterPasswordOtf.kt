@@ -2,6 +2,7 @@ package com.ahmetocak.shoppingapp.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -28,7 +28,10 @@ fun AuthEnterPasswordOtf(
     modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    isVerifyVersion: Boolean = false
+    isVerifyVersion: Boolean = false,
+    isError: Boolean ,
+    labelText: String,
+    keyboardActions: KeyboardActions = KeyboardActions()
 ) {
     var visibility by rememberSaveable { mutableStateOf(false) }
 
@@ -39,15 +42,7 @@ fun AuthEnterPasswordOtf(
         value = value,
         onValueChange = onValueChange,
         label = {
-            Text(
-                text = stringResource(
-                    id = if (isVerifyVersion) {
-                        R.string.verify_password
-                    } else {
-                        R.string.enter_password
-                    }
-                )
-            )
+            Text(text = labelText)
         },
         trailingIcon = {
             IconButton(onClick = { visibility = !visibility }) {
@@ -69,6 +64,8 @@ fun AuthEnterPasswordOtf(
             PasswordVisualTransformation()
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        singleLine = true
+        keyboardActions = keyboardActions,
+        singleLine = true,
+        isError = isError
     )
 }
