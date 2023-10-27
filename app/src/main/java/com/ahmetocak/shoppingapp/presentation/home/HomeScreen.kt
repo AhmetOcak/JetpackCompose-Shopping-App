@@ -54,7 +54,7 @@ private fun HomeScreenContent(modifier: Modifier) {
 }
 
 @Composable
-fun ProductList(modifier: Modifier) {
+private fun ProductList(modifier: Modifier) {
     LazyVerticalGrid(
         modifier = modifier
             .fillMaxWidth()
@@ -75,7 +75,7 @@ fun ProductList(modifier: Modifier) {
 }
 
 @Composable
-fun CategoryList(modifier: Modifier) {
+private fun CategoryList(modifier: Modifier) {
     var selectedCatName by rememberSaveable { mutableStateOf("All") }
 
     LazyRow(
@@ -136,7 +136,7 @@ private fun PageTitle(modifier: Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductItem(modifier: Modifier, title: String, price: Double) {
+private fun ProductItem(modifier: Modifier, title: String, price: Double) {
     Card(
         modifier = modifier.fillMaxSize(),
         onClick = {},
