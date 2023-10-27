@@ -63,7 +63,16 @@ fun NavGraph(
         ) {
             composable(route = NavScreen.LoginScreen.route) {
                 LoginScreen(
-                    onNavigateSignUp = { navController.navigate(NavScreen.SignUpScreen.route) }
+                    onNavigateSignUp = {
+                        navController.navigate(NavScreen.SignUpScreen.route)
+                    },
+                    onNavigateHome = {
+                        navController.navigate(NavScreen.HomeScreen.route) {
+                            popUpTo(NavScreen.LoginScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 )
             }
             composable(route = NavScreen.SignUpScreen.route) {

@@ -29,4 +29,6 @@
     <string name="favorites">Favorites</string>
     <string name="search">Search</string>
     <string name="unknown_error">Something went wrong</string>
+    <string name="send">Send</string>
+    <string name="password_reset_mail">Password reset mail has been sent. Please check your email box.</string>
 </resources>
