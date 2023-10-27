@@ -134,6 +134,12 @@ class SignUpViewModel @Inject constructor(
             true
         }
     }
+
+    fun consumedErrorMessage() {
+        _uiState.update {
+            it.copy(errorMessage = null)
+        }
+    }
 }
 
 data class SignUpUiState(

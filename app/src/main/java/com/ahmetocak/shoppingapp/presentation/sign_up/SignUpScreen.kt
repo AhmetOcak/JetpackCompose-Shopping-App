@@ -36,6 +36,7 @@ fun SignUpScreen(modifier: Modifier = Modifier, onNavigate: () -> Unit) {
             uiState.errorMessage,
             Toast.LENGTH_LONG
         ).show()
+        viewModel.consumedErrorMessage()
     }
 
     SignUpScreenContent(
