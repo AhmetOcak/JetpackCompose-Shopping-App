@@ -8,7 +8,7 @@
     <string name="login">Login</string>
     <string name="remember_me">Remember me</string>
     <string name="enter_email">Enter Email</string>
-    <string name="enter_password">Enter Password</string>
+    <string name="enter_password">Enter Password (+6 length)</string>
     <string name="welcome_register">Register now !</string>
     <string name="verify_password">Verify Password</string>
     <string name="sign_up">Sign Up</string>
@@ -28,4 +28,5 @@
     <string name="profile">Profile</string>
     <string name="favorites">Favorites</string>
     <string name="search">Search</string>
+    <string name="unknown_error">Something went wrong</string>
 </resources>
