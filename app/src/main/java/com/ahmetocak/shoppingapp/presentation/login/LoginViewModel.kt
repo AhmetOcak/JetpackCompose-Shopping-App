@@ -1,11 +1,14 @@
 package com.ahmetocak.shoppingapp.presentation.login
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.helpers.AuthFieldCheckers
+import com.ahmetocak.shoppingapp.common.helpers.rememberMe
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.auth.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val firebaseRepository: FirebaseRepository
+    private val firebaseRepository: FirebaseRepository,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -53,6 +57,7 @@ class LoginViewModel @Inject constructor(
         passwordResetEmail = value
     }
 
+    @SuppressLint("CommitPrefEdits")
     fun login(onNavigate: () -> Unit) {
         val isEmailOk = AuthFieldCheckers.checkEmailField(
             email = email,
@@ -102,6 +107,9 @@ class LoginViewModel @Inject constructor(
                     if (task.isSuccessful) {
                         _uiState.update {
                             it.copy(isLoading = false, isLoginEnd = true)
+                        }
+                        if (rememberMe) {
+                            sharedPreferences.edit().rememberMe()
                         }
                         onNavigate()
                     } else {
