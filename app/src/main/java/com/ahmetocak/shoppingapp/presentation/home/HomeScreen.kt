@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,12 +37,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.model.shopping.Product
+import com.ahmetocak.shoppingapp.ui.components.MinLineText
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -53,7 +57,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     HomeScreenContent(
         modifier = modifier,
         categories = uiState.categoryList,
-        isCategoriesLoading = uiState.isCategoryListLoading
+        isCategoriesLoading = uiState.isCategoryListLoading,
+        productList = uiState.productList,
+        isProductListLoading = uiState.isProductListLoading
     )
 }
 
@@ -61,7 +67,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 private fun HomeScreenContent(
     modifier: Modifier,
     categories: List<String>,
-    isCategoriesLoading: Boolean
+    isCategoriesLoading: Boolean,
+    productList: List<Product>,
+    isProductListLoading: Boolean
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         PageTitle(modifier = modifier)
@@ -70,27 +78,46 @@ private fun HomeScreenContent(
             categories = categories,
             isCategoriesLoading = isCategoriesLoading
         )
-        ProductList(modifier = modifier)
+        ProductList(
+            modifier = modifier,
+            productList = productList,
+            isProductListLoading = isProductListLoading
+        )
     }
 }
 
 @Composable
-private fun ProductList(modifier: Modifier) {
-    LazyVerticalGrid(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(dimensionResource(id = R.dimen.one_level_margin)),
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin)),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
-    ) {
-        items(10) {
-            ProductItem(
-                modifier = modifier,
-                title = "Mens Casual Premium Slim Fit T-Shirts",
-                price = 109.95
-            )
+private fun ProductList(
+    modifier: Modifier,
+    productList: List<Product>,
+    isProductListLoading: Boolean
+) {
+    if (isProductListLoading) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        LazyVerticalGrid(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(dimensionResource(id = R.dimen.one_level_margin)),
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
+        ) {
+            items(productList) {
+                ProductItem(
+                    modifier = modifier,
+                    title = it.title ?: "null",
+                    price = it.price ?: "null",
+                    image = it.image ?: "null"
+                )
+            }
         }
     }
 }
@@ -174,7 +201,7 @@ private fun PageTitle(modifier: Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProductItem(modifier: Modifier, title: String, price: Double) {
+private fun ProductItem(modifier: Modifier, title: String, price: String, image: String) {
     Card(
         modifier = modifier.fillMaxSize(),
         onClick = {},
@@ -191,21 +218,24 @@ private fun ProductItem(modifier: Modifier, title: String, price: Double) {
                     .fillMaxWidth()
                     .height(128.dp),
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg")
+                    .data(image)
                     .crossfade(true)
                     .build(),
                 error = painterResource(id = R.drawable.error_image),
                 contentDescription = null,
                 contentScale = ContentScale.Fit
             )
-            Text(
+            MinLineText(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.one_level_margin))
                     .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
                 text = title,
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                minLines = 2,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
             Text(
                 modifier = modifier.padding(top = dimensionResource(id = R.dimen.one_level_margin)),

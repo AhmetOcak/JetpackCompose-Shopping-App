@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Error
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
+import com.ahmetocak.shoppingapp.model.shopping.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +25,7 @@ class HomeViewModel @Inject constructor(
 
     init {
         getCategoryList()
+        getAllProducts()
     }
 
     private fun getCategoryList() {
@@ -49,10 +51,36 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    private fun getAllProducts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = shoppingRepository.getProducts()) {
+                is Response.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            isProductListLoading = false,
+                            productList = response.data
+                        )
+                    }
+                }
+
+                is Response.Error -> {
+                    _uiState.update {
+                        it.copy(
+                            isProductListLoading = false,
+                            errorMessages = _uiState.value.errorMessages + listOf(response.error)
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 
 data class HomeScreeUiState(
     val isCategoryListLoading: Boolean = true,
-    val errorMessages: List<Error> = listOf(),
-    val categoryList: List<String> = listOf()
+    val isProductListLoading: Boolean = true,
+    val categoryList: List<String> = listOf(),
+    val productList: List<Product> = listOf(),
+    val errorMessages: List<Error> = listOf()
 )
