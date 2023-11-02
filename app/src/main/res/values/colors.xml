@@ -9,4 +9,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#4CAF50</color>
     <color name="orange">#FF9800</color>
+
+    <color name="orange_100">#ff8c00</color>
+    <color name="orange_200">#fda425</color>
+    <color name="orange_300">#fabb49</color>
+    <color name="orange_400">#f8d26d</color>
+    <color name="orange_500">#f6e991</color>
 </resources>

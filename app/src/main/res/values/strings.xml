@@ -33,4 +33,9 @@
     <string name="password_reset_mail">Password reset mail has been sent. Please check your email box.</string>
     <string name="unknown">Something went wrong. Please try again later!!</string>
     <string name="network">Please check your internet connection!!</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile</string>
+    <string name="name">Name</string>
+    <string name="address">Address</string>
+    <string name="dob">D.O.B</string>
 </resources>
