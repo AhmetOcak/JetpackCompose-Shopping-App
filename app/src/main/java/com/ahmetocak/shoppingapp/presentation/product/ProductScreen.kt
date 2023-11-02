@@ -15,6 +15,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,34 +31,40 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.model.shopping.Product
 
 @Composable
 fun ProductScreen(modifier: Modifier = Modifier) {
 
     val viewModel: ProductViewModel = hiltViewModel()
 
-    ProductScreenContent(modifier = modifier)
+    val uiState by viewModel.uiState.collectAsState()
+
+    ProductScreenContent(modifier = modifier, product = uiState.product)
 }
 
 @Composable
-private fun ProductScreenContent(modifier: Modifier) {
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        ProductImage(
-            modifier = modifier
-                .weight(2f)
-                .fillMaxSize()
-                .padding(dimensionResource(id = R.dimen.nine_level_margin))
-        )
-        ProductDetails(
-            modifier = modifier
-                .weight(1f)
-                .fillMaxSize(),
-            title = "Leset Galant",
-            description = "Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket.",
-            price = 109.96
-        )
+private fun ProductScreenContent(modifier: Modifier, product: Product?) {
+    if (product != null) {
+        Column(
+            modifier = modifier.fillMaxSize()
+        ) {
+            ProductImage(
+                modifier = modifier
+                    .weight(2f)
+                    .fillMaxSize()
+                    .padding(dimensionResource(id = R.dimen.nine_level_margin)),
+                imgUrl = product.image ?: "null"
+            )
+            ProductDetails(
+                modifier = modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+                title = product.title ?: "null",
+                description = product.description ?: "null",
+                price = product.price?.toDouble() ?: 0.0
+            )
+        }
     }
 }
 
@@ -120,11 +128,11 @@ private fun AddToCartSection(modifier: Modifier, price: Double) {
 }
 
 @Composable
-private fun ProductImage(modifier: Modifier) {
+private fun ProductImage(modifier: Modifier, imgUrl: String) {
     AsyncImage(
         modifier = modifier,
         model = ImageRequest.Builder(LocalContext.current)
-            .data("https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg")
+            .data(imgUrl)
             .crossfade(true).build(),
         contentDescription = null,
         error = painterResource(id = R.drawable.error_image),
