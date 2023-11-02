@@ -47,6 +47,8 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.ui.components.MinLineText
 
+private const val ALL = "All"
+
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
 
@@ -71,17 +73,22 @@ private fun HomeScreenContent(
     productList: List<Product>,
     isProductListLoading: Boolean
 ) {
+    var selectedCatName by rememberSaveable { mutableStateOf(ALL) }
+
     Column(modifier = modifier.fillMaxSize()) {
         PageTitle(modifier = modifier)
         CategoryList(
             modifier = modifier,
             categories = categories,
-            isCategoriesLoading = isCategoriesLoading
+            isCategoriesLoading = isCategoriesLoading,
+            selectedCatName = selectedCatName,
+            onCategoryClick = { selectedCatName = it }
         )
         ProductList(
             modifier = modifier,
             productList = productList,
-            isProductListLoading = isProductListLoading
+            isProductListLoading = isProductListLoading,
+            selectedCatName = selectedCatName
         )
     }
 }
@@ -90,7 +97,8 @@ private fun HomeScreenContent(
 private fun ProductList(
     modifier: Modifier,
     productList: List<Product>,
-    isProductListLoading: Boolean
+    isProductListLoading: Boolean,
+    selectedCatName: String
 ) {
     if (isProductListLoading) {
         Column(
@@ -110,7 +118,10 @@ private fun ProductList(
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
         ) {
-            items(productList) {
+            items(
+                if (selectedCatName == ALL) productList
+                else productList.filter { it.category?.uppercase() == selectedCatName.uppercase() }
+            ) {
                 ProductItem(
                     modifier = modifier,
                     title = it.title ?: "null",
@@ -126,10 +137,10 @@ private fun ProductList(
 private fun CategoryList(
     modifier: Modifier,
     categories: List<String>,
-    isCategoriesLoading: Boolean
+    isCategoriesLoading: Boolean,
+    selectedCatName: String,
+    onCategoryClick: (String) -> Unit
 ) {
-    var selectedCatName by rememberSaveable { mutableStateOf("All") }
-
     if (isCategoriesLoading) {
         Row(
             modifier = modifier
@@ -152,13 +163,14 @@ private fun CategoryList(
                 Category(
                     categoryName = stringResource(id = R.string.all),
                     selectedCatName = selectedCatName,
-                    onCategoryClick = { selectedCatName = it })
+                    onCategoryClick = onCategoryClick
+                )
             }
             items(categories) { category ->
                 Category(
                     categoryName = category.replaceFirstChar { it.uppercase() },
                     selectedCatName = selectedCatName,
-                    onCategoryClick = { selectedCatName = it }
+                    onCategoryClick = onCategoryClick
                 )
             }
         }
