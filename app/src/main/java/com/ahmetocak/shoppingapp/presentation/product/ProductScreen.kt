@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,7 +57,7 @@ private fun ProductScreenContent(modifier: Modifier, product: Product?) {
         ) {
             ProductImage(
                 modifier = modifier
-                    .weight(2f)
+                    .weight(1f)
                     .fillMaxSize()
                     .padding(dimensionResource(id = R.dimen.nine_level_margin)),
                 imgUrl = product.image ?: "null"
@@ -62,36 +68,73 @@ private fun ProductScreenContent(modifier: Modifier, product: Product?) {
                     .fillMaxSize(),
                 title = product.title ?: "null",
                 description = product.description ?: "null",
-                price = product.price?.toDouble() ?: 0.0
+                price = product.price?.toDouble() ?: 0.0,
+                rate = product.rating?.rate ?: 0.0
             )
         }
     }
 }
 
 @Composable
-private fun ProductDetails(modifier: Modifier, title: String, description: String, price: Double) {
+private fun ProductDetails(
+    modifier: Modifier, title: String, description: String, price: Double, rate: Double
+) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
     ) {
+        ProductInfo(
+            modifier = Modifier.weight(4f),
+            title = title,
+            description = description,
+            rate = rate
+        )
+        Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Color.Black)
+        AddToCartSection(modifier = Modifier.weight(1f), price = price)
+    }
+}
+
+@Composable
+private fun ProductInfo(modifier: Modifier, title: String, description: String, rate: Double) {
+    Column(modifier = modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row {
+                Icon(
+                    imageVector = Icons.Filled.Star,
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.orange)
+                )
+                Text(text = "$rate")
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    imageVector = Icons.Filled.FavoriteBorder,
+                    contentDescription = null,
+                    tint = Color.Red
+                )
+            }
+        }
         Text(
             modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
+                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
+                .padding(top = dimensionResource(id = R.dimen.one_level_margin)),
             text = title,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
         Text(
             modifier = Modifier
-                .weight(3f)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
-            text = description
+                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
+                .padding(top = dimensionResource(id = R.dimen.one_level_margin)), text = description
         )
-        Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Color.Black)
-        AddToCartSection(modifier = Modifier.weight(2f), price = price)
     }
 }
 
@@ -131,9 +174,7 @@ private fun AddToCartSection(modifier: Modifier, price: Double) {
 private fun ProductImage(modifier: Modifier, imgUrl: String) {
     AsyncImage(
         modifier = modifier,
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(imgUrl)
-            .crossfade(true).build(),
+        model = ImageRequest.Builder(LocalContext.current).data(imgUrl).crossfade(true).build(),
         contentDescription = null,
         error = painterResource(id = R.drawable.error_image),
         contentScale = ContentScale.Fit
