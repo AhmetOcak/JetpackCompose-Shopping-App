@@ -116,30 +116,37 @@ fun NavGraph(
 
 @Composable
 private fun BottomNavigationView(
-    currentDestination: NavDestination?, navController: NavHostController
+    currentDestination: NavDestination?,
+    navController: NavHostController
 ) {
     NavigationBar {
         bottomNavItems.forEach { screen ->
             val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
-            NavigationBarItem(selected = isSelected, icon = {
-                Icon(
-                    imageVector = if (isSelected) {
-                        screen.selectedIcon
-                    } else {
-                        screen.unSelectedIcon
-                    }, contentDescription = null
-                )
-            }, onClick = {
-                navController.navigate(screen.route) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
+            NavigationBarItem(
+                selected = isSelected,
+                icon = {
+                    Icon(
+                        imageVector = if (isSelected) {
+                            screen.selectedIcon
+                        } else {
+                            screen.unSelectedIcon
+                        },
+                        contentDescription = null
+                    )
+                },
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
 
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }, label = { Text(text = stringResource(id = screen.labelId)) })
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                label = { Text(text = stringResource(id = screen.labelId)) }
+            )
         }
     }
 }
