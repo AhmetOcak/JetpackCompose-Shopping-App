@@ -12,6 +12,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.core.navigation.screens.NavRoutes
 
 sealed class BottomNavItem(
     val route: String,

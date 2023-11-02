@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.core.navigation
+package com.ahmetocak.shoppingapp.core.navigation.screens
 
 object NavRoutes {
     const val login_screen = "login_screen"

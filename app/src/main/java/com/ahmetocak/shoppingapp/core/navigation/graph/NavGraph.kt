@@ -19,7 +19,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ahmetocak.shoppingapp.core.navigation.BottomNavItem
-import com.ahmetocak.shoppingapp.core.navigation.NavScreen
+import com.ahmetocak.shoppingapp.core.navigation.screens.NavScreen
 import com.ahmetocak.shoppingapp.presentation.chart.ChartScreen
 import com.ahmetocak.shoppingapp.presentation.favorites.FavoritesScreen
 import com.ahmetocak.shoppingapp.presentation.home.HomeScreen
