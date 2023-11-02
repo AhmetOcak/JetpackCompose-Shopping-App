@@ -25,12 +25,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 
 @Composable
 fun ProductScreen(modifier: Modifier = Modifier) {
+
+    val viewModel: ProductViewModel = hiltViewModel()
 
     ProductScreenContent(modifier = modifier)
 }

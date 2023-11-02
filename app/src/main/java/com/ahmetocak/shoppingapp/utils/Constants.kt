@@ -7,3 +7,7 @@ object EndPoints {
     const val CATEGORY = "products/categories"
     const val PRODUCT = "products"
 }
+
+object NavKeys {
+    const val PRODUCT = "product"
+}

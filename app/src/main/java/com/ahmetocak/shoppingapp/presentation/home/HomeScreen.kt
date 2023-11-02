@@ -38,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -50,7 +49,7 @@ import com.ahmetocak.shoppingapp.ui.components.MinLineText
 private const val ALL = "All"
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, onNavigateProductScreen: (Product) -> Unit) {
 
     val viewModel: HomeViewModel = hiltViewModel()
 
@@ -61,7 +60,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         categories = uiState.categoryList,
         isCategoriesLoading = uiState.isCategoryListLoading,
         productList = uiState.productList,
-        isProductListLoading = uiState.isProductListLoading
+        isProductListLoading = uiState.isProductListLoading,
+        onProductClick = { onNavigateProductScreen(it) }
     )
 }
 
@@ -71,7 +71,8 @@ private fun HomeScreenContent(
     categories: List<String>,
     isCategoriesLoading: Boolean,
     productList: List<Product>,
-    isProductListLoading: Boolean
+    isProductListLoading: Boolean,
+    onProductClick: (Product) -> Unit
 ) {
     var selectedCatName by rememberSaveable { mutableStateOf(ALL) }
 
@@ -88,7 +89,8 @@ private fun HomeScreenContent(
             modifier = modifier,
             productList = productList,
             isProductListLoading = isProductListLoading,
-            selectedCatName = selectedCatName
+            selectedCatName = selectedCatName,
+            onProductClick = onProductClick
         )
     }
 }
@@ -98,7 +100,8 @@ private fun ProductList(
     modifier: Modifier,
     productList: List<Product>,
     isProductListLoading: Boolean,
-    selectedCatName: String
+    selectedCatName: String,
+    onProductClick: (Product) -> Unit
 ) {
     if (isProductListLoading) {
         Column(
@@ -124,9 +127,8 @@ private fun ProductList(
             ) {
                 ProductItem(
                     modifier = modifier,
-                    title = it.title ?: "null",
-                    price = it.price ?: "null",
-                    image = it.image ?: "null"
+                    product = it,
+                    onProductClick = onProductClick
                 )
             }
         }
@@ -213,10 +215,14 @@ private fun PageTitle(modifier: Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ProductItem(modifier: Modifier, title: String, price: String, image: String) {
+private fun ProductItem(
+    modifier: Modifier,
+    product: Product,
+    onProductClick: (Product) -> Unit
+) {
     Card(
         modifier = modifier.fillMaxSize(),
-        onClick = {},
+        onClick = { onProductClick(product) },
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Column(
@@ -230,7 +236,7 @@ private fun ProductItem(modifier: Modifier, title: String, price: String, image:
                     .fillMaxWidth()
                     .height(128.dp),
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(image)
+                    .data(product.image)
                     .crossfade(true)
                     .build(),
                 error = painterResource(id = R.drawable.error_image),
@@ -242,7 +248,7 @@ private fun ProductItem(modifier: Modifier, title: String, price: String, image:
                     .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.one_level_margin))
                     .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
-                text = title,
+                text = product.title ?: "null",
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 minLines = 2,
@@ -251,14 +257,8 @@ private fun ProductItem(modifier: Modifier, title: String, price: String, image:
             )
             Text(
                 modifier = modifier.padding(top = dimensionResource(id = R.dimen.one_level_margin)),
-                text = "$$price"
+                text = "$${product.price}"
             )
         }
     }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun PreviewHomeScreen() {
-    HomeScreen()
 }

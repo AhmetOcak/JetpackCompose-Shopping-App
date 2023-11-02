@@ -17,7 +17,9 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import com.ahmetocak.shoppingapp.core.navigation.BottomNavItem
 import com.ahmetocak.shoppingapp.core.navigation.screens.NavScreen
 import com.ahmetocak.shoppingapp.presentation.chart.ChartScreen
@@ -33,6 +35,9 @@ import com.ahmetocak.shoppingapp.utils.NavKeys
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.gson.Gson
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 private val bottomNavItems = listOf(
     BottomNavItem.HomeScreen,
@@ -44,7 +49,8 @@ private val bottomNavItems = listOf(
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NavGraph(
-    modifier: Modifier = Modifier, startDestination: String = NavScreen.HomeScreen.route
+    modifier: Modifier = Modifier,
+    startDestination: String = NavScreen.HomeScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -76,8 +82,9 @@ fun NavGraph(
             }
             composable(route = NavScreen.HomeScreen.route) {
                 HomeScreen(onNavigateProductScreen = { product ->
-                    navBackStackEntry?.savedStateHandle?.set(NavKeys.PRODUCT, product)
-                    navController.navigate(NavScreen.ProductScreen.route)
+                    val encodedValue =
+                        URLEncoder.encode(Gson().toJson(product), StandardCharsets.UTF_8.toString())
+                    navController.navigate("${NavScreen.ProductScreen.route}/$encodedValue")
                 })
             }
             composable(route = NavScreen.ChartScreen.route) {
@@ -89,7 +96,12 @@ fun NavGraph(
             composable(route = NavScreen.PaymentScreen.route) {
                 PaymentScreen()
             }
-            composable(route = NavScreen.ProductScreen.route) {
+            composable(
+                route = "${NavScreen.ProductScreen.route}/{${NavKeys.PRODUCT}}",
+                arguments = listOf(
+                    navArgument(NavKeys.PRODUCT) { type = NavType.StringType }
+                )
+            ) {
                 ProductScreen()
             }
             composable(route = NavScreen.ProfileScreen.route) {
