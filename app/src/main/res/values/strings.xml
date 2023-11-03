@@ -38,4 +38,7 @@
     <string name="name">Name</string>
     <string name="address">Address</string>
     <string name="dob">D.O.B</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+    <string name="account_info">Account Info</string>
 </resources>

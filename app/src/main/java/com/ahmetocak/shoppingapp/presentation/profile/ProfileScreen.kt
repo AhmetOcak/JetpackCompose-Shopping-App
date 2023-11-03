@@ -1,31 +1,39 @@
 package com.ahmetocak.shoppingapp.presentation.profile
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
@@ -39,6 +47,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
@@ -46,19 +56,102 @@ import com.ahmetocak.shoppingapp.R
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
 
-    ProfileScreenContent(modifier = modifier)
+    val viewModel: ProfileViewModel = hiltViewModel()
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    var showUpdateDialog by remember { mutableStateOf(false) }
+
+    ProfileScreenContent(
+        modifier = modifier,
+        userImgUrl = uiState.photoUrl ?: Uri.parse(""),
+        userName = uiState.name ?: uiState.email ?: "",
+        phoneNumber = uiState.phoneNumber ?: "",
+        email = uiState.email ?: "",
+        address = uiState.address ?: "",
+        dob = uiState.dob ?: "",
+        onAccountInfoClicked = {
+            viewModel.setAccountInfoType(it)
+            showUpdateDialog = !showUpdateDialog
+        },
+        showUpdateDialog = showUpdateDialog,
+        updateValue = viewModel.updateValue,
+        onUpdateValueChange = { viewModel.updateAccountInfoValue(it) },
+        onDismissRequest = {
+            viewModel.clearAccountInfoValue()
+            showUpdateDialog = false
+        },
+        onUpdateClick = {
+
+        },
+        dialogTitle = when (viewModel.infoType) {
+            InfoType.NAME -> {
+                stringResource(id = R.string.name)
+            }
+
+            InfoType.MOBILE -> {
+                stringResource(id = R.string.mobile)
+            }
+
+            InfoType.EMAIL -> {
+                stringResource(id = R.string.email)
+            }
+
+            InfoType.ADDRESS -> {
+                stringResource(id = R.string.address)
+            }
+
+            InfoType.DOB -> {
+                stringResource(id = R.string.dob)
+            }
+        }
+    )
 }
 
 @Composable
-private fun ProfileScreenContent(modifier: Modifier) {
+private fun ProfileScreenContent(
+    modifier: Modifier,
+    userImgUrl: Uri,
+    userName: String,
+    phoneNumber: String,
+    email: String,
+    address: String,
+    dob: String,
+    onAccountInfoClicked: (InfoType) -> Unit,
+    showUpdateDialog: Boolean,
+    onDismissRequest: () -> Unit,
+    updateValue: String,
+    onUpdateValueChange: (String) -> Unit,
+    onUpdateClick: () -> Unit,
+    dialogTitle: String
+) {
+    if (showUpdateDialog) {
+        UpdateAccountInfoDialog(
+            modifier = modifier,
+            onDismissRequest = onDismissRequest,
+            updateValue = updateValue,
+            onUpdateValueChange = onUpdateValueChange,
+            onUpdateClick = onUpdateClick,
+            title = dialogTitle
+        )
+    }
+
     Column(modifier = modifier.fillMaxSize()) {
-        ProfileSection(modifier = modifier.weight(3f))
-        AccountInfoSection(modifier = modifier.weight(4f))
+        ProfileSection(modifier = modifier.weight(3f), userImgUrl = userImgUrl, userName = userName)
+        AccountInfoSection(
+            modifier = modifier.weight(4f),
+            email = email,
+            phoneNumber = phoneNumber,
+            address = address,
+            dob = dob,
+            name = userName,
+            onAccountInfoClicked = onAccountInfoClicked
+        )
     }
 }
 
 @Composable
-private fun ProfileSection(modifier: Modifier) {
+private fun ProfileSection(modifier: Modifier, userImgUrl: Uri, userName: String) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -82,7 +175,7 @@ private fun ProfileSection(modifier: Modifier) {
                 .size(128.dp)
                 .clip(CircleShape),
             model = ImageRequest.Builder(LocalContext.current)
-                .data("https://images.pexels.com/photos/8159657/pexels-photo-8159657.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")
+                .data(userImgUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = null,
@@ -93,7 +186,7 @@ private fun ProfileSection(modifier: Modifier) {
                 .fillMaxWidth()
                 .padding(horizontal = dimensionResource(id = R.dimen.six_level_margin))
                 .padding(top = dimensionResource(id = R.dimen.two_level_margin)),
-            text = "Ahmet Ocak",
+            text = userName,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
@@ -101,14 +194,22 @@ private fun ProfileSection(modifier: Modifier) {
 }
 
 @Composable
-private fun AccountInfoSection(modifier: Modifier) {
+private fun AccountInfoSection(
+    modifier: Modifier,
+    email: String,
+    phoneNumber: String,
+    dob: String,
+    address: String,
+    name: String,
+    onAccountInfoClicked: (InfoType) -> Unit
+) {
     Column(modifier = modifier.fillMaxSize()) {
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
                 .padding(top = dimensionResource(id = R.dimen.four_level_margin)),
-            text = "Account Info",
+            text = stringResource(id = R.string.account_info),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold
         )
@@ -121,7 +222,29 @@ private fun AccountInfoSection(modifier: Modifier) {
                 Info(
                     imageId = it.imageId,
                     titleId = it.titleId,
-                    description = "ocak6139@gmail.com"
+                    description = when (it.infoType) {
+                        InfoType.NAME -> {
+                            name
+                        }
+
+                        InfoType.MOBILE -> {
+                            phoneNumber
+                        }
+
+                        InfoType.EMAIL -> {
+                            email
+                        }
+
+                        InfoType.ADDRESS -> {
+                            address
+                        }
+
+                        InfoType.DOB -> {
+                            dob
+                        }
+                    },
+                    infoType = it.infoType,
+                    onAccountInfoClicked = onAccountInfoClicked
                 )
                 Divider(modifier = modifier.fillMaxWidth())
             }
@@ -131,12 +254,19 @@ private fun AccountInfoSection(modifier: Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Info(modifier: Modifier = Modifier, imageId: Int, titleId: Int, description: String) {
+private fun Info(
+    modifier: Modifier = Modifier,
+    imageId: Int,
+    titleId: Int,
+    infoType: InfoType,
+    description: String,
+    onAccountInfoClicked: (InfoType) -> Unit
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .height(96.dp),
-        onClick = {},
+        onClick = { onAccountInfoClicked(infoType) },
         shape = RoundedCornerShape(0),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
     ) {
@@ -160,15 +290,78 @@ private fun Info(modifier: Modifier = Modifier, imageId: Int, titleId: Int, desc
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun UpdateAccountInfoDialog(
+    modifier: Modifier,
+    onDismissRequest: () -> Unit,
+    updateValue: String,
+    onUpdateValueChange: (String) -> Unit,
+    onUpdateClick: () -> Unit,
+    title: String
+) {
+    Dialog(onDismissRequest = onDismissRequest) {
+        Card(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.two_level_margin))
+        ) {
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.two_level_margin)),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Update $title",
+                    style = MaterialTheme.typography.titleLarge
+                )
+                OutlinedTextField(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(vertical = dimensionResource(id = R.dimen.two_level_margin)),
+                    value = updateValue,
+                    onValueChange = onUpdateValueChange
+                )
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(onClick = onDismissRequest) {
+                        Text(text = stringResource(id = R.string.cancel))
+                    }
+                    Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.two_level_margin)))
+                    Button(
+                        onClick = onUpdateClick,
+                        enabled = updateValue.isNotBlank()
+                    ) {
+                        Text(text = stringResource(id = R.string.update))
+                    }
+                }
+            }
+        }
+    }
+}
+
 private val accountInfoList = listOf(
-    AccountInfo(R.string.name, R.drawable.ic_name),
-    AccountInfo(R.string.mobile, R.drawable.ic_mobile),
-    AccountInfo(R.string.email, R.drawable.ic_email),
-    AccountInfo(R.string.address, R.drawable.ic_address),
-    AccountInfo(R.string.dob, R.drawable.ic_dob)
+    AccountInfo(InfoType.NAME, R.string.name, R.drawable.ic_name),
+    AccountInfo(InfoType.MOBILE, R.string.mobile, R.drawable.ic_mobile),
+    AccountInfo(InfoType.EMAIL, R.string.email, R.drawable.ic_email),
+    AccountInfo(InfoType.ADDRESS, R.string.address, R.drawable.ic_address),
+    AccountInfo(InfoType.DOB, R.string.dob, R.drawable.ic_dob)
 )
 
 data class AccountInfo(
+    val infoType: InfoType,
     val titleId: Int,
     val imageId: Int
 )
+
+enum class InfoType {
+    NAME,
+    MOBILE,
+    EMAIL,
+    ADDRESS,
+    DOB
+}
