@@ -1,8 +1,14 @@
 package com.ahmetocak.shoppingapp.presentation.profile
 
+import android.content.Context
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +53,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -52,6 +61,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.common.helpers.imageBitmapToFile
+import com.mr0xf00.easycrop.CropError
+import com.mr0xf00.easycrop.CropResult
+import com.mr0xf00.easycrop.crop
+import com.mr0xf00.easycrop.rememberImageCropper
+import com.mr0xf00.easycrop.ui.ImageCropperDialog
 
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
@@ -62,10 +77,22 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 
     var showUpdateDialog by remember { mutableStateOf(false) }
 
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    var showImageCropperDialog by remember { mutableStateOf(false) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract =
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        imageUri = uri
+        showImageCropperDialog = true
+    }
+
     ProfileScreenContent(
         modifier = modifier,
         userImgUrl = uiState.photoUrl ?: Uri.parse(""),
-        userName = uiState.name ?: uiState.email ?: "",
+        userName = uiState.name ?: "",
         phoneNumber = uiState.phoneNumber ?: "",
         email = uiState.email ?: "",
         address = uiState.address ?: "",
@@ -82,7 +109,17 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             showUpdateDialog = false
         },
         onUpdateClick = {
+            when (viewModel.infoType) {
+                InfoType.NAME -> {
+                    viewModel.updateUserName()
+                }
 
+                InfoType.EMAIL -> {
+                    //viewModel.reauthenticateAndUpdateMail()
+                }
+
+                else -> {}
+            }
         },
         dialogTitle = when (viewModel.infoType) {
             InfoType.NAME -> {
@@ -104,6 +141,19 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             InfoType.DOB -> {
                 stringResource(id = R.string.dob)
             }
+        },
+        infoType = viewModel.infoType,
+        onUserPhotoClicked = {
+            launcher.launch("image/*")
+        },
+        imageUri = imageUri,
+        showImageCropDialog = showImageCropperDialog,
+        uploadPhoto = {
+            if (it != null) {
+                viewModel.updateUserPhoto(it)
+            } else {
+                Log.d("UPLOAD IMAGE", "NULL IMAGE")
+            }
         }
     )
 }
@@ -123,7 +173,12 @@ private fun ProfileScreenContent(
     updateValue: String,
     onUpdateValueChange: (String) -> Unit,
     onUpdateClick: () -> Unit,
-    dialogTitle: String
+    dialogTitle: String,
+    infoType: InfoType,
+    onUserPhotoClicked: () -> Unit,
+    imageUri: Uri?,
+    showImageCropDialog: Boolean,
+    uploadPhoto: (Uri?) -> Unit
 ) {
     if (showUpdateDialog) {
         UpdateAccountInfoDialog(
@@ -132,12 +187,22 @@ private fun ProfileScreenContent(
             updateValue = updateValue,
             onUpdateValueChange = onUpdateValueChange,
             onUpdateClick = onUpdateClick,
-            title = dialogTitle
+            title = dialogTitle,
+            infoType = infoType
         )
     }
 
+    if (showImageCropDialog) {
+        ImageCrop(imageUri = imageUri, context = LocalContext.current, uploadPhoto = uploadPhoto)
+    }
+
     Column(modifier = modifier.fillMaxSize()) {
-        ProfileSection(modifier = modifier.weight(3f), userImgUrl = userImgUrl, userName = userName)
+        ProfileSection(
+            modifier = modifier.weight(3f),
+            userImgUrl = userImgUrl,
+            userName = userName,
+            onUserPhotoClicked = onUserPhotoClicked
+        )
         AccountInfoSection(
             modifier = modifier.weight(4f),
             email = email,
@@ -151,7 +216,12 @@ private fun ProfileScreenContent(
 }
 
 @Composable
-private fun ProfileSection(modifier: Modifier, userImgUrl: Uri, userName: String) {
+private fun ProfileSection(
+    modifier: Modifier,
+    userImgUrl: Uri,
+    userName: String,
+    onUserPhotoClicked: () -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -173,13 +243,15 @@ private fun ProfileSection(modifier: Modifier, userImgUrl: Uri, userName: String
         AsyncImage(
             modifier = Modifier
                 .size(128.dp)
-                .clip(CircleShape),
+                .clip(CircleShape)
+                .clickable(onClick = onUserPhotoClicked),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(userImgUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = null,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
+            error = painterResource(id = R.drawable.empty_profile_img)
         )
         Text(
             modifier = Modifier
@@ -298,14 +370,11 @@ private fun UpdateAccountInfoDialog(
     updateValue: String,
     onUpdateValueChange: (String) -> Unit,
     onUpdateClick: () -> Unit,
-    title: String
+    title: String,
+    infoType: InfoType
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
-        Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.two_level_margin))
-        ) {
+        Card(modifier = modifier.fillMaxWidth()) {
             Column(
                 modifier = modifier
                     .fillMaxWidth()
@@ -321,7 +390,22 @@ private fun UpdateAccountInfoDialog(
                         .fillMaxWidth()
                         .padding(vertical = dimensionResource(id = R.dimen.two_level_margin)),
                     value = updateValue,
-                    onValueChange = onUpdateValueChange
+                    onValueChange = onUpdateValueChange,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = when (infoType) {
+                            InfoType.MOBILE -> {
+                                KeyboardType.Number
+                            }
+
+                            InfoType.EMAIL -> {
+                                KeyboardType.Email
+                            }
+
+                            else -> {
+                                KeyboardType.Text
+                            }
+                        }
+                    )
                 )
                 Row(
                     modifier = modifier.fillMaxWidth(),
@@ -342,6 +426,34 @@ private fun UpdateAccountInfoDialog(
             }
         }
     }
+}
+
+@Composable
+private fun ImageCrop(imageUri: Uri?, context: Context, uploadPhoto: (Uri?) -> Unit) {
+    val imageCropper = rememberImageCropper()
+    val errorMessage = stringResource(id = R.string.unknown_error)
+
+    if (imageUri != null) {
+        LaunchedEffect(true) {
+            when (val result = imageCropper.crop(imageUri, context)) {
+                CropResult.Cancelled -> {}
+                is CropError -> {
+                    Toast.makeText(
+                        context,
+                        errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                is CropResult.Success -> {
+                    uploadPhoto(imageBitmapToFile(context, result.bitmap))
+                }
+            }
+        }
+    }
+
+    val cropState = imageCropper.cropState
+    if (cropState != null) ImageCropperDialog(state = cropState)
 }
 
 private val accountInfoList = listOf(
