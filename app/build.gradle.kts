@@ -98,4 +98,7 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Image Cropper
+    implementation("io.github.mr0xf00:easycrop:0.1.1")
 }
