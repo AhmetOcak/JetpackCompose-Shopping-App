@@ -62,6 +62,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.imageBitmapToFile
+import com.ahmetocak.shoppingapp.ui.components.AuthEnterPasswordOtf
 import com.mr0xf00.easycrop.CropError
 import com.mr0xf00.easycrop.CropResult
 import com.mr0xf00.easycrop.crop
@@ -80,6 +81,15 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
     var showImageCropperDialog by remember { mutableStateOf(false) }
+
+    if (uiState.userMessages.isNotEmpty()) {
+        Toast.makeText(
+            LocalContext.current,
+            uiState.userMessages.first(),
+            Toast.LENGTH_SHORT
+        ).show()
+        viewModel.consumedUserMessage()
+    }
 
     val launcher = rememberLauncherForActivityResult(
         contract =
@@ -115,7 +125,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 }
 
                 InfoType.EMAIL -> {
-                    //viewModel.reauthenticateAndUpdateMail()
+                    viewModel.reauthenticateAndUpdateMail()
                 }
 
                 else -> {}
@@ -150,10 +160,13 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         showImageCropDialog = showImageCropperDialog,
         uploadPhoto = {
             if (it != null) {
+                showImageCropperDialog = false
                 viewModel.updateUserPhoto(it)
-            } else {
-                Log.d("UPLOAD IMAGE", "NULL IMAGE")
             }
+        },
+        passwordValue = viewModel.password,
+        onPasswordValueChange = {
+            viewModel.updatePasswordValue(it)
         }
     )
 }
@@ -178,7 +191,9 @@ private fun ProfileScreenContent(
     onUserPhotoClicked: () -> Unit,
     imageUri: Uri?,
     showImageCropDialog: Boolean,
-    uploadPhoto: (Uri?) -> Unit
+    uploadPhoto: (Uri?) -> Unit,
+    passwordValue: String,
+    onPasswordValueChange: (String) -> Unit
 ) {
     if (showUpdateDialog) {
         UpdateAccountInfoDialog(
@@ -188,7 +203,9 @@ private fun ProfileScreenContent(
             onUpdateValueChange = onUpdateValueChange,
             onUpdateClick = onUpdateClick,
             title = dialogTitle,
-            infoType = infoType
+            infoType = infoType,
+            passwordValue = passwordValue,
+            onPasswordValueChange = onPasswordValueChange
         )
     }
 
@@ -251,7 +268,13 @@ private fun ProfileSection(
                 .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            error = painterResource(id = R.drawable.empty_profile_img)
+            error = painterResource(id = R.drawable.empty_profile_img),
+            onError = {
+                Log.d("IMAGE ERROR", it.result.throwable.stackTraceToString())
+            },
+            onSuccess = {
+                Log.d("IMAGE SUCCESS", "$userImgUrl")
+            }
         )
         Text(
             modifier = Modifier
@@ -368,7 +391,9 @@ private fun UpdateAccountInfoDialog(
     modifier: Modifier,
     onDismissRequest: () -> Unit,
     updateValue: String,
+    passwordValue: String,
     onUpdateValueChange: (String) -> Unit,
+    onPasswordValueChange: (String) -> Unit,
     onUpdateClick: () -> Unit,
     title: String,
     infoType: InfoType
@@ -407,6 +432,17 @@ private fun UpdateAccountInfoDialog(
                         }
                     )
                 )
+                if (infoType == InfoType.EMAIL) {
+                    AuthEnterPasswordOtf(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(bottom = dimensionResource(id = R.dimen.two_level_margin)),
+                        value = passwordValue,
+                        onValueChange = onPasswordValueChange,
+                        isError = false,
+                        labelText = stringResource(id = R.string.enter_password)
+                    )
+                }
                 Row(
                     modifier = modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,

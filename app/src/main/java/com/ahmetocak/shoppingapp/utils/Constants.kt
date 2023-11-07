@@ -11,3 +11,7 @@ object EndPoints {
 object NavKeys {
     const val PRODUCT = "product"
 }
+
+object Storage {
+    const val USER_PROFILE_IMG = "user_profile_images"
+}

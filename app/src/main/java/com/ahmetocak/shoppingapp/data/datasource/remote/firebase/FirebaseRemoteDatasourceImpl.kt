@@ -1,15 +1,22 @@
 package com.ahmetocak.shoppingapp.data.datasource.remote.firebase
 
+import android.net.Uri
 import com.ahmetocak.shoppingapp.model.auth.Auth
+import com.ahmetocak.shoppingapp.utils.Storage
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import javax.inject.Inject
 
 class FirebaseRemoteDatasourceImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    firebaseStorage: FirebaseStorage
 ) : FirebaseRemoteDataSource {
+
+    private val storageRef = firebaseStorage.reference
 
     override fun createAccount(auth: Auth) =
         firebaseAuth.createUserWithEmailAndPassword(auth.email, auth.password)
@@ -35,5 +42,19 @@ class FirebaseRemoteDatasourceImpl @Inject constructor(
         val credential = EmailAuthProvider.getCredential(auth.email, auth.password)
 
         return user?.reauthenticate(credential)
+    }
+
+    override fun uploadUserProfileImage(imgUri: Uri): UploadTask {
+        val profileImagesRef =
+            storageRef.child("${Storage.USER_PROFILE_IMG}/${firebaseAuth.currentUser?.uid}")
+
+        return profileImagesRef.putFile(imgUri)
+    }
+
+    override fun getUserProfileImage(): Task<Uri> {
+        val profileImagesRef =
+            storageRef.child("${Storage.USER_PROFILE_IMG}/${firebaseAuth.currentUser?.uid}")
+
+        return profileImagesRef.downloadUrl
     }
 }

@@ -27,5 +27,5 @@ fun imageBitmapToFile(context: Context, imageBitmap: ImageBitmap): Uri? {
         return null
     }
 
-    return Uri.parse(file.absolutePath)
+    return Uri.fromFile(file)
 }

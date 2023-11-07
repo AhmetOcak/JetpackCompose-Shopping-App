@@ -1,12 +1,14 @@
 package com.ahmetocak.shoppingapp.presentation.profile
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
+import com.ahmetocak.shoppingapp.model.auth.Auth
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +30,8 @@ class ProfileViewModel @Inject constructor(
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     init {
+        getUserProfileImage()
+
         val user = auth.currentUser
 
         if (user == null) {
@@ -39,7 +43,6 @@ class ProfileViewModel @Inject constructor(
                 it.copy(
                     name = user.displayName,
                     email = user.email,
-                    photoUrl = user.photoUrl,
                     phoneNumber = user.phoneNumber
                 )
             }
@@ -57,6 +60,10 @@ class ProfileViewModel @Inject constructor(
 
     fun updateAccountInfoValue(value: String) {
         updateValue = value
+    }
+
+    fun updatePasswordValue(value: String) {
+        password = value
     }
 
     fun clearAccountInfoValue() {
@@ -100,7 +107,8 @@ class ProfileViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
-                                name = auth.currentUser?.displayName
+                                name = auth.currentUser?.displayName,
+                                userMessages = listOf("Name updated successfully")
                             )
                         }
                     } else {
@@ -119,57 +127,74 @@ class ProfileViewModel @Inject constructor(
     fun updateUserPhoto(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isLoading = true) }
-            repository.updateUserProfile(userProfileChangeRequest {
-                photoUri = uri
-            })?.addOnCompleteListener { task ->
+            repository.uploadUserProfileImage(uri).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            photoUrl = auth.currentUser?.photoUrl
-                        )
+                        it.copy(userMessages = listOf("Image uploaded successfully"))
                     }
+                    getUserProfileImage()
                 } else {
                     _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessages = listOf(task.exception?.message ?: "null")
-                        )
+                        it.copy(isLoading = false)
                     }
+                    Log.d("UPLOAD USER IMG", task.exception?.stackTraceToString() ?: "null")
                 }
             }
         }
     }
 
-/*    fun reauthenticateAndUpdateMail() {
+    private fun getUserProfileImage() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isLoading = true) }
-            repository.reAuthenticate(
-                auth = Auth(auth.currentUser?.email ?: "", "ahmet2000")
-            )?.addOnCompleteListener {  task ->
+            repository.getUserProfileImage().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    updateUserEmail()
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            photoUrl = task.result
+                        )
+                    }
                 } else {
-                    Log.d("Reauthenticate", task.exception?.message.toString())
+                    _uiState.update {
+                        it.copy(isLoading = false)
+                    }
+                    Log.d("GET USER IMAGE", task.exception?.stackTraceToString() ?: "null")
                 }
             }
         }
     }
 
-    private fun updateUserEmail() {
-        auth.currentUser?.updateEmail(updateValue)?.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        email = auth.currentUser?.email
-                    )
+    fun reauthenticateAndUpdateMail() {
+        viewModelScope.launch(Dispatchers.IO) {
+            //_uiState.update { it.copy(isLoading = true) }
+            repository.reAuthenticate(
+                auth = Auth(auth.currentUser?.email ?: "", password)
+            )?.addOnCompleteListener { reauthenticateTask ->
+                if (reauthenticateTask.isSuccessful) {
+                    auth.currentUser?.updateEmail(updateValue)?.addOnCompleteListener { updateTask ->
+                        if (updateTask.isSuccessful) {
+                            _uiState.update {
+                                it.copy(
+                                    isLoading = false,
+                                    email = auth.currentUser?.email
+                                )
+                            }
+                        } else {
+                            Log.d("UpdateUserEmail", updateTask.exception?.message.toString())
+                        }
+                    }
+                } else {
+                    Log.d("Reauthenticate", reauthenticateTask.exception?.message.toString())
                 }
-            } else {
-                Log.d("UpdateUserEmail", task.exception?.message.toString())
             }
         }
-    }*/
+    }
+
+    fun consumedUserMessage() {
+        _uiState.update {
+            it.copy(userMessages = listOf())
+        }
+    }
 }
 
 data class ProfileUiState(
@@ -181,5 +206,6 @@ data class ProfileUiState(
     val photoUrl: Uri? = null,
     val phoneNumber: String? = null,
     val address: String? = null,
-    val dob: String? = null
+    val dob: String? = null,
+    val userMessages: List<String> = listOf()
 )
