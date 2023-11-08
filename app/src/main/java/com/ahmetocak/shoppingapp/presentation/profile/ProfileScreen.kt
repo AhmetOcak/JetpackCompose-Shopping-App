@@ -93,6 +93,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             Toast.LENGTH_SHORT
         ).show()
         viewModel.consumedUserMessage()
+        showUpdateDialog = false
     }
 
     when (uiState.verifyPhoneNumber) {
@@ -168,8 +169,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 stringResource(id = R.string.address)
             }
 
-            InfoType.DOB -> {
-                stringResource(id = R.string.dob)
+            InfoType.BIRTHDATE -> {
+                stringResource(id = R.string.birthdate)
             }
         },
         infoType = viewModel.infoType,
@@ -365,7 +366,7 @@ private fun AccountInfoSection(
                             address
                         }
 
-                        InfoType.DOB -> {
+                        InfoType.BIRTHDATE -> {
                             dob
                         }
                     },
@@ -547,7 +548,7 @@ private val accountInfoList = listOf(
     AccountInfo(InfoType.NAME, R.string.name, R.drawable.ic_name),
     AccountInfo(InfoType.MOBILE, R.string.mobile, R.drawable.ic_mobile),
     AccountInfo(InfoType.ADDRESS, R.string.address, R.drawable.ic_address),
-    AccountInfo(InfoType.DOB, R.string.dob, R.drawable.ic_dob)
+    AccountInfo(InfoType.BIRTHDATE, R.string.birthdate, R.drawable.ic_dob)
 )
 
 data class AccountInfo(
@@ -560,5 +561,5 @@ enum class InfoType {
     NAME,
     MOBILE,
     ADDRESS,
-    DOB
+    BIRTHDATE
 }
