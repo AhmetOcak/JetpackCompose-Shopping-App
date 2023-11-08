@@ -102,24 +102,19 @@ class ProfileViewModel @Inject constructor(
     fun updateUserName() {
         if (updateValue.isNotBlank()) {
             viewModelScope.launch(Dispatchers.IO) {
-                _uiState.update { it.copy(isLoading = true) }
                 repository.updateUserProfile(userProfileChangeRequest {
                     displayName = updateValue
                 })?.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _uiState.update {
                             it.copy(
-                                isLoading = false,
                                 name = auth.currentUser?.displayName,
                                 userMessages = listOf("Name updated successfully")
                             )
                         }
                     } else {
                         _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
-                            )
+                            it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
                         }
                     }
                 }
@@ -129,7 +124,6 @@ class ProfileViewModel @Inject constructor(
 
     fun updateUserPhoto(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { it.copy(isLoading = true) }
             repository.uploadUserProfileImage(uri).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
@@ -138,12 +132,7 @@ class ProfileViewModel @Inject constructor(
                     getUserProfileImage()
                 } else {
                     _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessages = listOf(
-                                task.exception?.message ?: UNKNOWN_ERROR
-                            )
-                        )
+                        it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
                     }
                 }
             }
