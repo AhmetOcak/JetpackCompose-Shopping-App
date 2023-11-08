@@ -56,6 +56,7 @@ fun MinLineText(
         overflow,
         softWrap,
         maxLines,
+        minLines,
         {
             if (it.lineCount < minLines) {
                 mText = text + "\n".repeat(minLines - it.lineCount)

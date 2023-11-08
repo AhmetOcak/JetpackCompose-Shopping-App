@@ -1,9 +1,7 @@
 package com.ahmetocak.shoppingapp.core.navigation.graph
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,7 +16,10 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ahmetocak.shoppingapp.core.navigation.BottomNavItem
 import com.ahmetocak.shoppingapp.core.navigation.screens.NavScreen
@@ -32,9 +33,6 @@ import com.ahmetocak.shoppingapp.presentation.profile.ProfileScreen
 import com.ahmetocak.shoppingapp.presentation.search.SearchScreen
 import com.ahmetocak.shoppingapp.presentation.sign_up.SignUpScreen
 import com.ahmetocak.shoppingapp.utils.NavKeys
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.gson.Gson
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -46,13 +44,12 @@ private val bottomNavItems = listOf(
     BottomNavItem.ProfileScreen
 )
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
     startDestination: String = NavScreen.HomeScreen.route
 ) {
-    val navController = rememberAnimatedNavController()
+    val navController = rememberNavController ()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -61,7 +58,7 @@ fun NavGraph(
             BottomNavigationView(currentDestination, navController)
         }
     }) {
-        AnimatedNavHost(
+        NavHost(
             modifier = modifier.padding(it),
             navController = navController,
             startDestination = startDestination
