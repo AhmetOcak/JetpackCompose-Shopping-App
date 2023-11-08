@@ -1,9 +1,12 @@
 package com.ahmetocak.shoppingapp.data.repository.firebase
 
+import android.app.Activity
 import android.net.Uri
 import com.ahmetocak.shoppingapp.model.auth.Auth
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.storage.UploadTask
 
@@ -28,4 +31,12 @@ interface FirebaseRepository {
     fun uploadUserProfileImage(imgUri: Uri) : UploadTask
 
     fun getUserProfileImage() : Task<Uri>
+
+    fun sendVerificationCode(
+        phoneNumber: String,
+        activity: Activity,
+        callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    )
+
+    fun verifyUserPhoneNumber(phoneAuthCredential: PhoneAuthCredential): Task<Void>?
 }

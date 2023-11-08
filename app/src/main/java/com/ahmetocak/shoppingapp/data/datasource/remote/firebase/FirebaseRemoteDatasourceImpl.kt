@@ -1,14 +1,20 @@
 package com.ahmetocak.shoppingapp.data.datasource.remote.firebase
 
+import android.app.Activity
 import android.net.Uri
 import com.ahmetocak.shoppingapp.model.auth.Auth
 import com.ahmetocak.shoppingapp.utils.Storage
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class FirebaseRemoteDatasourceImpl @Inject constructor(
@@ -56,5 +62,23 @@ class FirebaseRemoteDatasourceImpl @Inject constructor(
             storageRef.child("${Storage.USER_PROFILE_IMG}/${firebaseAuth.currentUser?.uid}")
 
         return profileImagesRef.downloadUrl
+    }
+
+    override fun sendVerificationCode(
+        phoneNumber: String,
+        activity: Activity,
+        callbacks: OnVerificationStateChangedCallbacks
+    ) {
+        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+            .setPhoneNumber(phoneNumber)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(activity)
+            .setCallbacks(callbacks)
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
+    }
+
+    override fun verifyUserPhoneNumber(phoneAuthCredential: PhoneAuthCredential): Task<Void>? {
+        return firebaseAuth.currentUser?.updatePhoneNumber(phoneAuthCredential)
     }
 }

@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.profile
 
+import android.app.Activity
 import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +8,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.userProfileChangeRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +21,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+const val UNKNOWN_ERROR = "Something went wrong. Please try again later."
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -50,11 +56,20 @@ class ProfileViewModel @Inject constructor(
     var updateValue by mutableStateOf("")
         private set
 
+    var verificationCode by mutableStateOf("")
+        private set
+
     var infoType by mutableStateOf(InfoType.NAME)
         private set
 
+    private var storedVerificationId: String? = null
+
     fun updateAccountInfoValue(value: String) {
         updateValue = value
+    }
+
+    fun updateVerificationCodeValue(value: String) {
+        verificationCode = value
     }
 
     fun clearAccountInfoValue() {
@@ -102,7 +117,7 @@ class ProfileViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
-                                errorMessages = listOf(task.exception?.message ?: "null")
+                                errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
                             )
                         }
                     }
@@ -124,7 +139,9 @@ class ProfileViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessages = listOf(task.exception?.message ?: "Something went wrong")
+                            errorMessages = listOf(
+                                task.exception?.message ?: UNKNOWN_ERROR
+                            )
                         )
                     }
                 }
@@ -147,9 +164,63 @@ class ProfileViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessages = listOf(task.exception?.message ?: "Something went wrong")
+                            errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
                         )
                     }
+                }
+            }
+        }
+    }
+
+    fun sendVerificationCode(activity: Activity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                override fun onVerificationCompleted(credential: PhoneAuthCredential) {}
+
+                override fun onVerificationFailed(e: FirebaseException) {
+                    _uiState.update {
+                        it.copy(
+                            errorMessages = listOf(e.message ?: UNKNOWN_ERROR),
+                            verifyPhoneNumber = VerifyPhoneNumberState.NOTHING
+                        )
+                    }
+                }
+
+                override fun onCodeSent(
+                    verificationId: String,
+                    token: PhoneAuthProvider.ForceResendingToken,
+                ) {
+                    storedVerificationId = verificationId
+                    _uiState.update {
+                        it.copy(verifyPhoneNumber = VerifyPhoneNumberState.ON_CODE_SENT)
+                    }
+                }
+            }
+
+            repository.sendVerificationCode(updateValue, activity, callbacks)
+        }
+    }
+
+    fun verifyUserPhoneNumber() {
+        repository.verifyUserPhoneNumber(
+            PhoneAuthProvider.getCredential(
+                storedVerificationId ?: "",
+                verificationCode
+            )
+        )?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                _uiState.update {
+                    it.copy(
+                        verifyPhoneNumber = VerifyPhoneNumberState.ON_VERIFICATION_COMPLETED,
+                        phoneNumber = auth.currentUser?.phoneNumber
+                    )
+                }
+            } else {
+                _uiState.update {
+                    it.copy(
+                        verifyPhoneNumber = VerifyPhoneNumberState.NOTHING,
+                        errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
+                    )
                 }
             }
         }
@@ -172,5 +243,12 @@ data class ProfileUiState(
     val phoneNumber: String? = null,
     val address: String? = null,
     val dob: String? = null,
-    val userMessages: List<String> = listOf()
+    val userMessages: List<String> = listOf(),
+    val verifyPhoneNumber: VerifyPhoneNumberState = VerifyPhoneNumberState.NOTHING
 )
+
+enum class VerifyPhoneNumberState {
+    NOTHING,
+    ON_CODE_SENT,
+    ON_VERIFICATION_COMPLETED
+}

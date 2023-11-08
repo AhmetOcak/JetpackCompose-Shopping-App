@@ -1,8 +1,12 @@
 package com.ahmetocak.shoppingapp.data.repository.firebase
 
+import android.app.Activity
 import android.net.Uri
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteDataSource
 import com.ahmetocak.shoppingapp.model.auth.Auth
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
 import javax.inject.Inject
 
@@ -31,4 +35,16 @@ class FirebaseRepositoryImpl @Inject constructor(
     override fun uploadUserProfileImage(imgUri: Uri) = dataSource.uploadUserProfileImage(imgUri)
 
     override fun getUserProfileImage() = dataSource.getUserProfileImage()
+
+    override fun sendVerificationCode(
+        phoneNumber: String,
+        activity: Activity,
+        callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    ) {
+        dataSource.sendVerificationCode(phoneNumber, activity, callbacks)
+    }
+
+    override fun verifyUserPhoneNumber(phoneAuthCredential: PhoneAuthCredential): Task<Void>? {
+        return dataSource.verifyUserPhoneNumber(phoneAuthCredential)
+    }
 }

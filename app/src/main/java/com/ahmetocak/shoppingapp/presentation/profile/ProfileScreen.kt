@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.profile
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -77,9 +78,13 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 
     var showUpdateDialog by remember { mutableStateOf(false) }
 
+    var showVerifyPhoneNumberDialog by remember { mutableStateOf(false) }
+
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
     var showImageCropperDialog by remember { mutableStateOf(false) }
+
+    val activity = LocalContext.current as Activity
 
     if (uiState.userMessages.isNotEmpty()) {
         Toast.makeText(
@@ -90,9 +95,26 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         viewModel.consumedUserMessage()
     }
 
+    when (uiState.verifyPhoneNumber) {
+        VerifyPhoneNumberState.NOTHING -> {
+            showVerifyPhoneNumberDialog = false
+        }
+        VerifyPhoneNumberState.ON_VERIFICATION_COMPLETED -> {
+            showUpdateDialog = false
+            showVerifyPhoneNumberDialog = false
+            Toast.makeText(
+                LocalContext.current,
+                stringResource(id = R.string.verification_completed),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        VerifyPhoneNumberState.ON_CODE_SENT ->{
+            showVerifyPhoneNumberDialog = true
+        }
+    }
+
     val launcher = rememberLauncherForActivityResult(
-        contract =
-        ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUri = uri
         showImageCropperDialog = true
@@ -120,6 +142,10 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
             when (viewModel.infoType) {
                 InfoType.NAME -> {
                     viewModel.updateUserName()
+                }
+
+                InfoType.MOBILE -> {
+                    viewModel.sendVerificationCode(activity)
                 }
 
                 else -> {}
@@ -153,6 +179,17 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 showImageCropperDialog = false
                 viewModel.updateUserPhoto(it)
             }
+        },
+        showVerifyPhoneNumberDialog = showVerifyPhoneNumberDialog,
+        codeValue = viewModel.verificationCode,
+        onCodeValueChange = {
+            viewModel.updateVerificationCodeValue(it)
+        },
+        onVerifyPhoneNumberDismiss = {
+            showVerifyPhoneNumberDialog = false
+        },
+        verifyPhoneNumber = {
+            viewModel.verifyUserPhoneNumber()
         }
     )
 }
@@ -176,7 +213,12 @@ private fun ProfileScreenContent(
     onUserPhotoClicked: () -> Unit,
     imageUri: Uri?,
     showImageCropDialog: Boolean,
-    uploadPhoto: (Uri?) -> Unit
+    uploadPhoto: (Uri?) -> Unit,
+    showVerifyPhoneNumberDialog: Boolean,
+    codeValue: String,
+    onCodeValueChange: (String) -> Unit,
+    verifyPhoneNumber: () -> Unit,
+    onVerifyPhoneNumberDismiss: () -> Unit
 ) {
     if (showUpdateDialog) {
         UpdateAccountInfoDialog(
@@ -192,6 +234,16 @@ private fun ProfileScreenContent(
 
     if (showImageCropDialog) {
         ImageCrop(imageUri = imageUri, context = LocalContext.current, uploadPhoto = uploadPhoto)
+    }
+
+    if (showVerifyPhoneNumberDialog) {
+        VerifyPhoneNumberDialog(
+            modifier = modifier,
+            codeValue = codeValue,
+            onCodeValueChange = onCodeValueChange,
+            verifyPhoneNumber = verifyPhoneNumber,
+            onVerifyPhoneNumberDismiss = onVerifyPhoneNumberDismiss
+        )
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -416,6 +468,43 @@ private fun UpdateAccountInfoDialog(
                     ) {
                         Text(text = stringResource(id = R.string.update))
                     }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun VerifyPhoneNumberDialog(
+    modifier: Modifier,
+    codeValue: String,
+    onCodeValueChange: (String) -> Unit,
+    verifyPhoneNumber: () -> Unit,
+    onVerifyPhoneNumberDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onVerifyPhoneNumberDismiss) {
+        Card(modifier = modifier.fillMaxWidth()) {
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.two_level_margin)),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = stringResource(id = R.string.enter_verification_code))
+                OutlinedTextField(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(vertical = dimensionResource(id = R.dimen.two_level_margin)),
+                    value = codeValue,
+                    onValueChange = onCodeValueChange,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                )
+                Button(
+                    onClick = verifyPhoneNumber,
+                    enabled = codeValue.isNotBlank()
+                ) {
+                    Text(text = stringResource(id = R.string.verify))
                 }
             }
         }

@@ -41,4 +41,7 @@
     <string name="cancel">Cancel</string>
     <string name="update">Update</string>
     <string name="account_info">Account Info</string>
+    <string name="verify">Verify</string>
+    <string name="enter_verification_code">Please enter the verification code sent to your phone number.</string>
+    <string name="verification_completed">"Verification Completed"</string>
 </resources>
