@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -10,6 +12,9 @@ android {
     namespace = "com.ahmetocak.shoppingapp"
     compileSdk = 34
 
+    val p = Properties()
+    p.load(project.rootProject.file("local.properties").inputStream())
+
     defaultConfig {
         applicationId = "com.ahmetocak.shoppingapp"
         minSdk = 26
@@ -21,6 +26,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "API_KEY", p.getProperty("API_KEY"))
+        buildConfigField("String", "PROJECT_ID", p.getProperty("PROJECT_ID"))
+        buildConfigField("String", "APPLICATION_ID", p.getProperty("APPLICATION_ID"))
+        buildConfigField("String", "STORAGE_BUCKET", p.getProperty("STORAGE_BUCKET"))
     }
 
     buildTypes {
@@ -41,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
