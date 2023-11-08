@@ -53,6 +53,10 @@ class FirebaseRepositoryImpl @Inject constructor(
         return dataSource.uploadUserAddress(address, userUid)
     }
 
+    override fun uploadUserBirthdate(birthdate: Long, userUid: String): Task<Void> {
+        return dataSource.uploadUserBirthdate(birthdate, userUid)
+    }
+
     override fun getAllUserDetails(userUid: String): Task<DocumentSnapshot> {
         return dataSource.getAllUserDetails(userUid)
     }

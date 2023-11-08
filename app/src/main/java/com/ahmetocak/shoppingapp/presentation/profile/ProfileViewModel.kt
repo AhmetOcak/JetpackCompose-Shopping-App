@@ -95,9 +95,7 @@ class ProfileViewModel @Inject constructor(
                 _uiState.value.userDetail?.address ?: ""
             }
 
-            InfoType.BIRTHDATE -> {
-                _uiState.value.userDetail?.birthdate ?: ""
-            }
+            else -> { "" }
         }
     }
 
@@ -224,26 +222,35 @@ class ProfileViewModel @Inject constructor(
 
     fun uploadUserAddress() {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { it.copy(isLoading = true) }
             repository.uploadUserAddress(updateValue, auth.uid ?: "null")
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                userMessages = listOf("Your address updated successfully")
-                            )
+                            it.copy(userMessages = listOf("Your address updated successfully"))
                         }
                         getUserDetails()
                     } else {
                         _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
-                            )
+                            it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
                         }
                     }
                 }
+        }
+    }
+
+    fun updateUserBirthdate(birthdate: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.uploadUserBirthdate(birthdate, auth.uid ?: "").addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _uiState.update {
+                        it.copy(userMessages = listOf("Your birthdate updated successfully"))
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
+                    }
+                }
+            }
         }
     }
 

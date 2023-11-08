@@ -43,5 +43,7 @@ interface FirebaseRemoteDataSource {
 
     fun uploadUserAddress(address: String, userUid: String): Task<Void>
 
+    fun uploadUserBirthdate(birthdate: Long, userUid: String): Task<Void>
+
     fun getAllUserDetails(userUid: String): Task<DocumentSnapshot>
 }

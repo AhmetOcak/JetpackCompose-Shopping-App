@@ -93,6 +93,12 @@ class FirebaseRemoteDatasourceImpl @Inject constructor(
             .set(hashMapOf("address" to address), SetOptions.merge())
     }
 
+    override fun uploadUserBirthdate(birthdate: Long, userUid: String): Task<Void> {
+        return firestoreDb.collection(Firestore.COLLECTION_KEY)
+            .document(userUid)
+            .set(hashMapOf("birthdate" to birthdate), SetOptions.merge())
+    }
+
     override fun getAllUserDetails(userUid: String): Task<DocumentSnapshot> {
         return firestoreDb.collection(Firestore.COLLECTION_KEY).document(userUid).get()
     }

@@ -28,11 +28,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -62,6 +67,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.common.helpers.formatDate
 import com.ahmetocak.shoppingapp.common.helpers.imageBitmapToFile
 import com.mr0xf00.easycrop.CropError
 import com.mr0xf00.easycrop.CropResult
@@ -69,6 +75,7 @@ import com.mr0xf00.easycrop.crop
 import com.mr0xf00.easycrop.rememberImageCropper
 import com.mr0xf00.easycrop.ui.ImageCropperDialog
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
 
@@ -83,6 +90,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
     var showImageCropperDialog by remember { mutableStateOf(false) }
+
+    val datePickerState = rememberDatePickerState()
 
     val activity = LocalContext.current as Activity
 
@@ -127,7 +136,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         userName = uiState.name ?: "",
         phoneNumber = uiState.phoneNumber ?: "",
         address = uiState.userDetail?.address ?: "",
-        birthdate = uiState.userDetail?.birthdate ?: "",
+        birthdate = uiState.userDetail?.birthdate?.formatDate() ?: "",
         onAccountInfoClicked = {
             viewModel.setAccountInfoType(it)
             showUpdateDialog = !showUpdateDialog
@@ -141,37 +150,17 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         },
         onUpdateClick = {
             when (viewModel.infoType) {
-                InfoType.NAME -> {
-                    viewModel.updateUserName()
-                }
-
-                InfoType.MOBILE -> {
-                    viewModel.sendVerificationCode(activity)
-                }
-
-                InfoType.ADDRESS -> {
-                    viewModel.uploadUserAddress()
-                }
-
+                InfoType.NAME -> { viewModel.updateUserName() }
+                InfoType.MOBILE -> { viewModel.sendVerificationCode(activity) }
+                InfoType.ADDRESS -> { viewModel.uploadUserAddress() }
                 else -> {}
             }
         },
         dialogTitle = when (viewModel.infoType) {
-            InfoType.NAME -> {
-                stringResource(id = R.string.name)
-            }
-
-            InfoType.MOBILE -> {
-                stringResource(id = R.string.mobile)
-            }
-
-            InfoType.ADDRESS -> {
-                stringResource(id = R.string.address)
-            }
-
-            InfoType.BIRTHDATE -> {
-                stringResource(id = R.string.birthdate)
-            }
+            InfoType.NAME -> { stringResource(id = R.string.name) }
+            InfoType.MOBILE -> { stringResource(id = R.string.mobile) }
+            InfoType.ADDRESS -> { stringResource(id = R.string.address) }
+            InfoType.BIRTHDATE -> { stringResource(id = R.string.birthdate) }
         },
         infoType = viewModel.infoType,
         onUserPhotoClicked = {
@@ -195,10 +184,19 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         },
         verifyPhoneNumber = {
             viewModel.verifyUserPhoneNumber()
+        },
+        datePickerState = datePickerState,
+        onDatePickerDialogDismiss = {
+            showUpdateDialog = false
+        },
+        onDateConfirmClick = {
+            datePickerState.selectedDateMillis?.let { viewModel.updateUserBirthdate(it) }
+            showUpdateDialog = false
         }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ProfileScreenContent(
     modifier: Modifier,
@@ -223,18 +221,43 @@ private fun ProfileScreenContent(
     codeValue: String,
     onCodeValueChange: (String) -> Unit,
     verifyPhoneNumber: () -> Unit,
-    onVerifyPhoneNumberDismiss: () -> Unit
+    onVerifyPhoneNumberDismiss: () -> Unit,
+    datePickerState: DatePickerState,
+    onDatePickerDialogDismiss: () -> Unit,
+    onDateConfirmClick: () -> Unit
 ) {
     if (showUpdateDialog) {
-        UpdateAccountInfoDialog(
-            modifier = modifier,
-            onDismissRequest = onDismissRequest,
-            updateValue = updateValue,
-            onUpdateValueChange = onUpdateValueChange,
-            onUpdateClick = onUpdateClick,
-            title = dialogTitle,
-            infoType = infoType
-        )
+        when(infoType) {
+            InfoType.BIRTHDATE -> {
+                DatePickerDialog(
+                    onDismissRequest = onDatePickerDialogDismiss,
+                    confirmButton = {
+                        TextButton(onClick = onDateConfirmClick) {
+                            Text(text = "Confirm")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = onDatePickerDialogDismiss) {
+                            Text(text = "Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
+
+            else -> {
+                UpdateAccountInfoDialog(
+                    modifier = modifier,
+                    onDismissRequest = onDismissRequest,
+                    updateValue = updateValue,
+                    onUpdateValueChange = onUpdateValueChange,
+                    onUpdateClick = onUpdateClick,
+                    title = dialogTitle,
+                    infoType = infoType
+                )
+            }
+        }
     }
 
     if (showImageCropDialog) {
@@ -373,7 +396,7 @@ private fun AccountInfoSection(
                     infoType = it.infoType,
                     onAccountInfoClicked = onAccountInfoClicked
                 )
-                Divider(modifier = modifier.fillMaxWidth())
+                HorizontalDivider(modifier = modifier.fillMaxWidth())
             }
         }
     }
@@ -417,7 +440,6 @@ private fun Info(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UpdateAccountInfoDialog(
     modifier: Modifier,
@@ -479,7 +501,6 @@ private fun UpdateAccountInfoDialog(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun VerifyPhoneNumberDialog(
     modifier: Modifier,
