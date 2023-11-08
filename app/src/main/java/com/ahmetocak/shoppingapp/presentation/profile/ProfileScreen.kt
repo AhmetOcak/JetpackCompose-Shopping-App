@@ -148,6 +148,10 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                     viewModel.sendVerificationCode(activity)
                 }
 
+                InfoType.ADDRESS -> {
+                    viewModel.uploadUserAddress()
+                }
+
                 else -> {}
             }
         },

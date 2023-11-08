@@ -39,4 +39,6 @@ interface FirebaseRepository {
     )
 
     fun verifyUserPhoneNumber(phoneAuthCredential: PhoneAuthCredential): Task<Void>?
+
+    fun uploadUserAddress(address: String, userUid: String): Task<Void>
 }

@@ -47,4 +47,8 @@ class FirebaseRepositoryImpl @Inject constructor(
     override fun verifyUserPhoneNumber(phoneAuthCredential: PhoneAuthCredential): Task<Void>? {
         return dataSource.verifyUserPhoneNumber(phoneAuthCredential)
     }
+
+    override fun uploadUserAddress(address: String, userUid: String): Task<Void> {
+        return dataSource.uploadUserAddress(address, userUid)
+    }
 }

@@ -6,6 +6,7 @@ import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteD
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSourceImpl
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
@@ -19,8 +20,12 @@ object DataSourceModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseRemoteDataSource(auth: FirebaseAuth, storage: FirebaseStorage): FirebaseRemoteDataSource {
-        return FirebaseRemoteDatasourceImpl(auth, storage)
+    fun provideFirebaseRemoteDataSource(
+        auth: FirebaseAuth,
+        storage: FirebaseStorage,
+        db: FirebaseFirestore
+    ): FirebaseRemoteDataSource {
+        return FirebaseRemoteDatasourceImpl(auth, storage, db)
     }
 
     @Provides

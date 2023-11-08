@@ -2,6 +2,7 @@ package com.ahmetocak.shoppingapp.presentation.profile
 
 import android.app.Activity
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -223,6 +224,32 @@ class ProfileViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun uploadUserAddress() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.update { it.copy(isLoading = true) }
+            repository.uploadUserAddress(updateValue, auth.uid ?: "null")
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                address = updateValue,
+                                userMessages = listOf("Your address updated successfully")
+                            )
+                        }
+                    } else {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
+                            )
+                        }
+                        Log.d("TEST", task.exception?.stackTraceToString() ?: "null")
+                    }
+                }
         }
     }
 

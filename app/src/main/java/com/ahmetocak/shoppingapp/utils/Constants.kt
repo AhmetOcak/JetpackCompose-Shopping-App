@@ -15,3 +15,7 @@ object NavKeys {
 object Storage {
     const val USER_PROFILE_IMG = "user_profile_images"
 }
+
+object Firestore {
+    const val COLLECTION_KEY = "user_details"
+}
