@@ -8,6 +8,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.storage.UploadTask
 
 interface FirebaseRepository {
@@ -41,4 +42,6 @@ interface FirebaseRepository {
     fun verifyUserPhoneNumber(phoneAuthCredential: PhoneAuthCredential): Task<Void>?
 
     fun uploadUserAddress(address: String, userUid: String): Task<Void>
+
+    fun getAllUserDetails(userUid: String): Task<DocumentSnapshot>
 }

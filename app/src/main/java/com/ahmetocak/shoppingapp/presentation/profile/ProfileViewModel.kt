@@ -8,11 +8,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
+import com.ahmetocak.shoppingapp.model.user_detail.UserDetail
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.firestore.toObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +37,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         getUserProfileImage()
+        getUserDetails()
 
         val user = auth.currentUser
 
@@ -89,11 +92,11 @@ class ProfileViewModel @Inject constructor(
             }
 
             InfoType.ADDRESS -> {
-                _uiState.value.address ?: ""
+                _uiState.value.userDetail?.address ?: ""
             }
 
             InfoType.BIRTHDATE -> {
-                _uiState.value.dob ?: ""
+                _uiState.value.userDetail?.birthdate ?: ""
             }
         }
     }
@@ -151,21 +154,14 @@ class ProfileViewModel @Inject constructor(
 
     private fun getUserProfileImage() {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.update { it.copy(isLoading = true) }
             repository.getUserProfileImage().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            photoUrl = task.result
-                        )
+                        it.copy(photoUrl = task.result)
                     }
                 } else {
                     _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
-                        )
+                        it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
                     }
                 }
             }
@@ -235,10 +231,10 @@ class ProfileViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
-                                address = updateValue,
                                 userMessages = listOf("Your address updated successfully")
                             )
                         }
+                        getUserDetails()
                     } else {
                         _uiState.update {
                             it.copy(
@@ -248,6 +244,22 @@ class ProfileViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    private fun getUserDetails() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getAllUserDetails(auth.uid ?: "").addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _uiState.update {
+                        it.copy(userDetail = task.result.toObject<UserDetail>())
+                    }
+                } else {
+                    _uiState.update {
+                        it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
+                    }
+                }
+            }
         }
     }
 
@@ -266,10 +278,9 @@ data class ProfileUiState(
     val email: String? = null,
     val photoUrl: Uri? = null,
     val phoneNumber: String? = null,
-    val address: String? = null,
-    val dob: String? = null,
     val userMessages: List<String> = listOf(),
-    val verifyPhoneNumber: VerifyPhoneNumberState = VerifyPhoneNumberState.NOTHING
+    val verifyPhoneNumber: VerifyPhoneNumberState = VerifyPhoneNumberState.NOTHING,
+    val userDetail: UserDetail? = null
 )
 
 enum class VerifyPhoneNumberState {

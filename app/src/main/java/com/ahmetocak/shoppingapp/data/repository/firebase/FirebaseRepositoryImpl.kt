@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.DocumentSnapshot
 import javax.inject.Inject
 
 class FirebaseRepositoryImpl @Inject constructor(
@@ -50,5 +51,9 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override fun uploadUserAddress(address: String, userUid: String): Task<Void> {
         return dataSource.uploadUserAddress(address, userUid)
+    }
+
+    override fun getAllUserDetails(userUid: String): Task<DocumentSnapshot> {
+        return dataSource.getAllUserDetails(userUid)
     }
 }

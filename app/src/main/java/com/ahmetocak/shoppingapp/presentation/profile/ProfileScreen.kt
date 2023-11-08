@@ -126,8 +126,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         userImgUrl = uiState.photoUrl ?: Uri.parse(""),
         userName = uiState.name ?: "",
         phoneNumber = uiState.phoneNumber ?: "",
-        address = uiState.address ?: "",
-        dob = uiState.dob ?: "",
+        address = uiState.userDetail?.address ?: "",
+        birthdate = uiState.userDetail?.birthdate ?: "",
         onAccountInfoClicked = {
             viewModel.setAccountInfoType(it)
             showUpdateDialog = !showUpdateDialog
@@ -206,7 +206,7 @@ private fun ProfileScreenContent(
     userName: String,
     phoneNumber: String,
     address: String,
-    dob: String,
+    birthdate: String,
     onAccountInfoClicked: (InfoType) -> Unit,
     showUpdateDialog: Boolean,
     onDismissRequest: () -> Unit,
@@ -262,7 +262,7 @@ private fun ProfileScreenContent(
             modifier = modifier.weight(4f),
             phoneNumber = phoneNumber,
             address = address,
-            dob = dob,
+            birthdate = birthdate,
             name = userName,
             onAccountInfoClicked = onAccountInfoClicked
         )
@@ -329,7 +329,7 @@ private fun ProfileSection(
 private fun AccountInfoSection(
     modifier: Modifier,
     phoneNumber: String,
-    dob: String,
+    birthdate: String,
     address: String,
     name: String,
     onAccountInfoClicked: (InfoType) -> Unit
@@ -367,7 +367,7 @@ private fun AccountInfoSection(
                         }
 
                         InfoType.BIRTHDATE -> {
-                            dob
+                            birthdate
                         }
                     },
                     infoType = it.infoType,
@@ -548,7 +548,7 @@ private val accountInfoList = listOf(
     AccountInfo(InfoType.NAME, R.string.name, R.drawable.ic_name),
     AccountInfo(InfoType.MOBILE, R.string.mobile, R.drawable.ic_mobile),
     AccountInfo(InfoType.ADDRESS, R.string.address, R.drawable.ic_address),
-    AccountInfo(InfoType.BIRTHDATE, R.string.birthdate, R.drawable.ic_dob)
+    AccountInfo(InfoType.BIRTHDATE, R.string.birthdate, R.drawable.ic_birthdate)
 )
 
 data class AccountInfo(

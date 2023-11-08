@@ -13,6 +13,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
@@ -90,5 +91,9 @@ class FirebaseRemoteDatasourceImpl @Inject constructor(
         return firestoreDb.collection(Firestore.COLLECTION_KEY)
             .document(userUid)
             .set(hashMapOf("address" to address), SetOptions.merge())
+    }
+
+    override fun getAllUserDetails(userUid: String): Task<DocumentSnapshot> {
+        return firestoreDb.collection(Firestore.COLLECTION_KEY).document(userUid).get()
     }
 }
