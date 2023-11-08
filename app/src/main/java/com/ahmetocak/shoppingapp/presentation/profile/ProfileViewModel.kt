@@ -2,7 +2,6 @@ package com.ahmetocak.shoppingapp.presentation.profile
 
 import android.app.Activity
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -93,7 +92,7 @@ class ProfileViewModel @Inject constructor(
                 _uiState.value.address ?: ""
             }
 
-            InfoType.DOB -> {
+            InfoType.BIRTHDATE -> {
                 _uiState.value.dob ?: ""
             }
         }
@@ -247,7 +246,6 @@ class ProfileViewModel @Inject constructor(
                                 errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
                             )
                         }
-                        Log.d("TEST", task.exception?.stackTraceToString() ?: "null")
                     }
                 }
         }
