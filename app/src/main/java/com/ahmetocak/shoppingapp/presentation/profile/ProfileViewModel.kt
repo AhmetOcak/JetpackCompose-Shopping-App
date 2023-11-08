@@ -1,14 +1,12 @@
 package com.ahmetocak.shoppingapp.presentation.profile
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
-import com.ahmetocak.shoppingapp.model.auth.Auth
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,18 +50,11 @@ class ProfileViewModel @Inject constructor(
     var updateValue by mutableStateOf("")
         private set
 
-    var password by mutableStateOf("")
-        private set
-
     var infoType by mutableStateOf(InfoType.NAME)
         private set
 
     fun updateAccountInfoValue(value: String) {
         updateValue = value
-    }
-
-    fun updatePasswordValue(value: String) {
-        password = value
     }
 
     fun clearAccountInfoValue() {
@@ -80,10 +71,6 @@ class ProfileViewModel @Inject constructor(
 
             InfoType.MOBILE -> {
                 _uiState.value.phoneNumber ?: ""
-            }
-
-            InfoType.EMAIL -> {
-                _uiState.value.email ?: ""
             }
 
             InfoType.ADDRESS -> {
@@ -135,9 +122,11 @@ class ProfileViewModel @Inject constructor(
                     getUserProfileImage()
                 } else {
                     _uiState.update {
-                        it.copy(isLoading = false)
+                        it.copy(
+                            isLoading = false,
+                            errorMessages = listOf(task.exception?.message ?: "Something went wrong")
+                        )
                     }
-                    Log.d("UPLOAD USER IMG", task.exception?.stackTraceToString() ?: "null")
                 }
             }
         }
@@ -156,35 +145,11 @@ class ProfileViewModel @Inject constructor(
                     }
                 } else {
                     _uiState.update {
-                        it.copy(isLoading = false)
+                        it.copy(
+                            isLoading = false,
+                            errorMessages = listOf(task.exception?.message ?: "Something went wrong")
+                        )
                     }
-                    Log.d("GET USER IMAGE", task.exception?.stackTraceToString() ?: "null")
-                }
-            }
-        }
-    }
-
-    fun reauthenticateAndUpdateMail() {
-        viewModelScope.launch(Dispatchers.IO) {
-            //_uiState.update { it.copy(isLoading = true) }
-            repository.reAuthenticate(
-                auth = Auth(auth.currentUser?.email ?: "", password)
-            )?.addOnCompleteListener { reauthenticateTask ->
-                if (reauthenticateTask.isSuccessful) {
-                    auth.currentUser?.updateEmail(updateValue)?.addOnCompleteListener { updateTask ->
-                        if (updateTask.isSuccessful) {
-                            _uiState.update {
-                                it.copy(
-                                    isLoading = false,
-                                    email = auth.currentUser?.email
-                                )
-                            }
-                        } else {
-                            Log.d("UpdateUserEmail", updateTask.exception?.message.toString())
-                        }
-                    }
-                } else {
-                    Log.d("Reauthenticate", reauthenticateTask.exception?.message.toString())
                 }
             }
         }

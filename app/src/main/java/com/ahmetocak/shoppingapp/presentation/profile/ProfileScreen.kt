@@ -62,7 +62,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.imageBitmapToFile
-import com.ahmetocak.shoppingapp.ui.components.AuthEnterPasswordOtf
 import com.mr0xf00.easycrop.CropError
 import com.mr0xf00.easycrop.CropResult
 import com.mr0xf00.easycrop.crop
@@ -104,7 +103,6 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         userImgUrl = uiState.photoUrl ?: Uri.parse(""),
         userName = uiState.name ?: "",
         phoneNumber = uiState.phoneNumber ?: "",
-        email = uiState.email ?: "",
         address = uiState.address ?: "",
         dob = uiState.dob ?: "",
         onAccountInfoClicked = {
@@ -124,10 +122,6 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                     viewModel.updateUserName()
                 }
 
-                InfoType.EMAIL -> {
-                    viewModel.reauthenticateAndUpdateMail()
-                }
-
                 else -> {}
             }
         },
@@ -138,10 +132,6 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 
             InfoType.MOBILE -> {
                 stringResource(id = R.string.mobile)
-            }
-
-            InfoType.EMAIL -> {
-                stringResource(id = R.string.email)
             }
 
             InfoType.ADDRESS -> {
@@ -163,10 +153,6 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 showImageCropperDialog = false
                 viewModel.updateUserPhoto(it)
             }
-        },
-        passwordValue = viewModel.password,
-        onPasswordValueChange = {
-            viewModel.updatePasswordValue(it)
         }
     )
 }
@@ -177,7 +163,6 @@ private fun ProfileScreenContent(
     userImgUrl: Uri,
     userName: String,
     phoneNumber: String,
-    email: String,
     address: String,
     dob: String,
     onAccountInfoClicked: (InfoType) -> Unit,
@@ -191,9 +176,7 @@ private fun ProfileScreenContent(
     onUserPhotoClicked: () -> Unit,
     imageUri: Uri?,
     showImageCropDialog: Boolean,
-    uploadPhoto: (Uri?) -> Unit,
-    passwordValue: String,
-    onPasswordValueChange: (String) -> Unit
+    uploadPhoto: (Uri?) -> Unit
 ) {
     if (showUpdateDialog) {
         UpdateAccountInfoDialog(
@@ -203,9 +186,7 @@ private fun ProfileScreenContent(
             onUpdateValueChange = onUpdateValueChange,
             onUpdateClick = onUpdateClick,
             title = dialogTitle,
-            infoType = infoType,
-            passwordValue = passwordValue,
-            onPasswordValueChange = onPasswordValueChange
+            infoType = infoType
         )
     }
 
@@ -222,7 +203,6 @@ private fun ProfileScreenContent(
         )
         AccountInfoSection(
             modifier = modifier.weight(4f),
-            email = email,
             phoneNumber = phoneNumber,
             address = address,
             dob = dob,
@@ -291,7 +271,6 @@ private fun ProfileSection(
 @Composable
 private fun AccountInfoSection(
     modifier: Modifier,
-    email: String,
     phoneNumber: String,
     dob: String,
     address: String,
@@ -324,10 +303,6 @@ private fun AccountInfoSection(
 
                         InfoType.MOBILE -> {
                             phoneNumber
-                        }
-
-                        InfoType.EMAIL -> {
-                            email
                         }
 
                         InfoType.ADDRESS -> {
@@ -391,9 +366,7 @@ private fun UpdateAccountInfoDialog(
     modifier: Modifier,
     onDismissRequest: () -> Unit,
     updateValue: String,
-    passwordValue: String,
     onUpdateValueChange: (String) -> Unit,
-    onPasswordValueChange: (String) -> Unit,
     onUpdateClick: () -> Unit,
     title: String,
     infoType: InfoType
@@ -422,27 +395,12 @@ private fun UpdateAccountInfoDialog(
                                 KeyboardType.Number
                             }
 
-                            InfoType.EMAIL -> {
-                                KeyboardType.Email
-                            }
-
                             else -> {
                                 KeyboardType.Text
                             }
                         }
                     )
                 )
-                if (infoType == InfoType.EMAIL) {
-                    AuthEnterPasswordOtf(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(bottom = dimensionResource(id = R.dimen.two_level_margin)),
-                        value = passwordValue,
-                        onValueChange = onPasswordValueChange,
-                        isError = false,
-                        labelText = stringResource(id = R.string.enter_password)
-                    )
-                }
                 Row(
                     modifier = modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
@@ -495,7 +453,6 @@ private fun ImageCrop(imageUri: Uri?, context: Context, uploadPhoto: (Uri?) -> U
 private val accountInfoList = listOf(
     AccountInfo(InfoType.NAME, R.string.name, R.drawable.ic_name),
     AccountInfo(InfoType.MOBILE, R.string.mobile, R.drawable.ic_mobile),
-    AccountInfo(InfoType.EMAIL, R.string.email, R.drawable.ic_email),
     AccountInfo(InfoType.ADDRESS, R.string.address, R.drawable.ic_address),
     AccountInfo(InfoType.DOB, R.string.dob, R.drawable.ic_dob)
 )
@@ -509,7 +466,6 @@ data class AccountInfo(
 enum class InfoType {
     NAME,
     MOBILE,
-    EMAIL,
     ADDRESS,
     DOB
 }
