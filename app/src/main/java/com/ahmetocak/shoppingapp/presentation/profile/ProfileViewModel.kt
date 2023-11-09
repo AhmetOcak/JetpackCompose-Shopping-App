@@ -43,7 +43,7 @@ class ProfileViewModel @Inject constructor(
 
         if (user == null) {
             _uiState.update {
-                it.copy(isError = true)
+                it.copy(errorMessages = listOf(UNKNOWN_ERROR))
             }
         } else {
             _uiState.update {
@@ -268,7 +268,6 @@ class ProfileViewModel @Inject constructor(
 
 data class ProfileUiState(
     val isLoading: Boolean = false,
-    val isError: Boolean = false,
     val errorMessages: List<String> = listOf(),
     val name: String? = null,
     val email: String? = null,

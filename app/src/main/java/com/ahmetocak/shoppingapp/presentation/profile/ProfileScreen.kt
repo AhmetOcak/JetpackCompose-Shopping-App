@@ -3,7 +3,6 @@ package com.ahmetocak.shoppingapp.presentation.profile
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -132,7 +131,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 
     ProfileScreenContent(
         modifier = modifier,
-        userImgUrl = uiState.photoUrl ?: Uri.parse(""),
+        userImgUrl = uiState.photoUrl,
         userName = uiState.name ?: "",
         phoneNumber = uiState.phoneNumber ?: "",
         address = uiState.userDetail?.address ?: "",
@@ -200,7 +199,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun ProfileScreenContent(
     modifier: Modifier,
-    userImgUrl: Uri,
+    userImgUrl: Uri?,
     userName: String,
     phoneNumber: String,
     address: String,
@@ -295,7 +294,7 @@ private fun ProfileScreenContent(
 @Composable
 private fun ProfileSection(
     modifier: Modifier,
-    userImgUrl: Uri,
+    userImgUrl: Uri?,
     userName: String,
     onUserPhotoClicked: () -> Unit
 ) {
@@ -317,25 +316,21 @@ private fun ProfileSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .size(128.dp)
-                .clip(CircleShape)
-                .clickable(onClick = onUserPhotoClicked),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(userImgUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            error = painterResource(id = R.drawable.empty_profile_img),
-            onError = {
-                Log.d("IMAGE ERROR", it.result.throwable.stackTraceToString())
-            },
-            onSuccess = {
-                Log.d("IMAGE SUCCESS", "$userImgUrl")
-            }
-        )
+        if (userImgUrl != null) {
+            AsyncImage(
+                modifier = Modifier
+                    .size(128.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onUserPhotoClicked),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(userImgUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                error = painterResource(id = R.drawable.empty_profile_img)
+            )
+        }
         Text(
             modifier = Modifier
                 .fillMaxWidth()
