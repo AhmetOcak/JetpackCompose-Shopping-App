@@ -3,6 +3,7 @@ package com.ahmetocak.shoppingapp.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.common.mapper.toProductEntity
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,6 +62,7 @@ class HomeViewModel @Inject constructor(
                             productList = response.data
                         )
                     }
+                    saveAllProductsToDb(response.data)
                 }
 
                 is Response.Error -> {
@@ -71,6 +73,14 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+        }
+    }
+
+    private fun saveAllProductsToDb(productList: List<Product>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            productList.forEach {
+                shoppingRepository.addProduct(it.toProductEntity())
             }
         }
     }

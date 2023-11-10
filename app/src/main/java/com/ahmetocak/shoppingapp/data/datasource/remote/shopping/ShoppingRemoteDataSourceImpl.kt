@@ -1,7 +1,7 @@
 package com.ahmetocak.shoppingapp.data.datasource.remote.shopping
 
 import com.ahmetocak.shoppingapp.common.Response
-import com.ahmetocak.shoppingapp.common.helpers.apiCall
+import com.ahmetocak.shoppingapp.common.caller.apiCall
 import com.ahmetocak.shoppingapp.data.datasource.remote.api.ShoppingApi
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import javax.inject.Inject
