@@ -2,7 +2,6 @@ package com.ahmetocak.shoppingapp.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ahmetocak.shoppingapp.common.Error
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.Product
@@ -44,7 +43,7 @@ class HomeViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isCategoryListLoading = false,
-                            errorMessages = _uiState.value.errorMessages + listOf(response.error)
+                            errorMessages = listOf(response.errorMessageId)
                         )
                     }
                 }
@@ -68,7 +67,7 @@ class HomeViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isProductListLoading = false,
-                            errorMessages = _uiState.value.errorMessages + listOf(response.error)
+                            errorMessages = listOf(response.errorMessageId)
                         )
                     }
                 }
@@ -82,5 +81,5 @@ data class HomeScreeUiState(
     val isProductListLoading: Boolean = true,
     val categoryList: List<String> = listOf(),
     val productList: List<Product> = listOf(),
-    val errorMessages: List<Error> = listOf()
+    val errorMessages: List<Int> = listOf()
 )
