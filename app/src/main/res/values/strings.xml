@@ -44,4 +44,6 @@
     <string name="verify">Verify</string>
     <string name="enter_verification_code">Please enter the verification code sent to your phone number.</string>
     <string name="verification_completed">"Verification Completed"</string>
+    <string name="search_result_empty_message">It seems the product you are looking for is not available.</string>
+    <string name="search_something">Search for the product you want</string>
 </resources>

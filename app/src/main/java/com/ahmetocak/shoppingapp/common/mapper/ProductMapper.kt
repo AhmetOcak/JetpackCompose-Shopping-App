@@ -2,6 +2,7 @@ package com.ahmetocak.shoppingapp.common.mapper
 
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
+import com.ahmetocak.shoppingapp.model.shopping.Rating
 
 fun Product.toProductEntity(): ProductEntity {
     return ProductEntity(
@@ -13,5 +14,20 @@ fun Product.toProductEntity(): ProductEntity {
         image = this.image,
         rating = this.rating?.rate,
         count = this.rating?.count
+    )
+}
+
+fun ProductEntity.toProduct(): Product {
+    return Product(
+        id,
+        title,
+        price,
+        description,
+        category,
+        image,
+        Rating(
+            rating,
+            count
+        )
     )
 }

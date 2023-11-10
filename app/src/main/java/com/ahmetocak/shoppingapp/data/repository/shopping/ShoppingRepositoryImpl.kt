@@ -18,4 +18,7 @@ class ShoppingRepositoryImpl @Inject constructor(
 
     override suspend fun addProduct(productEntity: ProductEntity): Response<Unit> =
         productLocalDataSource.addProduct(productEntity)
+
+    override suspend fun getAllProducts(): Response<List<ProductEntity>> =
+        productLocalDataSource.getAllProducts()
 }

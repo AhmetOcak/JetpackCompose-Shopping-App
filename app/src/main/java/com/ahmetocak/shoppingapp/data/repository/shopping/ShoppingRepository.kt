@@ -11,4 +11,6 @@ interface ShoppingRepository {
     suspend fun getProducts(): Response<List<Product>>
 
     suspend fun addProduct(productEntity: ProductEntity): Response<Unit>
+
+    suspend fun getAllProducts(): Response<List<ProductEntity>>
 }

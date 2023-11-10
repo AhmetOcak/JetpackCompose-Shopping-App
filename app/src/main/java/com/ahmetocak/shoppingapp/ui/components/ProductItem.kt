@@ -29,7 +29,7 @@ import com.ahmetocak.shoppingapp.model.shopping.Product
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductItem(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     product: Product,
     onProductClick: (Product) -> Unit
 ) {
