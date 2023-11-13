@@ -12,9 +12,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +39,11 @@ import com.ahmetocak.shoppingapp.ui.components.ProductItem
 private const val ALL = "All"
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onNavigateProductScreen: (Product) -> Unit) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    onNavigateProductScreen: (Product) -> Unit,
+    onNavigateCartScreen: () -> Unit
+) {
 
     val viewModel: HomeViewModel = hiltViewModel()
 
@@ -47,7 +55,8 @@ fun HomeScreen(modifier: Modifier = Modifier, onNavigateProductScreen: (Product)
         isCategoriesLoading = uiState.isCategoryListLoading,
         productList = uiState.productList,
         isProductListLoading = uiState.isProductListLoading,
-        onProductClick = { onNavigateProductScreen(it) }
+        onProductClick = { onNavigateProductScreen(it) },
+        onShoppingCartClicked = { onNavigateCartScreen() }
     )
 }
 
@@ -58,12 +67,13 @@ private fun HomeScreenContent(
     isCategoriesLoading: Boolean,
     productList: List<Product>,
     isProductListLoading: Boolean,
-    onProductClick: (Product) -> Unit
+    onProductClick: (Product) -> Unit,
+    onShoppingCartClicked: () -> Unit
 ) {
     var selectedCatName by rememberSaveable { mutableStateOf(ALL) }
 
     Column(modifier = modifier.fillMaxSize()) {
-        PageTitle(modifier = modifier)
+        PageTitleAndCartBtn(modifier = modifier, onShoppingCartClicked = onShoppingCartClicked)
         CategoryList(
             modifier = modifier,
             categories = categories,
@@ -188,13 +198,22 @@ private fun Category(
 }
 
 @Composable
-private fun PageTitle(modifier: Modifier) {
-    Text(
-        modifier = modifier.padding(
-            start = dimensionResource(id = R.dimen.two_level_margin),
-            top = dimensionResource(id = R.dimen.two_level_margin)
-        ),
-        text = stringResource(id = R.string.discover_products),
-        style = MaterialTheme.typography.headlineMedium
-    )
+private fun PageTitleAndCartBtn(modifier: Modifier, onShoppingCartClicked: () -> Unit) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = modifier.padding(
+                start = dimensionResource(id = R.dimen.two_level_margin),
+                top = dimensionResource(id = R.dimen.two_level_margin)
+            ),
+            text = stringResource(id = R.string.discover_products),
+            style = MaterialTheme.typography.headlineMedium
+        )
+        IconButton(onClick = onShoppingCartClicked) {
+            Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = null)
+        }
+    }
 }

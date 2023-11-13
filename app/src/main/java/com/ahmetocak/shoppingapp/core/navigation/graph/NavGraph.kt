@@ -49,7 +49,7 @@ fun NavGraph(
     modifier: Modifier = Modifier,
     startDestination: String = NavScreen.HomeScreen.route
 ) {
-    val navController = rememberNavController ()
+    val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -78,11 +78,16 @@ fun NavGraph(
                 SignUpScreen(onNavigate = { navController.navigateUp() })
             }
             composable(route = NavScreen.HomeScreen.route) {
-                HomeScreen(onNavigateProductScreen = { product ->
-                    val encodedValue =
-                        URLEncoder.encode(Gson().toJson(product), StandardCharsets.UTF_8.toString())
-                    navController.navigate("${NavScreen.ProductScreen.route}/$encodedValue")
-                })
+                HomeScreen(
+                    onNavigateProductScreen = { product ->
+                        val encodedValue =
+                            URLEncoder.encode(Gson().toJson(product), StandardCharsets.UTF_8.toString())
+                        navController.navigate("${NavScreen.ProductScreen.route}/$encodedValue")
+                    },
+                    onNavigateCartScreen = {
+                        navController.navigate(NavScreen.CartScreen.route)
+                    }
+                )
             }
             composable(route = NavScreen.CartScreen.route) {
                 CartScreen()
