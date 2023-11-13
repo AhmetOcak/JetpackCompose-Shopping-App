@@ -105,29 +105,33 @@ private fun CartScreenContent(
     onIncreaseClicked: (Int) -> Unit,
     onDecreaseClicked: (Int) -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
-    ) {
-        CartList(
-            modifier = modifier.weight(4f),
-            cartList = cartList,
-            onRemoveItemClick = onRemoveItemClick,
-            onDecreaseClicked = onDecreaseClicked,
-            onIncreaseClicked = onIncreaseClicked
-        )
-        CheckoutDetails(
+    if (cartList.isNotEmpty()) {
+        Column(
             modifier = modifier
-                .weight(1f)
-                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
-            subtotal = subtotal
-        )
-        CheckOutButton(
-            modifier = modifier
-                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
-            subtotal = subtotal
-        )
+                .fillMaxSize()
+                .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
+        ) {
+            CartList(
+                modifier = modifier.weight(4f),
+                cartList = cartList,
+                onRemoveItemClick = onRemoveItemClick,
+                onDecreaseClicked = onDecreaseClicked,
+                onIncreaseClicked = onIncreaseClicked
+            )
+            CheckoutDetails(
+                modifier = modifier
+                    .weight(1f)
+                    .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
+                subtotal = subtotal
+            )
+            CheckOutButton(
+                modifier = modifier
+                    .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
+                subtotal = subtotal
+            )
+        }
+    } else {
+        EmptyCartListView(modifier = modifier, messageId = R.string.cart_empty)
     }
 }
 
@@ -183,37 +187,33 @@ private fun CartList(
     onIncreaseClicked: (Int) -> Unit,
     onDecreaseClicked: (Int) -> Unit
 ) {
-    if (cartList.isNotEmpty()) {
-        LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxSize()
-                .background(
-                    brush = Brush.verticalGradient(
-                        listOf(
-                            colorResource(id = R.color.mauve),
-                            colorResource(id = R.color.pale_purple),
-                        ),
-                    )
-                ),
-            columns = GridCells.Fixed(1),
-            contentPadding = PaddingValues(dimensionResource(id = R.dimen.two_level_margin)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
-        ) {
-            items(cartList) { cart ->
-                CartItem(
-                    id = cart.id,
-                    imageUrl = cart.image,
-                    title = cart.title,
-                    price = cart.price * cart.count,
-                    onRemoveItemClick = onRemoveItemClick,
-                    itemCount = cart.count,
-                    onIncreaseClicked = onIncreaseClicked,
-                    onDecreaseClicked = onDecreaseClicked
+    LazyVerticalGrid(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(
+                        colorResource(id = R.color.mauve),
+                        colorResource(id = R.color.pale_purple),
+                    ),
                 )
-            }
+            ),
+        columns = GridCells.Fixed(1),
+        contentPadding = PaddingValues(dimensionResource(id = R.dimen.two_level_margin)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
+    ) {
+        items(cartList) { cart ->
+            CartItem(
+                id = cart.id,
+                imageUrl = cart.image,
+                title = cart.title,
+                price = cart.price * cart.count,
+                onRemoveItemClick = onRemoveItemClick,
+                itemCount = cart.count,
+                onIncreaseClicked = onIncreaseClicked,
+                onDecreaseClicked = onDecreaseClicked
+            )
         }
-    } else {
-        EmptyCartListView(modifier = modifier, messageId = R.string.cart_empty)
     }
 }
 
