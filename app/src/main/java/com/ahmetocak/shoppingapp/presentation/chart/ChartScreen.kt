@@ -15,7 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -60,7 +60,7 @@ private fun ChartScreenContent(modifier: Modifier) {
 
 @Composable
 private fun CheckOutButton(modifier: Modifier) {
-    Divider(
+    HorizontalDivider(
         modifier = modifier
             .fillMaxWidth()
             .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
@@ -114,7 +114,7 @@ private fun ChartList(modifier: Modifier) {
                 title = "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
                 price = 109.43
             )
-            Divider(
+            HorizontalDivider(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(
