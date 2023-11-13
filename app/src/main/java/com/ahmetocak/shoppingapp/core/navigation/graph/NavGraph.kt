@@ -1,5 +1,7 @@
 package com.ahmetocak.shoppingapp.core.navigation.graph
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -21,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.ahmetocak.shoppingapp.common.helpers.removeRememberMe
 import com.ahmetocak.shoppingapp.core.navigation.BottomNavItem
 import com.ahmetocak.shoppingapp.core.navigation.screens.NavScreen
 import com.ahmetocak.shoppingapp.presentation.cart.CartScreen
@@ -44,10 +47,12 @@ private val bottomNavItems = listOf(
     BottomNavItem.ProfileScreen
 )
 
+@SuppressLint("CommitPrefEdits")
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.HomeScreen.route
+    startDestination: String = NavScreen.HomeScreen.route,
+    sharedPreferences: SharedPreferences
 ) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -113,7 +118,15 @@ fun NavGraph(
                 })
             }
             composable(route = NavScreen.ProfileScreen.route) {
-                ProfileScreen()
+                ProfileScreen(onSignOutClicked = {
+                    sharedPreferences.edit().removeRememberMe()
+
+                    navController.navigate(NavScreen.LoginScreen.route) {
+                        popUpTo(NavScreen.HomeScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                })
             }
             composable(route = NavScreen.SearchScreen.route) {
                 SearchScreen(onNavigateProductScreen = { product ->

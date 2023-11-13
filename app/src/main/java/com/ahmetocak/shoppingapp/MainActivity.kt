@@ -31,9 +31,15 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (sharedPreferences.getRememberMe()) {
-                        NavGraph(startDestination = NavScreen.HomeScreen.route)
+                        NavGraph(
+                            startDestination = NavScreen.HomeScreen.route,
+                            sharedPreferences = sharedPreferences
+                        )
                     } else {
-                        NavGraph(startDestination = NavScreen.LoginScreen.route)
+                        NavGraph(
+                            startDestination = NavScreen.LoginScreen.route,
+                            sharedPreferences = sharedPreferences
+                        )
                     }
                 }
             }

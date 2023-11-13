@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +25,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,6 +35,8 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -76,7 +81,7 @@ import com.mr0xf00.easycrop.ui.ImageCropperDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
 
     val viewModel: ProfileViewModel = hiltViewModel()
 
@@ -108,6 +113,7 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         VerifyPhoneNumberState.NOTHING -> {
             showVerifyPhoneNumberDialog = false
         }
+
         VerifyPhoneNumberState.ON_VERIFICATION_COMPLETED -> {
             showUpdateDialog = false
             showVerifyPhoneNumberDialog = false
@@ -117,7 +123,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        VerifyPhoneNumberState.ON_CODE_SENT ->{
+
+        VerifyPhoneNumberState.ON_CODE_SENT -> {
             showVerifyPhoneNumberDialog = true
         }
     }
@@ -149,17 +156,37 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         },
         onUpdateClick = {
             when (viewModel.infoType) {
-                InfoType.NAME -> { viewModel.updateUserName() }
-                InfoType.MOBILE -> { viewModel.sendVerificationCode(activity) }
-                InfoType.ADDRESS -> { viewModel.uploadUserAddress() }
+                InfoType.NAME -> {
+                    viewModel.updateUserName()
+                }
+
+                InfoType.MOBILE -> {
+                    viewModel.sendVerificationCode(activity)
+                }
+
+                InfoType.ADDRESS -> {
+                    viewModel.uploadUserAddress()
+                }
+
                 else -> {}
             }
         },
         dialogTitle = when (viewModel.infoType) {
-            InfoType.NAME -> { stringResource(id = R.string.name) }
-            InfoType.MOBILE -> { stringResource(id = R.string.mobile) }
-            InfoType.ADDRESS -> { stringResource(id = R.string.address) }
-            InfoType.BIRTHDATE -> { stringResource(id = R.string.birthdate) }
+            InfoType.NAME -> {
+                stringResource(id = R.string.name)
+            }
+
+            InfoType.MOBILE -> {
+                stringResource(id = R.string.mobile)
+            }
+
+            InfoType.ADDRESS -> {
+                stringResource(id = R.string.address)
+            }
+
+            InfoType.BIRTHDATE -> {
+                stringResource(id = R.string.birthdate)
+            }
         },
         infoType = viewModel.infoType,
         onUserPhotoClicked = {
@@ -191,7 +218,8 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         onDateConfirmClick = {
             datePickerState.selectedDateMillis?.let { viewModel.updateUserBirthdate(it) }
             showUpdateDialog = false
-        }
+        },
+        onSignOutClicked = onSignOutClicked
     )
 }
 
@@ -223,10 +251,11 @@ private fun ProfileScreenContent(
     onVerifyPhoneNumberDismiss: () -> Unit,
     datePickerState: DatePickerState,
     onDatePickerDialogDismiss: () -> Unit,
-    onDateConfirmClick: () -> Unit
+    onDateConfirmClick: () -> Unit,
+    onSignOutClicked: () -> Unit
 ) {
     if (showUpdateDialog) {
-        when(infoType) {
+        when (infoType) {
             InfoType.BIRTHDATE -> {
                 DatePickerDialog(
                     onDismissRequest = onDatePickerDialogDismiss,
@@ -278,7 +307,8 @@ private fun ProfileScreenContent(
             modifier = modifier.weight(3f),
             userImgUrl = userImgUrl,
             userName = userName,
-            onUserPhotoClicked = onUserPhotoClicked
+            onUserPhotoClicked = onUserPhotoClicked,
+            onSignOutClicked = onSignOutClicked
         )
         AccountInfoSection(
             modifier = modifier.weight(4f),
@@ -296,8 +326,25 @@ private fun ProfileSection(
     modifier: Modifier,
     userImgUrl: Uri?,
     userName: String,
-    onUserPhotoClicked: () -> Unit
+    onUserPhotoClicked: () -> Unit,
+    onSignOutClicked: () -> Unit
 ) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Brush.horizontalGradient(listOf(
+                colorResource(id = R.color.orange_100),
+                colorResource(id = R.color.orange_200),
+                colorResource(id = R.color.orange_300),
+                colorResource(id = R.color.orange_400),
+                colorResource(id = R.color.orange_500)
+            ))),
+        contentAlignment = Alignment.TopEnd
+    ) {
+        IconButton(onClick = onSignOutClicked) {
+            Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null)
+        }
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -465,13 +512,8 @@ private fun UpdateAccountInfoDialog(
                     onValueChange = onUpdateValueChange,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = when (infoType) {
-                            InfoType.MOBILE -> {
-                                KeyboardType.Number
-                            }
-
-                            else -> {
-                                KeyboardType.Text
-                            }
+                            InfoType.MOBILE -> { KeyboardType.Number }
+                            else -> { KeyboardType.Text }
                         }
                     )
                 )
