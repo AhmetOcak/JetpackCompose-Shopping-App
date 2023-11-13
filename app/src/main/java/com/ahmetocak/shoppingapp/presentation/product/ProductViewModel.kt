@@ -159,7 +159,7 @@ class ProductViewModel @Inject constructor(
 
     private fun findProductInCart(productId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = shoppingRepository.findFavoriteProduct(productId)) {
+            when (val response = shoppingRepository.findCartItem(productId)) {
                 is Response.Success -> {
                     _uiState.update {
                         it.copy(isProductInCart = response.data != null)
