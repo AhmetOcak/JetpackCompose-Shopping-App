@@ -46,4 +46,6 @@
     <string name="verification_completed">"Verification Completed"</string>
     <string name="search_result_empty_message">It seems the product you are looking for is not available.</string>
     <string name="search_something">Search for the product you want</string>
+    <string name="product_added_favorites">The product has been successfully added to favorites.</string>
+    <string name="product_removed_favorites">The product has been successfully removed from favorites.</string>
 </resources>

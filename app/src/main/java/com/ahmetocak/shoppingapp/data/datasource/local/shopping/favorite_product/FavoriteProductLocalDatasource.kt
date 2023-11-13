@@ -1,18 +1,9 @@
-package com.ahmetocak.shoppingapp.data.repository.shopping
+package com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product
 
 import com.ahmetocak.shoppingapp.common.Response
-import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 
-interface ShoppingRepository {
-
-    suspend fun getCategories(): Response<List<String>>
-
-    suspend fun getProducts(): Response<List<Product>>
-
-    suspend fun addProduct(productEntity: ProductEntity): Response<Unit>
-
-    suspend fun getAllProducts(): Response<List<ProductEntity>>
+interface FavoriteProductLocalDatasource {
 
     suspend fun addFavoriteProduct(productEntity: ProductEntity): Response<Unit>
 

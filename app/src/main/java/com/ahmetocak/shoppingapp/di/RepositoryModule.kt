@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.di
 
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.FavoriteProductLocalDatasource
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductLocalDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSource
@@ -27,8 +28,13 @@ object RepositoryModule {
     @Singleton
     fun provideShoppingRepository(
         remoteDataSource: ShoppingRemoteDataSource,
-        productLocalDataSource: ProductLocalDataSource
+        productLocalDataSource: ProductLocalDataSource,
+        favoriteProductLocalDatasource: FavoriteProductLocalDatasource
     ): ShoppingRepository {
-        return ShoppingRepositoryImpl(remoteDataSource, productLocalDataSource)
+        return ShoppingRepositoryImpl(
+            remoteDataSource,
+            productLocalDataSource,
+            favoriteProductLocalDatasource
+        )
     }
 }

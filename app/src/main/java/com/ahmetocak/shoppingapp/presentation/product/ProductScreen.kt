@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.product
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,10 +12,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,11 +48,41 @@ fun ProductScreen(modifier: Modifier = Modifier) {
 
     val uiState by viewModel.uiState.collectAsState()
 
-    ProductScreenContent(modifier = modifier, product = uiState.product)
+    if (uiState.userMessages.isNotEmpty()) {
+        Toast.makeText(
+            LocalContext.current,
+            stringResource(id = uiState.userMessages.first()),
+            Toast.LENGTH_SHORT
+        ).show()
+        viewModel.consumedUserMessages()
+    }
+
+    if (uiState.errorMessages.isNotEmpty()) {
+        Toast.makeText(
+            LocalContext.current,
+            stringResource(id = uiState.errorMessages.first()),
+            Toast.LENGTH_SHORT
+        ).show()
+        viewModel.consumedErrorMessages()
+    }
+
+    ProductScreenContent(
+        modifier = modifier,
+        product = uiState.product,
+        isProductFavorite = uiState.isProductFavorite,
+        onFavoriteBtnClicked = {
+            viewModel.onFavoriteProductClick()
+        }
+    )
 }
 
 @Composable
-private fun ProductScreenContent(modifier: Modifier, product: Product?) {
+private fun ProductScreenContent(
+    modifier: Modifier,
+    product: Product?,
+    isProductFavorite: Boolean,
+    onFavoriteBtnClicked: () -> Unit
+) {
     if (product != null) {
         Column(
             modifier = modifier.fillMaxSize()
@@ -69,7 +101,9 @@ private fun ProductScreenContent(modifier: Modifier, product: Product?) {
                 title = product.title ?: "null",
                 description = product.description ?: "null",
                 price = product.price?.toDouble() ?: 0.0,
-                rate = product.rating?.rate ?: 0.0
+                rate = product.rating?.rate ?: 0.0,
+                isProductFavorite = isProductFavorite,
+                onFavoriteBtnClicked = onFavoriteBtnClicked
             )
         }
     }
@@ -77,7 +111,13 @@ private fun ProductScreenContent(modifier: Modifier, product: Product?) {
 
 @Composable
 private fun ProductDetails(
-    modifier: Modifier, title: String, description: String, price: Double, rate: Double
+    modifier: Modifier,
+    title: String,
+    description: String,
+    price: Double,
+    rate: Double,
+    onFavoriteBtnClicked: () -> Unit,
+    isProductFavorite: Boolean
 ) {
     Column(
         modifier = modifier,
@@ -87,15 +127,24 @@ private fun ProductDetails(
             modifier = Modifier.weight(4f),
             title = title,
             description = description,
-            rate = rate
+            rate = rate,
+            onFavoriteBtnClicked = onFavoriteBtnClicked,
+            isProductFavorite = isProductFavorite
         )
-        Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Color.Black)
+        HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Color.Black)
         AddToCartSection(modifier = Modifier.weight(1f), price = price)
     }
 }
 
 @Composable
-private fun ProductInfo(modifier: Modifier, title: String, description: String, rate: Double) {
+private fun ProductInfo(
+    modifier: Modifier,
+    title: String,
+    description: String,
+    rate: Double,
+    isProductFavorite: Boolean,
+    onFavoriteBtnClicked: () -> Unit
+) {
     Column(modifier = modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
@@ -112,9 +161,9 @@ private fun ProductInfo(modifier: Modifier, title: String, description: String, 
                 )
                 Text(text = "$rate")
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = onFavoriteBtnClicked) {
                 Icon(
-                    imageVector = Icons.Filled.FavoriteBorder,
+                    imageVector = if (isProductFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = null,
                     tint = Color.Red
                 )
