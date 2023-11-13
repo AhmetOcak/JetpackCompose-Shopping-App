@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,7 +39,20 @@ fun ProductItem(
     Card(
         modifier = modifier.fillMaxSize(),
         onClick = { onProductClick(product) },
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(
+            1.dp, Brush.horizontalGradient(
+                listOf(
+                    colorResource(id = R.color.dark_green),
+                    colorResource(id = R.color.hunter_green),
+                    colorResource(id = R.color.dark_moss_green),
+                    colorResource(id = R.color.walnut_brown),
+                    colorResource(id = R.color.bole),
+                    colorResource(id = R.color.cordovan),
+                    colorResource(id = R.color.redwood)
+                )
+            )
+        )
     ) {
         Column(
             modifier = modifier
