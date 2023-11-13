@@ -166,7 +166,11 @@ class ProductViewModel @Inject constructor(
                     }
                 }
 
-                is Response.Error -> {}
+                is Response.Error -> {
+                    _uiState.update {
+                        it.copy(errorMessages = listOf(response.errorMessageId))
+                    }
+                }
             }
         }
     }
