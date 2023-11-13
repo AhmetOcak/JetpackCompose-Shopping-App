@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.chart
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,8 +25,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -185,7 +190,19 @@ private fun ChartNameAndRemove(title: String) {
 
 @Composable
 private fun ChartItemImg(imageUrl: String) {
-    Card(modifier = Modifier.size(128.dp)) {
+    Card(
+        modifier = Modifier.size(128.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(1.dp, brush = Brush.horizontalGradient(listOf(
+            colorResource(id = R.color.dark_green),
+            colorResource(id = R.color.hunter_green),
+            colorResource(id = R.color.dark_moss_green),
+            colorResource(id = R.color.walnut_brown),
+            colorResource(id = R.color.bole),
+            colorResource(id = R.color.cordovan),
+            colorResource(id = R.color.redwood)
+        )))
+    ) {
         AsyncImage(
             modifier = Modifier
                 .fillMaxSize()
