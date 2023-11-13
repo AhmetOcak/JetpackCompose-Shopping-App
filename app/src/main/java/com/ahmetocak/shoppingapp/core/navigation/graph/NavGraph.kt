@@ -88,7 +88,11 @@ fun NavGraph(
                 ChartScreen()
             }
             composable(route = NavScreen.FavoritesScreen.route) {
-                FavoritesScreen()
+                FavoritesScreen(onNavigateProductScreen = { product ->
+                    val encodedValue =
+                        URLEncoder.encode(Gson().toJson(product), StandardCharsets.UTF_8.toString())
+                    navController.navigate("${NavScreen.ProductScreen.route}/$encodedValue")
+                })
             }
             composable(route = NavScreen.PaymentScreen.route) {
                 PaymentScreen()

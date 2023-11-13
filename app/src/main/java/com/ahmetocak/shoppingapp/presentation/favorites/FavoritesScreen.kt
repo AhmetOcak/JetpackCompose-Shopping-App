@@ -48,10 +48,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.common.mapper.toProduct
+import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 
 @Composable
-fun FavoritesScreen(modifier: Modifier = Modifier) {
+fun FavoritesScreen(modifier: Modifier = Modifier, onNavigateProductScreen: (Product) -> Unit) {
 
     val viewModel: FavoritesViewModel = hiltViewModel()
 
@@ -83,6 +85,9 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
         favoriteProductList = uiState.favoriteList,
         onRemoveFavoriteClicked = { id ->
             id?.let { viewModel.removeProductFromFavorites(it) }
+        },
+        onFavoriteItemClicked = { entity ->
+            onNavigateProductScreen(entity.toProduct())
         }
     )
 }
@@ -92,7 +97,8 @@ private fun FavoritesScreenContent(
     modifier: Modifier,
     isLoading: Boolean,
     favoriteProductList: List<ProductEntity>,
-    onRemoveFavoriteClicked: (Int?) -> Unit
+    onRemoveFavoriteClicked: (Int?) -> Unit,
+    onFavoriteItemClicked: (ProductEntity) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -122,6 +128,9 @@ private fun FavoritesScreenContent(
                         price = it.price?.toDouble() ?: 0.0,
                         onRemoveFavoriteClicked = {
                             onRemoveFavoriteClicked(it.id)
+                        },
+                        onFavoriteItemClicked = {
+                            onFavoriteItemClicked(it)
                         }
                     )
                 }
@@ -139,7 +148,8 @@ private fun FavoriteItem(
     imgUrl: String,
     title: String,
     price: Double,
-    onRemoveFavoriteClicked: () -> Unit
+    onRemoveFavoriteClicked: () -> Unit,
+    onFavoriteItemClicked: () -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -152,7 +162,8 @@ private fun FavoriteItem(
             colorResource(id = R.color.bole),
             colorResource(id = R.color.cordovan),
             colorResource(id = R.color.redwood),
-        )))
+        ))),
+        onClick = onFavoriteItemClicked
     ) {
         Column(
             modifier = modifier
