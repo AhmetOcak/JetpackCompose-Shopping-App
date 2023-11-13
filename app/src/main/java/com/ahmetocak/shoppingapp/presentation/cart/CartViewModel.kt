@@ -31,7 +31,10 @@ class CartViewModel @Inject constructor(
             when (val response = shoppingRepository.getCart()) {
                 is Response.Success -> {
                     _uiState.update {
-                        it.copy(cartList = response.data)
+                        it.copy(
+                            cartList = response.data,
+                            subtotal = calculateSubtotal(response.data)
+                        )
                     }
                 }
 
@@ -52,7 +55,7 @@ class CartViewModel @Inject constructor(
                     cartList.removeIf { it.id == productId }
 
                     _uiState.update {
-                        it.copy(cartList = cartList)
+                        it.copy(cartList = cartList, subtotal = calculateSubtotal(cartList))
                     }
                 }
 
@@ -76,10 +79,19 @@ class CartViewModel @Inject constructor(
             it.copy(userMessages = listOf())
         }
     }
+
+    private fun calculateSubtotal(cartList: List<CartEntity>): Double {
+        var subtotal = 0.0
+        cartList.forEach {
+            subtotal += it.price
+        }
+        return subtotal
+    }
 }
 
 data class CartScreenUiState(
     val cartList: List<CartEntity> = listOf(),
     val userMessages: List<Int> = listOf(),
-    val errorMessages: List<Int> = listOf()
+    val errorMessages: List<Int> = listOf(),
+    val subtotal: Double = 0.0
 )

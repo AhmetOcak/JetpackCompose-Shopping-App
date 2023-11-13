@@ -80,7 +80,8 @@ fun CartScreen(modifier: Modifier = Modifier) {
         cartList = uiState.cartList,
         onRemoveItemClick = {
             viewModel.removeProductFromCart(it)
-        }
+        },
+        subtotal = uiState.subtotal
     )
 }
 
@@ -88,7 +89,8 @@ fun CartScreen(modifier: Modifier = Modifier) {
 private fun CartScreenContent(
     modifier: Modifier,
     cartList: List<CartEntity>,
-    onRemoveItemClick: (Int) -> Unit
+    onRemoveItemClick: (Int) -> Unit,
+    subtotal: Double
 ) {
     Column(
         modifier = modifier
@@ -101,13 +103,13 @@ private fun CartScreenContent(
             cartList = cartList,
             onRemoveItemClick = onRemoveItemClick
         )
-        CheckoutDetails(modifier = modifier.weight(1f))
-        CheckOutButton(modifier = modifier)
+        CheckoutDetails(modifier = modifier.weight(1f), subtotal = subtotal)
+        CheckOutButton(modifier = modifier, subtotal = subtotal)
     }
 }
 
 @Composable
-private fun CheckOutButton(modifier: Modifier) {
+private fun CheckOutButton(modifier: Modifier, subtotal: Double) {
     HorizontalDivider(
         modifier = modifier
             .fillMaxWidth()
@@ -123,7 +125,7 @@ private fun CheckOutButton(modifier: Modifier) {
             text = buildAnnotatedString {
                 append(stringResource(id = R.string.checkout))
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(" $805.00")
+                    append(" $$subtotal")
                 }
             },
             style = MaterialTheme.typography.titleMedium
@@ -132,7 +134,7 @@ private fun CheckOutButton(modifier: Modifier) {
 }
 
 @Composable
-private fun CheckoutDetails(modifier: Modifier) {
+private fun CheckoutDetails(modifier: Modifier, subtotal: Double) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -141,7 +143,7 @@ private fun CheckoutDetails(modifier: Modifier) {
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = stringResource(id = R.string.sub_total))
-            Text(text = "$800.00", fontWeight = FontWeight.Bold)
+            Text(text = "$$subtotal", fontWeight = FontWeight.Bold)
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = stringResource(id = R.string.delivery_fee))
