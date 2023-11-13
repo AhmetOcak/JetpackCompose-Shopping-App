@@ -30,4 +30,8 @@ interface ShoppingRepository {
     suspend fun getCart(): Response<List<CartEntity>>
 
     suspend fun findCartItem(productId: Int): Response<CartEntity?>
+
+    suspend fun increaseCartItemCount(cartItemId: Int): Response<Unit>
+
+    suspend fun decreaseCartItemCount(cartItemId: Int): Response<Unit>
 }

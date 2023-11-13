@@ -68,6 +68,38 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    fun increaseProductCount(productId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = shoppingRepository.increaseCartItemCount(productId)) {
+                is Response.Success -> {
+                    getCart()
+                }
+
+                is Response.Error -> {
+                    _uiState.update {
+                        it.copy(errorMessages = listOf(response.errorMessageId))
+                    }
+                }
+            }
+        }
+    }
+
+    fun decreaseProductCount(productId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = shoppingRepository.decreaseCartItemCount(productId)) {
+                is Response.Success -> {
+                    getCart()
+                }
+
+                is Response.Error -> {
+                    _uiState.update {
+                        it.copy(errorMessages = listOf(response.errorMessageId))
+                    }
+                }
+            }
+        }
+    }
+
     fun consumedErrorMessage() {
         _uiState.update {
             it.copy(errorMessages = listOf())
@@ -83,7 +115,7 @@ class CartViewModel @Inject constructor(
     private fun calculateSubtotal(cartList: List<CartEntity>): Double {
         var subtotal = 0.0
         cartList.forEach {
-            subtotal += it.price
+            subtotal += it.price * it.count
         }
         return subtotal
     }

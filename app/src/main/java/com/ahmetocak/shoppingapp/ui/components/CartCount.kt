@@ -9,7 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -22,8 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
 
 @Composable
-fun CartItemNumber() {
-    var count by rememberSaveable { mutableStateOf(1) }
+fun CartItemCountSetter(
+    itemCount: Int,
+    onIncreaseClicked: () -> Unit,
+    onDecreaseClicked: () -> Unit
+) {
+    var count by rememberSaveable { mutableIntStateOf(itemCount) }
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin)),
@@ -33,6 +37,7 @@ fun CartItemNumber() {
             onClick = {
                 if (count != 1) {
                     count--
+                    onDecreaseClicked()
                 }
             },
             tint = if (count != 1) {
@@ -53,6 +58,7 @@ fun CartItemNumber() {
             onClick = {
                 if (count < 10) {
                     count++
+                    onIncreaseClicked()
                 }
             },
             tint = if (count < 10) {

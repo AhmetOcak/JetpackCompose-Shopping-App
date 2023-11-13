@@ -50,4 +50,10 @@ class ShoppingRepositoryImpl @Inject constructor(
 
     override suspend fun findCartItem(productId: Int): Response<CartEntity?> =
         cartLocalDataSource.findCartItem(productId)
+
+    override suspend fun increaseCartItemCount(cartItemId: Int): Response<Unit> =
+        cartLocalDataSource.increaseCartItemCount(cartItemId)
+
+    override suspend fun decreaseCartItemCount(cartItemId: Int): Response<Unit> =
+        cartLocalDataSource.decreaseCartItemCount(cartItemId)
 }

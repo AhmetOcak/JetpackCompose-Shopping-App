@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if (sharedPreferences.getRememberMe()) {
-                        NavGraph(startDestination = NavScreen.HomeScreen.route)
+                        NavGraph(startDestination = NavScreen.CartScreen.route)
                     } else {
                         NavGraph(startDestination = NavScreen.LoginScreen.route)
                     }

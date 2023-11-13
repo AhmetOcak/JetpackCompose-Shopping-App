@@ -48,7 +48,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
-import com.ahmetocak.shoppingapp.ui.components.CartItemNumber
+import com.ahmetocak.shoppingapp.ui.components.CartItemCountSetter
 
 @Composable
 fun CartScreen(modifier: Modifier = Modifier) {
@@ -81,7 +81,13 @@ fun CartScreen(modifier: Modifier = Modifier) {
         onRemoveItemClick = {
             viewModel.removeProductFromCart(it)
         },
-        subtotal = uiState.subtotal
+        subtotal = uiState.subtotal,
+        onIncreaseClicked = {
+            viewModel.increaseProductCount(it)
+        },
+        onDecreaseClicked = {
+            viewModel.decreaseProductCount(it)
+        }
     )
 }
 
@@ -90,7 +96,9 @@ private fun CartScreenContent(
     modifier: Modifier,
     cartList: List<CartEntity>,
     onRemoveItemClick: (Int) -> Unit,
-    subtotal: Double
+    subtotal: Double,
+    onIncreaseClicked: (Int) -> Unit,
+    onDecreaseClicked: (Int) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -101,7 +109,9 @@ private fun CartScreenContent(
         CartList(
             modifier = modifier.weight(4f),
             cartList = cartList,
-            onRemoveItemClick = onRemoveItemClick
+            onRemoveItemClick = onRemoveItemClick,
+            onDecreaseClicked = onDecreaseClicked,
+            onIncreaseClicked = onIncreaseClicked
         )
         CheckoutDetails(modifier = modifier.weight(1f), subtotal = subtotal)
         CheckOutButton(modifier = modifier, subtotal = subtotal)
@@ -125,7 +135,7 @@ private fun CheckOutButton(modifier: Modifier, subtotal: Double) {
             text = buildAnnotatedString {
                 append(stringResource(id = R.string.checkout))
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(" $$subtotal")
+                    append(" $${String.format("%.2f", subtotal)}")
                 }
             },
             style = MaterialTheme.typography.titleMedium
@@ -143,11 +153,11 @@ private fun CheckoutDetails(modifier: Modifier, subtotal: Double) {
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = stringResource(id = R.string.sub_total))
-            Text(text = "$$subtotal", fontWeight = FontWeight.Bold)
+            Text(text = "$${String.format("%.2f", subtotal)}", fontWeight = FontWeight.Bold)
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = stringResource(id = R.string.delivery_fee))
-            Text(text = "$5.00", fontWeight = FontWeight.Bold)
+            Text(text = "$${String.format("%.2f", 5.00)}", fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -156,7 +166,9 @@ private fun CheckoutDetails(modifier: Modifier, subtotal: Double) {
 private fun CartList(
     modifier: Modifier,
     cartList: List<CartEntity>,
-    onRemoveItemClick: (Int) -> Unit
+    onRemoveItemClick: (Int) -> Unit,
+    onIncreaseClicked: (Int) -> Unit,
+    onDecreaseClicked: (Int) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = modifier.fillMaxSize(),
@@ -170,7 +182,10 @@ private fun CartList(
                 imageUrl = cart.image,
                 title = cart.title,
                 price = cart.price * cart.count,
-                onRemoveItemClick = onRemoveItemClick
+                onRemoveItemClick = onRemoveItemClick,
+                itemCount = cart.count,
+                onIncreaseClicked = onIncreaseClicked,
+                onDecreaseClicked = onDecreaseClicked
             )
         }
     }
@@ -182,7 +197,10 @@ private fun CartItem(
     imageUrl: String,
     title: String,
     price: Double,
-    onRemoveItemClick: (Int) -> Unit
+    onRemoveItemClick: (Int) -> Unit,
+    itemCount: Int,
+    onIncreaseClicked: (Int) -> Unit,
+    onDecreaseClicked: (Int) -> Unit
 ) {
     Column {
         Row(
@@ -192,9 +210,17 @@ private fun CartItem(
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
         ) {
             CartItemImg(imageUrl = imageUrl)
-            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
                 CartNameAndRemove(id = id, title = title, onRemoveItemClick = onRemoveItemClick)
-                CartPriceAndCount(price)
+                CartPriceAndCount(
+                    itemCount = itemCount,
+                    price = price,
+                    onIncreaseClicked = { onIncreaseClicked(id) },
+                    onDecreaseClicked = { onDecreaseClicked(id) }
+                )
             }
         }
         HorizontalDivider(
@@ -209,7 +235,12 @@ private fun CartItem(
 }
 
 @Composable
-private fun CartPriceAndCount(price: Double) {
+private fun CartPriceAndCount(
+    price: Double,
+    itemCount: Int,
+    onIncreaseClicked: () -> Unit,
+    onDecreaseClicked: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -217,11 +248,15 @@ private fun CartPriceAndCount(price: Double) {
     ) {
         Text(
             modifier = Modifier.weight(1f),
-            text = "$$price",
+            text = "$${String.format("%.2f", price)}",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
-        CartItemNumber()
+        CartItemCountSetter(
+            itemCount = itemCount,
+            onIncreaseClicked = onIncreaseClicked,
+            onDecreaseClicked = onDecreaseClicked
+        )
     }
 }
 
