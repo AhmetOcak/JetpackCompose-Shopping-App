@@ -2,6 +2,8 @@ package com.ahmetocak.shoppingapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.cart.db.CartDao
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.cart.db.CartDatabase
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.db.FavoriteProductDao
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.db.FavoriteProductDatabase
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.db.ProductDao
@@ -47,5 +49,21 @@ object RoomModule {
     @Singleton
     fun provideFavoriteProductDao(db: FavoriteProductDatabase): FavoriteProductDao {
         return db.favoriteProductDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCartDb(@ApplicationContext context: Context): CartDatabase {
+        return Room.databaseBuilder(
+            context,
+            CartDatabase::class.java,
+            "card_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCardDao(db: CartDatabase): CartDao {
+        return db.cartDao()
     }
 }

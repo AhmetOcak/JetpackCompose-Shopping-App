@@ -103,7 +103,9 @@ fun NavGraph(
                     navArgument(NavKeys.PRODUCT) { type = NavType.StringType }
                 )
             ) {
-                ProductScreen()
+                ProductScreen(onNavigateCartScreen = {
+                    navController.navigate(NavScreen.CartScreen.route)
+                })
             }
             composable(route = NavScreen.ProfileScreen.route) {
                 ProfileScreen()

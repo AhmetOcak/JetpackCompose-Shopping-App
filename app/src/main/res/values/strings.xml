@@ -49,4 +49,6 @@
     <string name="product_added_favorites">The product has been successfully added to favorites.</string>
     <string name="product_removed_favorites">The product has been successfully removed from favorites.</string>
     <string name="no_favorite">It seems you don\'t have a favorite product.</string>
+    <string name="product_added_cart">Product successfully added to cart.</string>
+    <string name="go_to_cart">Go to cart</string>
 </resources>

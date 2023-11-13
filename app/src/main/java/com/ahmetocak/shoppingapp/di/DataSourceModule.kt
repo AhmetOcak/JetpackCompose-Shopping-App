@@ -1,5 +1,8 @@
 package com.ahmetocak.shoppingapp.di
 
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.cart.CartLocalDataSource
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.cart.CartLocalDataSourceImpl
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.cart.db.CartDao
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.FavoriteLocalDatasourceImpl
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.FavoriteProductLocalDatasource
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.db.FavoriteProductDao
@@ -50,5 +53,11 @@ object DataSourceModule {
     @Singleton
     fun provideFavoriteProductLocalDataSource(favoriteProductDao: FavoriteProductDao): FavoriteProductLocalDatasource {
         return FavoriteLocalDatasourceImpl(favoriteProductDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCartLocalDataSource(cartDao: CartDao): CartLocalDataSource {
+        return CartLocalDataSourceImpl(cartDao)
     }
 }

@@ -7,6 +7,7 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.common.mapper.toProductEntity
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
+import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.utils.NavKeys
 import com.google.gson.Gson
@@ -36,6 +37,7 @@ class ProductViewModel @Inject constructor(
             it.copy(product = Gson().fromJson(decodedValue, Product::class.java))
         }
         _uiState.value.product?.id?.let { findProduct(productId = it) }
+        _uiState.value.product?.id?.let { findProductInCart(productId = it) }
     }
 
     private fun findProduct(productId: Int) {
@@ -43,16 +45,13 @@ class ProductViewModel @Inject constructor(
             when (val response = shoppingRepository.findFavoriteProduct(productId)) {
                 is Response.Success -> {
                     _uiState.update {
-                        it.copy(
-                            isProductFavorite = response.data != null,
-                            favoriteBtnEnabled = true
-                        )
+                        it.copy(isProductFavorite = response.data != null)
                     }
                 }
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(favoriteBtnEnabled = false)
+                        it.copy(errorMessages = listOf(response.errorMessageId))
                     }
                 }
             }
@@ -126,6 +125,52 @@ class ProductViewModel @Inject constructor(
         }
     }
 
+    fun addProductToCart() {
+        val product = _uiState.value.product
+
+        if (product?.id != null && product.title != null && product.price != null && product.image != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                when (val response = shoppingRepository.addProductToCart(
+                    CartEntity(
+                        id = product.id,
+                        title = product.title,
+                        price = product.price.toDouble(),
+                        image = product.image,
+                        count = 0
+                    )
+                )) {
+                    is Response.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                userMessages = listOf(R.string.product_added_cart),
+                                isProductInCart = true
+                            )
+                        }
+                    }
+                    is Response.Error -> {
+                        _uiState.update {
+                            it.copy(errorMessages = listOf(response.errorMessageId))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun findProductInCart(productId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val response = shoppingRepository.findFavoriteProduct(productId)) {
+                is Response.Success -> {
+                    _uiState.update {
+                        it.copy(isProductInCart = response.data != null)
+                    }
+                }
+
+                is Response.Error -> {}
+            }
+        }
+    }
+
     fun consumedUserMessages() {
         _uiState.update {
             it.copy(userMessages = listOf())
@@ -142,7 +187,7 @@ class ProductViewModel @Inject constructor(
 data class ProductScreenUiState(
     val product: Product? = null,
     val isProductFavorite: Boolean = false,
-    val favoriteBtnEnabled: Boolean = true,
     val userMessages: List<Int> = listOf(),
-    val errorMessages: List<Int> = listOf()
+    val errorMessages: List<Int> = listOf(),
+    val isProductInCart: Boolean = false
 )

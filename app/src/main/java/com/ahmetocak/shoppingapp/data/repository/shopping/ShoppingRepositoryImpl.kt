@@ -1,9 +1,11 @@
 package com.ahmetocak.shoppingapp.data.repository.shopping
 
 import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.cart.CartLocalDataSource
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.FavoriteProductLocalDatasource
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductLocalDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSource
+import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import javax.inject.Inject
@@ -11,7 +13,8 @@ import javax.inject.Inject
 class ShoppingRepositoryImpl @Inject constructor(
     private val remoteDataSource: ShoppingRemoteDataSource,
     private val productLocalDataSource: ProductLocalDataSource,
-    private val favoriteProductLocalDatasource: FavoriteProductLocalDatasource
+    private val favoriteProductLocalDatasource: FavoriteProductLocalDatasource,
+    private val cartLocalDataSource: CartLocalDataSource
 ) : ShoppingRepository {
 
     override suspend fun getCategories(): Response<List<String>> = remoteDataSource.getCategories()
@@ -35,4 +38,16 @@ class ShoppingRepositoryImpl @Inject constructor(
 
     override suspend fun removeFavoriteProduct(productId: Int): Response<Unit> =
         favoriteProductLocalDatasource.removeFavoriteProduct(productId)
+
+    override suspend fun addProductToCart(cartEntity: CartEntity): Response<Unit> =
+        cartLocalDataSource.addProductToCart(cartEntity)
+
+    override suspend fun removeProductFromCart(productId: Int): Response<Unit> =
+        cartLocalDataSource.removeProductFromCart(productId)
+
+    override suspend fun getCart(): Response<List<CartEntity>> =
+        cartLocalDataSource.getCart()
+
+    override suspend fun findCartItem(productId: Int): Response<CartEntity?> =
+        cartLocalDataSource.findCartItem(productId)
 }

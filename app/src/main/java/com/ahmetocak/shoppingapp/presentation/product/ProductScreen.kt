@@ -42,7 +42,7 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.Product
 
 @Composable
-fun ProductScreen(modifier: Modifier = Modifier) {
+fun ProductScreen(modifier: Modifier = Modifier, onNavigateCartScreen: () -> Unit) {
 
     val viewModel: ProductViewModel = hiltViewModel()
 
@@ -72,6 +72,18 @@ fun ProductScreen(modifier: Modifier = Modifier) {
         isProductFavorite = uiState.isProductFavorite,
         onFavoriteBtnClicked = {
             viewModel.onFavoriteProductClick()
+        },
+        onAddToCartClicked = {
+            if (uiState.isProductInCart) {
+                onNavigateCartScreen()
+            } else {
+                viewModel.addProductToCart()
+            }
+        },
+        cartButtonText = if (uiState.isProductInCart) {
+            stringResource(id = R.string.go_to_cart)
+        } else {
+            stringResource(id = R.string.add_to_cart)
         }
     )
 }
@@ -81,7 +93,9 @@ private fun ProductScreenContent(
     modifier: Modifier,
     product: Product?,
     isProductFavorite: Boolean,
-    onFavoriteBtnClicked: () -> Unit
+    onFavoriteBtnClicked: () -> Unit,
+    onAddToCartClicked: () -> Unit,
+    cartButtonText: String
 ) {
     if (product != null) {
         Column(
@@ -103,7 +117,9 @@ private fun ProductScreenContent(
                 price = product.price?.toDouble() ?: 0.0,
                 rate = product.rating?.rate ?: 0.0,
                 isProductFavorite = isProductFavorite,
-                onFavoriteBtnClicked = onFavoriteBtnClicked
+                onFavoriteBtnClicked = onFavoriteBtnClicked,
+                onAddToCartClicked = onAddToCartClicked,
+                cartButtonText = cartButtonText
             )
         }
     }
@@ -117,7 +133,9 @@ private fun ProductDetails(
     price: Double,
     rate: Double,
     onFavoriteBtnClicked: () -> Unit,
-    isProductFavorite: Boolean
+    isProductFavorite: Boolean,
+    onAddToCartClicked: () -> Unit,
+    cartButtonText: String
 ) {
     Column(
         modifier = modifier,
@@ -132,7 +150,12 @@ private fun ProductDetails(
             isProductFavorite = isProductFavorite
         )
         HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Color.Black)
-        AddToCartSection(modifier = Modifier.weight(1f), price = price)
+        AddToCartSection(
+            modifier = Modifier.weight(1f),
+            price = price,
+            onAddToCartClicked = onAddToCartClicked,
+            cartButtonText = cartButtonText
+        )
     }
 }
 
@@ -188,7 +211,12 @@ private fun ProductInfo(
 }
 
 @Composable
-private fun AddToCartSection(modifier: Modifier, price: Double) {
+private fun AddToCartSection(
+    modifier: Modifier,
+    price: Double,
+    onAddToCartClicked: () -> Unit,
+    cartButtonText: String
+) {
     Row(
         modifier = modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -207,12 +235,12 @@ private fun AddToCartSection(modifier: Modifier, price: Double) {
                     start = dimensionResource(id = R.dimen.four_level_margin),
                     end = dimensionResource(id = R.dimen.two_level_margin)
                 ),
-            onClick = { /*TODO*/ },
+            onClick = onAddToCartClicked,
             contentPadding = PaddingValues(vertical = 12.dp),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.add_to_cart),
+                text = cartButtonText,
                 style = MaterialTheme.typography.titleLarge
             )
         }

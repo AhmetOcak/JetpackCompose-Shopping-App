@@ -1,6 +1,7 @@
 package com.ahmetocak.shoppingapp.data.repository.shopping
 
 import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 
@@ -21,4 +22,12 @@ interface ShoppingRepository {
     suspend fun findFavoriteProduct(productId: Int): Response<ProductEntity?>
 
     suspend fun removeFavoriteProduct(productId: Int): Response<Unit>
+
+    suspend fun addProductToCart(cartEntity: CartEntity): Response<Unit>
+
+    suspend fun removeProductFromCart(productId: Int): Response<Unit>
+
+    suspend fun getCart(): Response<List<CartEntity>>
+
+    suspend fun findCartItem(productId: Int): Response<CartEntity?>
 }
