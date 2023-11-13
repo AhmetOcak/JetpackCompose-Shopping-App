@@ -15,4 +15,12 @@
     <color name="orange_300">#fabb49</color>
     <color name="orange_400">#f8d26d</color>
     <color name="orange_500">#f6e991</color>
+
+    <color name="dark_green">#2E7037</color>
+    <color name="hunter_green">#42683B</color>
+    <color name="dark_moss_green">#56603F</color>
+    <color name="walnut_brown">#6A5843</color>
+    <color name="bole">#7E4F46</color>
+    <color name="cordovan">#92474A</color>
+    <color name="redwood">#A63F4E</color>
 </resources>
