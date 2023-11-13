@@ -2,6 +2,7 @@ package com.ahmetocak.shoppingapp.presentation.cart
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -103,7 +104,6 @@ private fun CartScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
             .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
     ) {
         CartList(
@@ -113,8 +113,17 @@ private fun CartScreenContent(
             onDecreaseClicked = onDecreaseClicked,
             onIncreaseClicked = onIncreaseClicked
         )
-        CheckoutDetails(modifier = modifier.weight(1f), subtotal = subtotal)
-        CheckOutButton(modifier = modifier, subtotal = subtotal)
+        CheckoutDetails(
+            modifier = modifier
+                .weight(1f)
+                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
+            subtotal = subtotal
+        )
+        CheckOutButton(
+            modifier = modifier
+                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
+            subtotal = subtotal
+        )
     }
 }
 
@@ -171,9 +180,18 @@ private fun CartList(
     onDecreaseClicked: (Int) -> Unit
 ) {
     LazyVerticalGrid(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(
+                        colorResource(id = R.color.mauve),
+                        colorResource(id = R.color.pale_purple),
+                    ),
+                )
+            ),
         columns = GridCells.Fixed(1),
-        contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.two_level_margin)),
+        contentPadding = PaddingValues(dimensionResource(id = R.dimen.two_level_margin)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
     ) {
         items(cartList) { cart ->
@@ -229,7 +247,8 @@ private fun CartItem(
                 .padding(
                     top = dimensionResource(id = R.dimen.two_level_margin),
                     bottom = dimensionResource(id = R.dimen.one_level_margin)
-                )
+                ),
+            color = Color.Magenta
         )
     }
 }

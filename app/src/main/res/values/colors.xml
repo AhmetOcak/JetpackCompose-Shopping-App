@@ -7,7 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="green">#4CAF50</color>
+    <color name="green">#03C20B</color>
     <color name="orange">#FF9800</color>
 
     <color name="orange_100">#ff8c00</color>
@@ -23,4 +23,7 @@
     <color name="bole">#7E4F46</color>
     <color name="cordovan">#92474A</color>
     <color name="redwood">#A63F4E</color>
+
+    <color name="pale_purple">#EADDFF</color>
+    <color name="mauve">#CDB9F9</color>
 </resources>
