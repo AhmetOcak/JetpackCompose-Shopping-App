@@ -136,7 +136,7 @@ class ProductViewModel @Inject constructor(
                         title = product.title,
                         price = product.price.toDouble(),
                         image = product.image,
-                        count = 0
+                        count = 1
                     )
                 )) {
                     is Response.Success -> {
