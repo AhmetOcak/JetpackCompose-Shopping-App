@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.presentation.chart
+package com.ahmetocak.shoppingapp.presentation.cart
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -41,23 +41,23 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.ui.components.ChartItemNumber
+import com.ahmetocak.shoppingapp.ui.components.CartItemNumber
 
 @Composable
-fun ChartScreen(modifier: Modifier = Modifier) {
+fun CartScreen(modifier: Modifier = Modifier) {
 
-    ChartScreenContent(modifier = modifier)
+    CartScreenContent(modifier = modifier)
 }
 
 @Composable
-private fun ChartScreenContent(modifier: Modifier) {
+private fun CartScreenContent(modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
             .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
     ) {
-        ChartList(modifier = modifier.weight(4f))
+        CartList(modifier = modifier.weight(4f))
         CheckoutDetails(modifier = modifier.weight(1f))
         CheckOutButton(modifier = modifier)
     }
@@ -107,14 +107,14 @@ private fun CheckoutDetails(modifier: Modifier) {
 }
 
 @Composable
-private fun ChartList(modifier: Modifier) {
+private fun CartList(modifier: Modifier) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = dimensionResource(id = R.dimen.two_level_margin)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
     ) {
         items(8) {
-            ChartItem(
+            CartItem(
                 imageUrl = "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
                 title = "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
                 price = 109.43
@@ -132,7 +132,7 @@ private fun ChartList(modifier: Modifier) {
 }
 
 @Composable
-private fun ChartItem(imageUrl: String, title: String, price: Double) {
+private fun CartItem(imageUrl: String, title: String, price: Double) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -141,16 +141,16 @@ private fun ChartItem(imageUrl: String, title: String, price: Double) {
             dimensionResource(id = R.dimen.one_level_margin)
         )
     ) {
-        ChartItemImg(imageUrl = imageUrl)
+        CartItemImg(imageUrl = imageUrl)
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
-            ChartNameAndRemove(title = title)
-            ChartPriceAndCount(price)
+            CartNameAndRemove(title = title)
+            CartPriceAndCount(price)
         }
     }
 }
 
 @Composable
-private fun ChartPriceAndCount(price: Double) {
+private fun CartPriceAndCount(price: Double) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -162,12 +162,12 @@ private fun ChartPriceAndCount(price: Double) {
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
-        ChartItemNumber()
+        CartItemNumber()
     }
 }
 
 @Composable
-private fun ChartNameAndRemove(title: String) {
+private fun CartNameAndRemove(title: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -189,7 +189,7 @@ private fun ChartNameAndRemove(title: String) {
 }
 
 @Composable
-private fun ChartItemImg(imageUrl: String) {
+private fun CartItemImg(imageUrl: String) {
     Card(
         modifier = Modifier.size(128.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),

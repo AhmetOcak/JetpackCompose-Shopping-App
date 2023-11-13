@@ -23,7 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ahmetocak.shoppingapp.core.navigation.BottomNavItem
 import com.ahmetocak.shoppingapp.core.navigation.screens.NavScreen
-import com.ahmetocak.shoppingapp.presentation.chart.ChartScreen
+import com.ahmetocak.shoppingapp.presentation.cart.CartScreen
 import com.ahmetocak.shoppingapp.presentation.favorites.FavoritesScreen
 import com.ahmetocak.shoppingapp.presentation.home.HomeScreen
 import com.ahmetocak.shoppingapp.presentation.login.LoginScreen
@@ -84,8 +84,8 @@ fun NavGraph(
                     navController.navigate("${NavScreen.ProductScreen.route}/$encodedValue")
                 })
             }
-            composable(route = NavScreen.ChartScreen.route) {
-                ChartScreen()
+            composable(route = NavScreen.CartScreen.route) {
+                CartScreen()
             }
             composable(route = NavScreen.FavoritesScreen.route) {
                 FavoritesScreen(onNavigateProductScreen = { product ->

@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
 
 @Composable
-fun ChartItemNumber() {
+fun CartItemNumber() {
     var count by rememberSaveable { mutableStateOf(1) }
 
     Row(
