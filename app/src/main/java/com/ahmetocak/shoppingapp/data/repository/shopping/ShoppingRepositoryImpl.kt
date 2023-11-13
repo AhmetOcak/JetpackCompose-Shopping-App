@@ -1,7 +1,7 @@
 package com.ahmetocak.shoppingapp.data.repository.shopping
 
 import com.ahmetocak.shoppingapp.common.Response
-import com.ahmetocak.shoppingapp.data.datasource.local.product.ProductLocalDataSource
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductLocalDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSource
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity

@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.data.datasource.local.product
+package com.ahmetocak.shoppingapp.data.datasource.local.shopping.product
 
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity

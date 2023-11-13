@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.data.datasource.local.product.product_db
+package com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.db
 
 import androidx.room.Dao
 import androidx.room.Insert

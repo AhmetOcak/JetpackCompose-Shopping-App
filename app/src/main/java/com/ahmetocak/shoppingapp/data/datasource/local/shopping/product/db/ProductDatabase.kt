@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.data.datasource.local.product.product_db
+package com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

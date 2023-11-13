@@ -2,8 +2,8 @@ package com.ahmetocak.shoppingapp.di
 
 import android.content.Context
 import androidx.room.Room
-import com.ahmetocak.shoppingapp.data.datasource.local.product.product_db.ProductDao
-import com.ahmetocak.shoppingapp.data.datasource.local.product.product_db.ProductDatabase
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.db.ProductDao
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.db.ProductDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

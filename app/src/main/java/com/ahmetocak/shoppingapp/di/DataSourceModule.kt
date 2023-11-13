@@ -1,8 +1,8 @@
 package com.ahmetocak.shoppingapp.di
 
-import com.ahmetocak.shoppingapp.data.datasource.local.product.ProductLocalDataSource
-import com.ahmetocak.shoppingapp.data.datasource.local.product.ProductLocalDataSourceImpl
-import com.ahmetocak.shoppingapp.data.datasource.local.product.product_db.ProductDao
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductLocalDataSource
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductLocalDataSourceImpl
+import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.db.ProductDao
 import com.ahmetocak.shoppingapp.data.datasource.remote.api.ShoppingApi
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteDatasourceImpl
@@ -39,7 +39,7 @@ object DataSourceModule {
 
     @Provides
     @Singleton
-    fun provideLocalProductDataSource(dao: ProductDao): ProductLocalDataSource {
-        return ProductLocalDataSourceImpl(dao)
+    fun provideLocalProductDataSource(productDao: ProductDao): ProductLocalDataSource {
+        return ProductLocalDataSourceImpl(productDao)
     }
 }
