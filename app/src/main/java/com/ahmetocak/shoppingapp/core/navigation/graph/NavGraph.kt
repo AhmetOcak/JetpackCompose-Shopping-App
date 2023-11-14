@@ -95,7 +95,9 @@ fun NavGraph(
                 )
             }
             composable(route = NavScreen.CartScreen.route) {
-                CartScreen()
+                CartScreen(onNavigatePaymentScreen = { totalAmount ->
+                    navController.navigate("${NavScreen.PaymentScreen.route}/$totalAmount")
+                })
             }
             composable(route = NavScreen.FavoritesScreen.route) {
                 FavoritesScreen(onNavigateProductScreen = { product ->
@@ -104,7 +106,12 @@ fun NavGraph(
                     navController.navigate("${NavScreen.ProductScreen.route}/$encodedValue")
                 })
             }
-            composable(route = NavScreen.PaymentScreen.route) {
+            composable(
+                route = "${NavScreen.PaymentScreen.route}/{${NavKeys.TOTAL_AMOUNT}}",
+                arguments = listOf(
+                    navArgument(NavKeys.TOTAL_AMOUNT) { type = NavType.FloatType }
+                )
+            ) {
                 PaymentScreen()
             }
             composable(

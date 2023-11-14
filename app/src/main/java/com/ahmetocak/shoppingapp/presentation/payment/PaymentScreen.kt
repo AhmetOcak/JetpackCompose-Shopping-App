@@ -16,6 +16,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -28,11 +30,14 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.CreditCard
 import com.ahmetocak.shoppingapp.ui.components.CreditCard
 import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
+import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
 fun PaymentScreen(modifier: Modifier = Modifier) {
 
     val viewModel: PaymentViewModel = hiltViewModel()
+
+    val uiState by viewModel.uiState.collectAsState()
 
     PaymentScreenContent(
         modifier = modifier,
@@ -53,7 +58,8 @@ fun PaymentScreen(modifier: Modifier = Modifier) {
         },
         onExpiryDateChanged = {
             viewModel.updateExpiryDate(it)
-        }
+        },
+        totalAmount = uiState.totalAmount + DELIVERY_FEE
     )
 }
 
@@ -64,7 +70,8 @@ private fun PaymentScreenContent(
     onHolderNameChanged: (String) -> Unit,
     onCardNumberChanged: (String) -> Unit,
     onExpiryDateChanged: (String) -> Unit,
-    onCvcChanged: (String) -> Unit
+    onCvcChanged: (String) -> Unit,
+    totalAmount: Double
 ) {
     Column(
         modifier = modifier
@@ -87,8 +94,8 @@ private fun PaymentScreenContent(
                 .height(96.dp),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.four_level_margin))
         ) {
-            PaymentDetail(modifier = modifier, titleId = R.string.delivery, description = 5.00)
-            PaymentDetail(modifier = modifier, titleId = R.string.total, description = 1370.00)
+            PaymentDetail(modifier = modifier, titleId = R.string.delivery, description = DELIVERY_FEE)
+            PaymentDetail(modifier = modifier, titleId = R.string.total, description = totalAmount)
         }
         PaymentButton(modifier = modifier)
     }
@@ -114,7 +121,7 @@ private fun RowScope.PaymentDetail(modifier: Modifier, titleId: Int, description
                 .padding(dimensionResource(id = R.dimen.two_level_margin)),
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "$$description", fontWeight = FontWeight.Bold)
+            Text(text = "$${String.format("%.2f", description)}", fontWeight = FontWeight.Bold)
             Text(text = stringResource(id = titleId), fontWeight = FontWeight.Light)
         }
     }

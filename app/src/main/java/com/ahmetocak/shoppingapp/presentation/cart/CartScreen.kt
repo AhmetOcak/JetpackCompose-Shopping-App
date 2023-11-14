@@ -54,9 +54,10 @@ import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.ui.components.CartItemCountSetter
+import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
-fun CartScreen(modifier: Modifier = Modifier) {
+fun CartScreen(modifier: Modifier = Modifier, onNavigatePaymentScreen: (Float) -> Unit) {
 
     val viewModel: CartViewModel = hiltViewModel()
 
@@ -92,6 +93,9 @@ fun CartScreen(modifier: Modifier = Modifier) {
         },
         onDecreaseClicked = {
             viewModel.decreaseProductCount(it)
+        },
+        onCheckoutBtnClicked = {
+            onNavigatePaymentScreen((uiState.subtotal).toFloat())
         }
     )
 }
@@ -103,7 +107,8 @@ private fun CartScreenContent(
     onRemoveItemClick: (Int) -> Unit,
     subtotal: Double,
     onIncreaseClicked: (Int) -> Unit,
-    onDecreaseClicked: (Int) -> Unit
+    onDecreaseClicked: (Int) -> Unit,
+    onCheckoutBtnClicked: () -> Unit
 ) {
     if (cartList.isNotEmpty()) {
         Column(
@@ -127,7 +132,8 @@ private fun CartScreenContent(
             CheckOutButton(
                 modifier = modifier
                     .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
-                subtotal = subtotal
+                subtotal = subtotal,
+                onCheckoutBtnClicked = onCheckoutBtnClicked
             )
         }
     } else {
@@ -136,7 +142,11 @@ private fun CartScreenContent(
 }
 
 @Composable
-private fun CheckOutButton(modifier: Modifier, subtotal: Double) {
+private fun CheckOutButton(
+    modifier: Modifier,
+    subtotal: Double,
+    onCheckoutBtnClicked: () -> Unit
+) {
     HorizontalDivider(
         modifier = modifier
             .fillMaxWidth()
@@ -144,7 +154,7 @@ private fun CheckOutButton(modifier: Modifier, subtotal: Double) {
     )
     Button(
         modifier = modifier.fillMaxWidth(),
-        onClick = { /*TODO*/ },
+        onClick = onCheckoutBtnClicked,
         contentPadding = PaddingValues(vertical = 16.dp),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -152,7 +162,7 @@ private fun CheckOutButton(modifier: Modifier, subtotal: Double) {
             text = buildAnnotatedString {
                 append(stringResource(id = R.string.checkout))
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                    append(" $${String.format("%.2f", subtotal)}")
+                    append(" $${String.format("%.2f", subtotal + DELIVERY_FEE)}")
                 }
             },
             style = MaterialTheme.typography.titleMedium
@@ -174,7 +184,7 @@ private fun CheckoutDetails(modifier: Modifier, subtotal: Double) {
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = stringResource(id = R.string.delivery_fee))
-            Text(text = "$${String.format("%.2f", 5.00)}", fontWeight = FontWeight.Bold)
+            Text(text = "$${String.format("%.2f", DELIVERY_FEE)}", fontWeight = FontWeight.Bold)
         }
     }
 }

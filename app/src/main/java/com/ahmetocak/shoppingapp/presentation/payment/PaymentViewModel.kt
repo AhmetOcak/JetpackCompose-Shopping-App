@@ -3,18 +3,31 @@ package com.ahmetocak.shoppingapp.presentation.payment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.ahmetocak.shoppingapp.utils.NavKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class PaymentViewModel @Inject constructor() : ViewModel() {
+class PaymentViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PaymentUiState())
     val uiState: StateFlow<PaymentUiState> = _uiState.asStateFlow()
+
+    init {
+        savedStateHandle.get<Float>(NavKeys.TOTAL_AMOUNT)?.let { amount ->
+            _uiState.update {
+                it.copy(totalAmount = amount.toDouble())
+            }
+        }
+    }
 
     var cardNumber by mutableStateOf("")
         private set
