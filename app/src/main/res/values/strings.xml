@@ -52,4 +52,6 @@
     <string name="product_added_cart">Product successfully added to cart.</string>
     <string name="go_to_cart">Go to cart</string>
     <string name="cart_empty">Your cart is currently empty!</string>
+    <string name="card_holder">Card Holder</string>
+    <string name="valid_thru">VALID THRU</string>
 </resources>

@@ -26,4 +26,9 @@
 
     <color name="pale_purple">#EADDFF</color>
     <color name="mauve">#CDB9F9</color>
+
+    <color name="blue_100">#12B3EB</color>
+    <color name="blue_200">#1DA5ED</color>
+    <color name="blue_300">#2897F0</color>
+    <color name="blue_400">#338AF2</color>
 </resources>
