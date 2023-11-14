@@ -24,9 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -43,9 +40,7 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.CreditCard
 
 @Composable
-fun CreditCard(cardInfo: CreditCard) {
-
-    var rotated by remember { mutableStateOf(false) }
+fun CreditCard(cardInfo: CreditCard, rotated: Boolean, onCardClick: () -> Unit) {
 
     val cardType = when (findCreditCardType(cardInfo.number)) {
         CardType.VISA -> { painterResource(id = R.drawable.visa) }
@@ -82,7 +77,7 @@ fun CreditCard(cardInfo: CreditCard) {
                 cameraDistance = 8 * density
             }
             .clickable {
-                rotated = !rotated
+                onCardClick()
             },
         shape = RoundedCornerShape(14.dp),
         elevation = CardDefaults.cardElevation(4.dp),

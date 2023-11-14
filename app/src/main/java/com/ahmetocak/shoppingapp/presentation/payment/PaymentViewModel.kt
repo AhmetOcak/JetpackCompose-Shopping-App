@@ -60,6 +60,12 @@ class PaymentViewModel @Inject constructor(
             cvc = value
         }
     }
+
+    var rotateCard by mutableStateOf(false)
+        private set
+    fun updateRotateCard(value: Boolean) {
+        rotateCard = value
+    }
 }
 
 data class PaymentUiState(

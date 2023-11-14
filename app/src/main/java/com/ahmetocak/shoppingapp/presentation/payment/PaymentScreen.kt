@@ -1,5 +1,7 @@
 package com.ahmetocak.shoppingapp.presentation.payment
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +18,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -59,7 +63,14 @@ fun PaymentScreen(modifier: Modifier = Modifier) {
         onExpiryDateChanged = {
             viewModel.updateExpiryDate(it)
         },
-        totalAmount = uiState.totalAmount + DELIVERY_FEE
+        totalAmount = uiState.totalAmount + DELIVERY_FEE,
+        onCardInputClicked = {
+            viewModel.updateRotateCard(it)
+        },
+        rotated = viewModel.rotateCard,
+        onCardClick = {
+            viewModel.updateRotateCard(!viewModel.rotateCard)
+        }
     )
 }
 
@@ -71,21 +82,25 @@ private fun PaymentScreenContent(
     onCardNumberChanged: (String) -> Unit,
     onExpiryDateChanged: (String) -> Unit,
     onCvcChanged: (String) -> Unit,
-    totalAmount: Double
+    totalAmount: Double,
+    onCardInputClicked: (Boolean) -> Unit,
+    rotated: Boolean,
+    onCardClick: () -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.two_level_margin))
     ) {
-        CreditCard(cardInfo = cardInfo)
+        CreditCard(cardInfo = cardInfo, rotated = rotated, onCardClick = onCardClick)
         CardDetails(
             modifier = modifier,
             onHolderNameChanged = onHolderNameChanged,
             onCardNumberChanged = onCardNumberChanged,
             onCvcChanged = onCvcChanged,
             onExpiryDateChanged = onExpiryDateChanged,
-            cardInfo = cardInfo
+            cardInfo = cardInfo,
+            onCardInputClicked = onCardInputClicked
         )
         Row(
             modifier = modifier
@@ -94,7 +109,11 @@ private fun PaymentScreenContent(
                 .height(96.dp),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.four_level_margin))
         ) {
-            PaymentDetail(modifier = modifier, titleId = R.string.delivery, description = DELIVERY_FEE)
+            PaymentDetail(
+                modifier = modifier,
+                titleId = R.string.delivery,
+                description = DELIVERY_FEE
+            )
             PaymentDetail(modifier = modifier, titleId = R.string.total, description = totalAmount)
         }
         PaymentButton(modifier = modifier)
@@ -134,24 +153,28 @@ private fun CardDetails(
     onCardNumberChanged: (String) -> Unit,
     onCvcChanged: (String) -> Unit,
     onExpiryDateChanged: (String) -> Unit,
-    cardInfo: CreditCard
+    cardInfo: CreditCard,
+    onCardInputClicked: (Boolean) -> Unit
 ) {
     CardHolderName(
         modifier = modifier,
         onHolderNameChanged = onHolderNameChanged,
-        holderNameVal = cardInfo.holderName
+        holderNameVal = cardInfo.holderName,
+        onCardInputClicked = onCardInputClicked
     )
     CardNumber(
         modifier = modifier,
         onCardNumberChanged = onCardNumberChanged,
-        cardNumberVal = cardInfo.number
+        cardNumberVal = cardInfo.number,
+        onCardInputClicked = onCardInputClicked
     )
     CardDateAndCVC(
         modifier = modifier,
         onExpiryDateChanged = onExpiryDateChanged,
         onCvcChanged = onCvcChanged,
         expiryDateVal = cardInfo.expiryDate,
-        cvcVal = cardInfo.cvc
+        cvcVal = cardInfo.cvc,
+        onCardInputClicked = onCardInputClicked
     )
 }
 
@@ -159,7 +182,8 @@ private fun CardDetails(
 fun CardHolderName(
     modifier: Modifier,
     onHolderNameChanged: (String) -> Unit,
-    holderNameVal: String
+    holderNameVal: String,
+    onCardInputClicked: (Boolean) -> Unit
 ) {
     OutlinedTextField(
         modifier = modifier
@@ -171,7 +195,11 @@ fun CardHolderName(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         label = {
             Text(text = stringResource(id = R.string.card_holder))
-        }
+        },
+        interactionSource = interactionSource(
+            cardRotate = false,
+            onCardInputClicked = onCardInputClicked
+        )
     )
 }
 
@@ -179,7 +207,8 @@ fun CardHolderName(
 private fun CardNumber(
     modifier: Modifier,
     onCardNumberChanged: (String) -> Unit,
-    cardNumberVal: String
+    cardNumberVal: String,
+    onCardInputClicked: (Boolean) -> Unit
 ) {
     OutlinedTextField(
         modifier = modifier
@@ -191,7 +220,11 @@ private fun CardNumber(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         label = {
             Text(text = stringResource(id = R.string.card_num))
-        }
+        },
+        interactionSource = interactionSource(
+            cardRotate = false,
+            onCardInputClicked = onCardInputClicked
+        )
     )
 }
 
@@ -201,7 +234,8 @@ private fun CardDateAndCVC(
     onCvcChanged: (String) -> Unit,
     onExpiryDateChanged: (String) -> Unit,
     cvcVal: String,
-    expiryDateVal: String
+    expiryDateVal: String,
+    onCardInputClicked: (Boolean) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -223,7 +257,11 @@ private fun CardDateAndCVC(
             },
             placeholder = {
                 Text(text = stringResource(id = R.string.expiry_date_placeholder))
-            }
+            },
+            interactionSource = interactionSource(
+                cardRotate = false,
+                onCardInputClicked = onCardInputClicked
+            )
         )
         Spacer(modifier = modifier.width(32.dp))
         OutlinedTextField(
@@ -236,7 +274,28 @@ private fun CardDateAndCVC(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = {
                 Text(text = stringResource(id = R.string.cvc))
-            }
+            },
+            interactionSource = interactionSource(
+                cardRotate = true,
+                onCardInputClicked = onCardInputClicked
+            )
         )
     }
+}
+
+@Composable
+private fun interactionSource(
+    cardRotate: Boolean,
+    onCardInputClicked: (Boolean) -> Unit
+): MutableInteractionSource {
+    return remember { MutableInteractionSource() }
+        .also { interactionSource ->
+            LaunchedEffect(interactionSource) {
+                interactionSource.interactions.collect {
+                    if (it is PressInteraction.Release) {
+                        onCardInputClicked(cardRotate)
+                    }
+                }
+            }
+        }
 }
