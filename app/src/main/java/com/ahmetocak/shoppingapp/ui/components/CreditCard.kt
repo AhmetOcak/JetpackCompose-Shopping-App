@@ -1,6 +1,5 @@
 package com.ahmetocak.shoppingapp.ui.components
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -41,17 +40,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.model.shopping.CreditCard
 
 @Composable
-fun CreditCard(
-    cardNumber: String,
-    holderName: String,
-    cvc: String,
-    expireDate: String
-) {
+fun CreditCard(cardInfo: CreditCard) {
+
     var rotated by remember { mutableStateOf(false) }
 
-    val cardType = when (findCreditCardType(cardNumber.replace(" ", ""))) {
+    val cardType = when (findCreditCardType(cardInfo.number)) {
         CardType.VISA -> { painterResource(id = R.drawable.visa) }
         CardType.MASTERCARD -> { painterResource(id = R.drawable.mastercard) }
         CardType.AMERICAN_EXPRESS -> { painterResource(id = R.drawable.american_express) }
@@ -112,7 +108,6 @@ fun CreditCard(
                     verticalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                 ) {
-
                     Row(horizontalArrangement = Arrangement.SpaceBetween) {
                         Icon(
                             painter = painterResource(R.drawable.ic_contactless),
@@ -129,7 +124,7 @@ fun CreditCard(
                         Spacer(modifier = Modifier.weight(1f))
                         Image(
                             painter = cardType,
-                            contentDescription = "test",
+                            contentDescription = null,
                             modifier = Modifier
                                 .width(50.dp)
                                 .height(50.dp)
@@ -140,7 +135,7 @@ fun CreditCard(
                     }
 
                     Text(
-                        text = cardNumber,
+                        text = cardInfo.number.replace("....".toRegex(), "$0 "),
                         modifier = Modifier
                             .padding(top = 16.dp)
                             .graphicsLayer {
@@ -166,7 +161,7 @@ fun CreditCard(
                                     }
                             )
                             Text(
-                                text = holderName,
+                                text = cardInfo.holderName,
                                 color = Color.White,
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier
@@ -188,7 +183,7 @@ fun CreditCard(
                                     }
                             )
                             Text(
-                                text = expireDate,
+                                text = cardInfo.expiryDate.chunked(2).joinToString(separator = "/"),
                                 color = Color.White,
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier
@@ -212,7 +207,7 @@ fun CreditCard(
                         color = Color.Black
                     )
                     Text(
-                        text = cvc,
+                        text = cardInfo.cvc,
                         color = Color.Black,
                         modifier = Modifier
                             .padding(10.dp)
@@ -233,7 +228,6 @@ fun CreditCard(
 }
 
 private fun findCreditCardType(cardNumber: String): CardType {
-    Log.d("NUMBER", cardNumber)
     return when {
         cardNumber.startsWith("4") && (cardNumber.length == 13 || cardNumber.length == 16 || cardNumber.length == 19) -> CardType.VISA
         cardNumber.startsWith("5") && (cardNumber.length == 16 || cardNumber.length == 19) -> CardType.MASTERCARD

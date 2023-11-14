@@ -54,4 +54,5 @@
     <string name="cart_empty">Your cart is currently empty!</string>
     <string name="card_holder">Card Holder</string>
     <string name="valid_thru">VALID THRU</string>
+    <string name="expiry_date_placeholder">MM/YY</string>
 </resources>

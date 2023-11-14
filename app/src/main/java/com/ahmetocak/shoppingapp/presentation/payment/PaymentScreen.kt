@@ -23,30 +23,63 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.model.shopping.CreditCard
 import com.ahmetocak.shoppingapp.ui.components.CreditCard
 import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
 
 @Composable
 fun PaymentScreen(modifier: Modifier = Modifier) {
 
-    PaymentScreenContent(modifier = modifier)
+    val viewModel: PaymentViewModel = hiltViewModel()
+
+    PaymentScreenContent(
+        modifier = modifier,
+        cardInfo = CreditCard(
+            holderName = viewModel.holderName,
+            number = viewModel.cardNumber,
+            expiryDate = viewModel.expiryDate,
+            cvc = viewModel.cvc
+        ),
+        onHolderNameChanged = {
+            viewModel.updateHolderName(it)
+        },
+        onCardNumberChanged = {
+            viewModel.updateCardNumber(it)
+        },
+        onCvcChanged = {
+            viewModel.updateCVC(it)
+        },
+        onExpiryDateChanged = {
+            viewModel.updateExpiryDate(it)
+        }
+    )
 }
 
 @Composable
-private fun PaymentScreenContent(modifier: Modifier) {
+private fun PaymentScreenContent(
+    modifier: Modifier,
+    cardInfo: CreditCard,
+    onHolderNameChanged: (String) -> Unit,
+    onCardNumberChanged: (String) -> Unit,
+    onExpiryDateChanged: (String) -> Unit,
+    onCvcChanged: (String) -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.two_level_margin))
     ) {
-        CreditCard(
-            cardNumber = "5425 2334 3010 9903",
-            holderName = "Ahmet ocak",
-            cvc = "123",
-            expireDate = "02/08"
+        CreditCard(cardInfo = cardInfo)
+        CardDetails(
+            modifier = modifier,
+            onHolderNameChanged = onHolderNameChanged,
+            onCardNumberChanged = onCardNumberChanged,
+            onCvcChanged = onCvcChanged,
+            onExpiryDateChanged = onExpiryDateChanged,
+            cardInfo = cardInfo
         )
-        CardDetails(modifier = modifier)
         Row(
             modifier = modifier
                 .fillMaxWidth()
@@ -88,20 +121,45 @@ private fun RowScope.PaymentDetail(modifier: Modifier, titleId: Int, description
 }
 
 @Composable
-private fun CardDetails(modifier: Modifier) {
-    CardHolderName(modifier = modifier)
-    CardNumber(modifier = modifier)
-    CardDateAndCVC(modifier = modifier)
+private fun CardDetails(
+    modifier: Modifier,
+    onHolderNameChanged: (String) -> Unit,
+    onCardNumberChanged: (String) -> Unit,
+    onCvcChanged: (String) -> Unit,
+    onExpiryDateChanged: (String) -> Unit,
+    cardInfo: CreditCard
+) {
+    CardHolderName(
+        modifier = modifier,
+        onHolderNameChanged = onHolderNameChanged,
+        holderNameVal = cardInfo.holderName
+    )
+    CardNumber(
+        modifier = modifier,
+        onCardNumberChanged = onCardNumberChanged,
+        cardNumberVal = cardInfo.number
+    )
+    CardDateAndCVC(
+        modifier = modifier,
+        onExpiryDateChanged = onExpiryDateChanged,
+        onCvcChanged = onCvcChanged,
+        expiryDateVal = cardInfo.expiryDate,
+        cvcVal = cardInfo.cvc
+    )
 }
 
 @Composable
-fun CardHolderName(modifier: Modifier) {
+fun CardHolderName(
+    modifier: Modifier,
+    onHolderNameChanged: (String) -> Unit,
+    holderNameVal: String
+) {
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = dimensionResource(id = R.dimen.two_level_margin)),
-        value = "",
-        onValueChange = {},
+        value = holderNameVal,
+        onValueChange = onHolderNameChanged,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         label = {
@@ -110,15 +168,18 @@ fun CardHolderName(modifier: Modifier) {
     )
 }
 
-// TODO max 16 karakter ve 4 karakterde bir boşluk bırakma işi yapılacak
 @Composable
-private fun CardNumber(modifier: Modifier) {
+private fun CardNumber(
+    modifier: Modifier,
+    onCardNumberChanged: (String) -> Unit,
+    cardNumberVal: String
+) {
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = dimensionResource(id = R.dimen.two_level_margin)),
-        value = "",
-        onValueChange = {},
+        value = cardNumberVal,
+        onValueChange = onCardNumberChanged,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         label = {
@@ -127,9 +188,14 @@ private fun CardNumber(modifier: Modifier) {
     )
 }
 
-// TODO karakter ayarı yapılacak
 @Composable
-private fun CardDateAndCVC(modifier: Modifier) {
+private fun CardDateAndCVC(
+    modifier: Modifier,
+    onCvcChanged: (String) -> Unit,
+    onExpiryDateChanged: (String) -> Unit,
+    cvcVal: String,
+    expiryDateVal: String
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -141,12 +207,15 @@ private fun CardDateAndCVC(modifier: Modifier) {
             modifier = modifier
                 .weight(1f)
                 .fillMaxWidth(),
-            value = "",
-            onValueChange = {},
+            value = expiryDateVal,
+            onValueChange = onExpiryDateChanged,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = {
                 Text(text = stringResource(id = R.string.expiry_date))
+            },
+            placeholder = {
+                Text(text = stringResource(id = R.string.expiry_date_placeholder))
             }
         )
         Spacer(modifier = modifier.width(32.dp))
@@ -154,8 +223,8 @@ private fun CardDateAndCVC(modifier: Modifier) {
             modifier = modifier
                 .weight(1f)
                 .fillMaxWidth(),
-            value = "",
-            onValueChange = {},
+            value = cvcVal,
+            onValueChange = onCvcChanged,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             label = {
