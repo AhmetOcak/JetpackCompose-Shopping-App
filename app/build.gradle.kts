@@ -120,7 +120,4 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
-
-    // Turbine
-    testImplementation("app.cash.turbine:turbine:0.12.3")
 }
