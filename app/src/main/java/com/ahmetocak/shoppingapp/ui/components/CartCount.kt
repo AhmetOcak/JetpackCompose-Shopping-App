@@ -53,7 +53,7 @@ fun CartItemCountSetter(
                 Color.Gray
             }
         )
-        Text(text = "$count")
+        Text(text = "$count", color = Color.Black)
         IcBtn(
             onClick = {
                 if (count < 10) {

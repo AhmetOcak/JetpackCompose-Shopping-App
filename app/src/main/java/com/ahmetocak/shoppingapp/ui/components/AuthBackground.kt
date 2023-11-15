@@ -2,9 +2,11 @@ package com.ahmetocak.shoppingapp.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +28,10 @@ fun AuthBackground(modifier: Modifier) {
     var sizeImage by remember { mutableStateOf(IntSize.Zero) }
 
     val gradient = Brush.verticalGradient(
-        colors = listOf(Color.Transparent, Color.White),
+        colors = listOf(
+            Color.Transparent,
+            if (isSystemInDarkTheme()) MaterialTheme.colorScheme.background else Color.White
+        ),
         startY = sizeImage.height.toFloat() / 1.5f,
         endY = sizeImage.height.toFloat()
     )

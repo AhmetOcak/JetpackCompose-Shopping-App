@@ -82,11 +82,13 @@ fun ProductItem(
                 fontWeight = FontWeight.Bold,
                 minLines = 2,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = Color.Black
             )
             Text(
                 modifier = modifier.padding(top = dimensionResource(id = R.dimen.one_level_margin)),
-                text = "$${product.price}"
+                text = "$${product.price}",
+                color = Color.Black
             )
         }
     }

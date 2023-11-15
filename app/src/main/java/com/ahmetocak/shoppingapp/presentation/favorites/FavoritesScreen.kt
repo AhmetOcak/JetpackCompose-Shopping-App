@@ -199,11 +199,13 @@ private fun FavoriteItem(
                 fontWeight = FontWeight.Bold,
                 maxLines = 3,
                 minLines = 3,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                color = Color.Black
             )
             Text(
                 modifier = modifier.padding(top = dimensionResource(id = R.dimen.one_level_margin)),
-                text = "$$price"
+                text = "$$price",
+                color = Color.Black
             )
         }
     }

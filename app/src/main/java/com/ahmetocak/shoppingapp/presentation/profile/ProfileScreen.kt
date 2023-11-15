@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -332,17 +334,25 @@ private fun ProfileSection(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Brush.horizontalGradient(listOf(
-                colorResource(id = R.color.orange_100),
-                colorResource(id = R.color.orange_200),
-                colorResource(id = R.color.orange_300),
-                colorResource(id = R.color.orange_400),
-                colorResource(id = R.color.orange_500)
-            ))),
+            .background(
+                Brush.horizontalGradient(
+                    listOf(
+                        colorResource(id = R.color.orange_100),
+                        colorResource(id = R.color.orange_200),
+                        colorResource(id = R.color.orange_300),
+                        colorResource(id = R.color.orange_400),
+                        colorResource(id = R.color.orange_500)
+                    )
+                )
+            ),
         contentAlignment = Alignment.TopEnd
     ) {
         IconButton(onClick = onSignOutClicked) {
-            Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null)
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                contentDescription = null,
+                tint = Color.Black
+            )
         }
     }
     Column(
@@ -385,7 +395,8 @@ private fun ProfileSection(
                 .padding(top = dimensionResource(id = R.dimen.two_level_margin)),
             text = userName,
             style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = Color.Black
         )
     }
 }
@@ -419,21 +430,10 @@ private fun AccountInfoSection(
                     imageId = it.imageId,
                     titleId = it.titleId,
                     description = when (it.infoType) {
-                        InfoType.NAME -> {
-                            name
-                        }
-
-                        InfoType.MOBILE -> {
-                            phoneNumber
-                        }
-
-                        InfoType.ADDRESS -> {
-                            address
-                        }
-
-                        InfoType.BIRTHDATE -> {
-                            birthdate
-                        }
+                        InfoType.NAME -> { name }
+                        InfoType.MOBILE -> { phoneNumber }
+                        InfoType.ADDRESS -> { address }
+                        InfoType.BIRTHDATE -> { birthdate }
                     },
                     infoType = it.infoType,
                     onAccountInfoClicked = onAccountInfoClicked
@@ -472,7 +472,8 @@ private fun Info(
             Image(
                 modifier = modifier.size(48.dp),
                 painter = painterResource(id = imageId),
-                contentDescription = null
+                contentDescription = null,
+                colorFilter = if (isSystemInDarkTheme()) ColorFilter.tint(colorResource(id = R.color.orange_500)) else null
             )
             Column(modifier = modifier.fillMaxWidth()) {
                 Text(text = stringResource(id = titleId), fontWeight = FontWeight.Bold)

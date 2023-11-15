@@ -287,7 +287,8 @@ private fun CartPriceAndCount(
             modifier = Modifier.weight(1f),
             text = "$${String.format("%.2f", price)}",
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
         )
         CartItemCountSetter(
             itemCount = itemCount,
@@ -309,10 +310,11 @@ private fun CartNameAndRemove(id: Int, title: String, onRemoveItemClick: (Int) -
             text = title,
             style = MaterialTheme.typography.titleMedium,
             overflow = TextOverflow.Ellipsis,
-            maxLines = 2
+            maxLines = 2,
+            color = Color.Black
         )
         IconButton(onClick = { onRemoveItemClick(id) }) {
-            Icon(imageVector = Icons.Filled.Clear, contentDescription = null)
+            Icon(imageVector = Icons.Filled.Clear, contentDescription = null, tint = Color.Black)
         }
     }
 }
