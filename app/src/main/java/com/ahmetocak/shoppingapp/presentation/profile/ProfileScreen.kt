@@ -101,6 +101,15 @@ fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
 
     val activity = LocalContext.current as Activity
 
+    if (uiState.errorMessages.isNotEmpty()) {
+        Toast.makeText(
+            LocalContext.current,
+            uiState.errorMessages.first(),
+            Toast.LENGTH_SHORT
+        ).show()
+        viewModel.consumedErrorMessage()
+    }
+
     if (uiState.userMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
@@ -158,37 +167,17 @@ fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
         },
         onUpdateClick = {
             when (viewModel.infoType) {
-                InfoType.NAME -> {
-                    viewModel.updateUserName()
-                }
-
-                InfoType.MOBILE -> {
-                    viewModel.sendVerificationCode(activity)
-                }
-
-                InfoType.ADDRESS -> {
-                    viewModel.uploadUserAddress()
-                }
-
+                InfoType.NAME -> { viewModel.updateUserName() }
+                InfoType.MOBILE -> { viewModel.sendVerificationCode(activity) }
+                InfoType.ADDRESS -> { viewModel.uploadUserAddress() }
                 else -> {}
             }
         },
         dialogTitle = when (viewModel.infoType) {
-            InfoType.NAME -> {
-                stringResource(id = R.string.name)
-            }
-
-            InfoType.MOBILE -> {
-                stringResource(id = R.string.mobile)
-            }
-
-            InfoType.ADDRESS -> {
-                stringResource(id = R.string.address)
-            }
-
-            InfoType.BIRTHDATE -> {
-                stringResource(id = R.string.birthdate)
-            }
+            InfoType.NAME -> { stringResource(id = R.string.name) }
+            InfoType.MOBILE -> { stringResource(id = R.string.mobile) }
+            InfoType.ADDRESS -> { stringResource(id = R.string.address) }
+            InfoType.BIRTHDATE -> { stringResource(id = R.string.birthdate) }
         },
         infoType = viewModel.infoType,
         onUserPhotoClicked = {
@@ -373,21 +362,20 @@ private fun ProfileSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        if (userImgUrl != null) {
-            AsyncImage(
-                modifier = Modifier
-                    .size(128.dp)
-                    .clip(CircleShape)
-                    .clickable(onClick = onUserPhotoClicked),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(userImgUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.empty_profile_img)
-            )
-        }
+        AsyncImage(
+            modifier = Modifier
+                .size(128.dp)
+                .clip(CircleShape)
+                .clickable(onClick = onUserPhotoClicked),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(userImgUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            error = painterResource(id = R.drawable.empty_profile_img),
+            placeholder = painterResource(id = R.drawable.empty_profile_img)
+        )
         Text(
             modifier = Modifier
                 .fillMaxWidth()

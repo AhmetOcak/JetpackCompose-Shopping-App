@@ -265,6 +265,12 @@ class ProfileViewModel @Inject constructor(
             it.copy(userMessages = listOf())
         }
     }
+
+    fun consumedErrorMessage() {
+        _uiState.update {
+            it.copy(errorMessages = listOf())
+        }
+    }
 }
 
 data class ProfileUiState(

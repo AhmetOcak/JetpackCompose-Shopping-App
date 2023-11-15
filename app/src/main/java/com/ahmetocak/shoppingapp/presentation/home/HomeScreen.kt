@@ -1,6 +1,8 @@
 package com.ahmetocak.shoppingapp.presentation.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -29,8 +31,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.Product
@@ -44,7 +49,6 @@ fun HomeScreen(
     onNavigateProductScreen: (Product) -> Unit,
     onNavigateCartScreen: () -> Unit
 ) {
-
     val viewModel: HomeViewModel = hiltViewModel()
 
     val uiState by viewModel.uiState.collectAsState()
@@ -56,7 +60,8 @@ fun HomeScreen(
         productList = uiState.productList,
         isProductListLoading = uiState.isProductListLoading,
         onProductClick = { onNavigateProductScreen(it) },
-        onShoppingCartClicked = { onNavigateCartScreen() }
+        onShoppingCartClicked = { onNavigateCartScreen() },
+        errors = uiState.errorMessages
     )
 }
 
@@ -68,26 +73,61 @@ private fun HomeScreenContent(
     productList: List<Product>,
     isProductListLoading: Boolean,
     onProductClick: (Product) -> Unit,
-    onShoppingCartClicked: () -> Unit
+    onShoppingCartClicked: () -> Unit,
+    errors: List<Int>
 ) {
     var selectedCatName by rememberSaveable { mutableStateOf(ALL) }
 
     Column(modifier = modifier.fillMaxSize()) {
-        PageTitleAndCartBtn(modifier = modifier, onShoppingCartClicked = onShoppingCartClicked)
-        CategoryList(
-            modifier = modifier,
-            categories = categories,
-            isCategoriesLoading = isCategoriesLoading,
-            selectedCatName = selectedCatName,
-            onCategoryClick = { selectedCatName = it }
-        )
-        ProductList(
-            modifier = modifier,
-            productList = productList,
-            isProductListLoading = isProductListLoading,
-            selectedCatName = selectedCatName,
-            onProductClick = onProductClick
-        )
+        if (errors.isNotEmpty()) {
+            ErrorView(modifier, errors)
+        } else {
+            PageTitleAndCartBtn(modifier = modifier, onShoppingCartClicked = onShoppingCartClicked)
+            CategoryList(
+                modifier = modifier,
+                categories = categories,
+                isCategoriesLoading = isCategoriesLoading,
+                selectedCatName = selectedCatName,
+                onCategoryClick = { selectedCatName = it }
+            )
+            ProductList(
+                modifier = modifier,
+                productList = productList,
+                isProductListLoading = isProductListLoading,
+                selectedCatName = selectedCatName,
+                onProductClick = onProductClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun ErrorView(
+    modifier: Modifier,
+    errors: List<Int>
+) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = dimensionResource(id = R.dimen.four_level_margin)),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                modifier = modifier.fillMaxWidth(),
+                painter = painterResource(id = R.drawable.error_img),
+                contentDescription = null,
+                contentScale = ContentScale.Fit
+            )
+            Text(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = dimensionResource(id = R.dimen.one_level_margin)),
+                text = stringResource(id = errors.first()),
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
