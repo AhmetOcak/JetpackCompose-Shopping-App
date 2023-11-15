@@ -1,5 +1,7 @@
 # ShoppingApp
 
+<img src="https://github.com/AhmetOcak/WorldCountries/assets/73544434/0d6a06b3-aca7-45f8-a189-be20504828e4" width="192" height="192" />
+
 |                  | Light | Dark |
 |------------------|-------|------|
 | Login Screen     | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/df2fb363-8c9f-43f5-9bf0-8cece45dc53f" width="240" height="480"/>      | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/96b0287f-2be4-4833-b370-6e530db25269" width="240" height="480"/>     |
