@@ -16,7 +16,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.toObject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +29,8 @@ const val UNKNOWN_ERROR = "Something went wrong. Please try again later."
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val auth: FirebaseAuth,
-    private val repository: FirebaseRepository
+    private val repository: FirebaseRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -101,7 +102,7 @@ class ProfileViewModel @Inject constructor(
 
     fun updateUserName() {
         if (updateValue.isNotBlank()) {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(ioDispatcher) {
                 repository.updateUserProfile(userProfileChangeRequest {
                     displayName = updateValue
                 })?.addOnCompleteListener { task ->
@@ -123,7 +124,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun updateUserPhoto(uri: Uri) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             repository.uploadUserProfileImage(uri).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
@@ -140,7 +141,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getUserProfileImage() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             repository.getUserProfileImage().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
@@ -156,7 +157,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun sendVerificationCode(activity: Activity) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {}
 
@@ -210,7 +211,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun uploadUserAddress() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             repository.uploadUserAddress(updateValue, auth.uid ?: "null")
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -228,7 +229,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun updateUserBirthdate(birthdate: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             repository.uploadUserBirthdate(birthdate, auth.uid ?: "").addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
@@ -244,7 +245,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getUserDetails() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             repository.getAllUserDetails(auth.uid ?: "").addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {

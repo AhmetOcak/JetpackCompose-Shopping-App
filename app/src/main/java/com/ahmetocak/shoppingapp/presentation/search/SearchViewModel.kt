@@ -9,7 +9,7 @@ import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: ShoppingRepository
+    private val repository: ShoppingRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchScreenUiState())
@@ -37,7 +38,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun getAllProducts() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = repository.getAllProducts()) {
                 is Response.Success -> {
                     _uiState.update {

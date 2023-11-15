@@ -7,7 +7,7 @@ import com.ahmetocak.shoppingapp.common.mapper.toProductEntity
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val shoppingRepository: ShoppingRepository
+    private val shoppingRepository: ShoppingRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeScreeUiState())
@@ -29,7 +30,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getCategoryList() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = shoppingRepository.getCategories()) {
                 is Response.Success -> {
                     _uiState.update {
@@ -53,7 +54,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getAllProducts() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = shoppingRepository.getProducts()) {
                 is Response.Success -> {
                     _uiState.update {
@@ -78,7 +79,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun saveAllProductsToDb(productList: List<Product>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             productList.forEach {
                 shoppingRepository.addProduct(it.toProductEntity())
             }

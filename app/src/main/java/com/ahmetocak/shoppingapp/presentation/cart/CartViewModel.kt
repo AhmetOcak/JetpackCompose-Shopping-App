@@ -6,7 +6,7 @@ import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val shoppingRepository: ShoppingRepository
+    private val shoppingRepository: ShoppingRepository,
+    private val ioDispatcher:CoroutineDispatcher
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CartScreenUiState())
@@ -27,7 +28,7 @@ class CartViewModel @Inject constructor(
     }
 
     private fun getCart() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = shoppingRepository.getCart()) {
                 is Response.Success -> {
                     _uiState.update {
@@ -48,7 +49,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun removeProductFromCart(productId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = shoppingRepository.removeProductFromCart(productId)) {
                 is Response.Success -> {
                     val cartList = _uiState.value.cartList.toMutableList()
@@ -69,7 +70,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun increaseProductCount(productId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = shoppingRepository.increaseCartItemCount(productId)) {
                 is Response.Success -> {
                     getCart()
@@ -85,7 +86,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun decreaseProductCount(productId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = shoppingRepository.decreaseCartItemCount(productId)) {
                 is Response.Success -> {
                     getCart()

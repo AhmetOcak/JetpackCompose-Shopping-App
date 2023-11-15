@@ -12,7 +12,7 @@ import com.ahmetocak.shoppingapp.common.helpers.rememberMe
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.auth.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val firebaseRepository: FirebaseRepository,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -98,7 +99,7 @@ class LoginViewModel @Inject constructor(
         )
 
         if (isEmailOk && isPasswordOk) {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(ioDispatcher) {
                 _uiState.update {
                     it.copy(isLoading = true)
                 }
@@ -143,7 +144,7 @@ class LoginViewModel @Inject constructor(
         )
 
         if (isPasswordResetEmailOk) {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(ioDispatcher) {
                 _uiState.update {
                     it.copy(isLoading = true)
                 }

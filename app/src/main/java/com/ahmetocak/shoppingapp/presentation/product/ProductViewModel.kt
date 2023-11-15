@@ -12,7 +12,7 @@ import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.utils.NavKeys
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val shoppingRepository: ShoppingRepository
+    private val shoppingRepository: ShoppingRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductScreenUiState())
@@ -42,7 +43,7 @@ class ProductViewModel @Inject constructor(
     }
 
     private fun findProduct(productId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = shoppingRepository.findFavoriteProduct(productId)) {
                 is Response.Success -> {
                     _uiState.update {
@@ -68,7 +69,7 @@ class ProductViewModel @Inject constructor(
     }
 
     private fun addProductToFavorites() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response =
                 _uiState.value.product?.toProductEntity()
                     ?.let { shoppingRepository.addFavoriteProduct(it) }
@@ -98,7 +99,7 @@ class ProductViewModel @Inject constructor(
     }
 
     private fun removeProductFromFavorites() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response =
                 _uiState.value.product?.id?.let { shoppingRepository.removeFavoriteProduct(it) }
             ) {
@@ -130,7 +131,7 @@ class ProductViewModel @Inject constructor(
         val product = _uiState.value.product
 
         if (product?.id != null && product.title != null && product.price != null && product.image != null) {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(ioDispatcher) {
                 when (val response = shoppingRepository.addProductToCart(
                     CartEntity(
                         id = product.id,
@@ -159,7 +160,7 @@ class ProductViewModel @Inject constructor(
     }
 
     private fun findProductInCart(productId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             when (val response = shoppingRepository.findCartItem(productId)) {
                 is Response.Success -> {
                     _uiState.update {
