@@ -174,7 +174,11 @@ private fun FavoriteItem(
             Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.TopEnd) {
                 CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
                     IconButton(onClick = onRemoveFavoriteClicked) {
-                        Icon(imageVector = Icons.Filled.Clear, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
                     }
                 }
             }
