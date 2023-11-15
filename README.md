@@ -1,6 +1,6 @@
 # ShoppingApp
 
-<img src="https://github.com/AhmetOcak/WorldCountries/assets/73544434/0d6a06b3-aca7-45f8-a189-be20504828e4" width="192" height="192" />
+<img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/a6f34238-a018-4493-8ddd-2fe5d530d565" width="192" height="192" />
 
 |                  | Light | Dark |
 |------------------|-------|------|
