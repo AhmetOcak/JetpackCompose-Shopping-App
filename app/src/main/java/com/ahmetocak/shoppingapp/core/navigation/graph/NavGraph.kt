@@ -138,7 +138,7 @@ fun NavGraph(
             composable(route = NavScreen.SearchScreen.route) {
                 SearchScreen(onNavigateProductScreen = { product ->
                     val encodedValue =
-                        URLEncoder.encode(Gson().toJson(product), StandardCharsets.UTF_8.toString())
+                        URLEncoder.encode(Gson().toJson(product), StandardCharsets.UTF_8.name())
                     navController.navigate("${NavScreen.ProductScreen.route}/$encodedValue")
                 })
             }

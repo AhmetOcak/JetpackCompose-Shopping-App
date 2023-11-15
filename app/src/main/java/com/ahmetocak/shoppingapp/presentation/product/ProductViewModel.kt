@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +33,7 @@ class ProductViewModel @Inject constructor(
 
     init {
         val arg = savedStateHandle.get<String>(NavKeys.PRODUCT)
-        val decodedValue = URLDecoder.decode(arg, "UTF-8")
+        val decodedValue = URLDecoder.decode(arg?.replace("%", "%25"), StandardCharsets.UTF_8.name())
         _uiState.update {
             it.copy(product = Gson().fromJson(decodedValue, Product::class.java))
         }
