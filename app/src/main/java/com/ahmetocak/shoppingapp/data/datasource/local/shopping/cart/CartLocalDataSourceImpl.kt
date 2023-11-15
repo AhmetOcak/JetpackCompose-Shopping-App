@@ -32,4 +32,8 @@ class CartLocalDataSourceImpl @Inject constructor(
     override suspend fun decreaseCartItemCount(cartItemId: Int): Response<Unit> {
         return dbCall { dao.decreaseCartItemCount(cartItemId) }
     }
+
+    override suspend fun deleteAllItemsFromCart(): Response<Unit> {
+        return dbCall { dao.deleteAllItems() }
+    }
 }

@@ -55,4 +55,7 @@
     <string name="card_holder">Card Holder</string>
     <string name="valid_thru">VALID THRU</string>
     <string name="expiry_date_placeholder">MM/YY</string>
+    <string name="fill_all_fields">Please fill in all fields!!</string>
+    <string name="payment_success">Payment completed successfully. Thanks for shopping.</string>
+    <string name="continue_shopping">Continue shopping</string>
 </resources>

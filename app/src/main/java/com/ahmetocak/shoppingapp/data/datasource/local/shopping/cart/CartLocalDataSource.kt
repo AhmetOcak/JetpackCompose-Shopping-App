@@ -16,4 +16,6 @@ interface CartLocalDataSource {
     suspend fun increaseCartItemCount(cartItemId: Int): Response<Unit>
 
     suspend fun decreaseCartItemCount(cartItemId: Int): Response<Unit>
+
+    suspend fun deleteAllItemsFromCart(): Response<Unit>
 }

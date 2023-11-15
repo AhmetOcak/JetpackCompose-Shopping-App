@@ -25,4 +25,7 @@ interface CartDao {
 
     @Query("UPDATE CartEntity SET count = count - 1 WHERE id == :cartItemId")
     suspend fun decreaseCartItemCount(cartItemId: Int)
+
+    @Query("DELETE FROM CartEntity")
+    suspend fun deleteAllItems()
 }

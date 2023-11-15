@@ -34,4 +34,6 @@ interface ShoppingRepository {
     suspend fun increaseCartItemCount(cartItemId: Int): Response<Unit>
 
     suspend fun decreaseCartItemCount(cartItemId: Int): Response<Unit>
+
+    suspend fun deleteAllCartItems(): Response<Unit>
 }

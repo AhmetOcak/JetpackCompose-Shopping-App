@@ -5,17 +5,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.utils.NavKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val ioDispatcher: CoroutineDispatcher,
+    private val shoppingRepository: ShoppingRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PaymentUiState())
@@ -63,13 +72,57 @@ class PaymentViewModel @Inject constructor(
 
     var rotateCard by mutableStateOf(false)
         private set
+
     fun updateRotateCard(value: Boolean) {
         rotateCard = value
+    }
+
+    private fun checkInputFields(): Boolean {
+        return !(holderName.isBlank() || cardNumber.isBlank() || expiryDate.isBlank() || cvc.isBlank())
+    }
+
+    fun payment() {
+        if (checkInputFields()) {
+            viewModelScope.launch(ioDispatcher) {
+                _uiState.update { it.copy(isLoading = true) }
+                delay(4000)
+                when (val response = shoppingRepository.deleteAllCartItems()) {
+                    is Response.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                isPaymentDone = true
+                            )
+                        }
+                    }
+
+                    is Response.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessages = listOf(response.errorMessageId)
+                            )
+                        }
+                    }
+                }
+            }
+        } else {
+            _uiState.update {
+                it.copy(errorMessages = listOf(R.string.fill_all_fields))
+            }
+        }
+    }
+
+    fun consumedErrorMessage() {
+        _uiState.update {
+            it.copy(errorMessages = listOf())
+        }
     }
 }
 
 data class PaymentUiState(
     val isLoading: Boolean = false,
-    val errorMessages: List<String> = listOf(),
-    val totalAmount: Double = 0.0
+    val errorMessages: List<Int> = listOf(),
+    val totalAmount: Double = 0.0,
+    val isPaymentDone: Boolean = false
 )

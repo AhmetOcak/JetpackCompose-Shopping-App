@@ -1,5 +1,7 @@
 package com.ahmetocak.shoppingapp.presentation.payment
 
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,10 +27,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
@@ -37,11 +44,20 @@ import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
-fun PaymentScreen(modifier: Modifier = Modifier) {
+fun PaymentScreen(modifier: Modifier = Modifier, onNavigateHomeScreen: () -> Unit) {
 
     val viewModel: PaymentViewModel = hiltViewModel()
 
     val uiState by viewModel.uiState.collectAsState()
+
+    if (uiState.errorMessages.isNotEmpty()) {
+        Toast.makeText(
+            LocalContext.current,
+            uiState.errorMessages.first(),
+            Toast.LENGTH_SHORT
+        ).show()
+        viewModel.consumedErrorMessage()
+    }
 
     PaymentScreenContent(
         modifier = modifier,
@@ -51,26 +67,18 @@ fun PaymentScreen(modifier: Modifier = Modifier) {
             expiryDate = viewModel.expiryDate,
             cvc = viewModel.cvc
         ),
-        onHolderNameChanged = {
-            viewModel.updateHolderName(it)
-        },
-        onCardNumberChanged = {
-            viewModel.updateCardNumber(it)
-        },
-        onCvcChanged = {
-            viewModel.updateCVC(it)
-        },
-        onExpiryDateChanged = {
-            viewModel.updateExpiryDate(it)
-        },
+        onHolderNameChanged = { viewModel.updateHolderName(it) },
+        onCardNumberChanged = { viewModel.updateCardNumber(it) },
+        onCvcChanged = { viewModel.updateCVC(it) },
+        onExpiryDateChanged = { viewModel.updateExpiryDate(it) },
         totalAmount = uiState.totalAmount + DELIVERY_FEE,
-        onCardInputClicked = {
-            viewModel.updateRotateCard(it)
-        },
+        onCardInputClicked = { viewModel.updateRotateCard(it) },
         rotated = viewModel.rotateCard,
-        onCardClick = {
-            viewModel.updateRotateCard(!viewModel.rotateCard)
-        }
+        onCardClick = { viewModel.updateRotateCard(!viewModel.rotateCard) },
+        onPaymentClicked = { viewModel.payment() },
+        isPaymentDone = uiState.isPaymentDone,
+        isLoading = uiState.isLoading,
+        onContinueShoppingClick = { onNavigateHomeScreen() }
     )
 }
 
@@ -85,45 +93,100 @@ private fun PaymentScreenContent(
     totalAmount: Double,
     onCardInputClicked: (Boolean) -> Unit,
     rotated: Boolean,
-    onCardClick: () -> Unit
+    onCardClick: () -> Unit,
+    onPaymentClicked: () -> Unit,
+    isPaymentDone: Boolean,
+    isLoading: Boolean,
+    onContinueShoppingClick: () -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.two_level_margin))
     ) {
-        CreditCard(cardInfo = cardInfo, rotated = rotated, onCardClick = onCardClick)
-        CardDetails(
-            modifier = modifier,
-            onHolderNameChanged = onHolderNameChanged,
-            onCardNumberChanged = onCardNumberChanged,
-            onCvcChanged = onCvcChanged,
-            onExpiryDateChanged = onExpiryDateChanged,
-            cardInfo = cardInfo,
-            onCardInputClicked = onCardInputClicked
-        )
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = dimensionResource(id = R.dimen.four_level_margin))
-                .height(96.dp),
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.four_level_margin))
-        ) {
-            PaymentDetail(
+        if (isLoading) {
+            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        } else if (isPaymentDone) {
+            PaymentSuccessView(
                 modifier = modifier,
-                titleId = R.string.delivery,
-                description = DELIVERY_FEE
+                onContinueShoppingClick = onContinueShoppingClick
             )
-            PaymentDetail(modifier = modifier, titleId = R.string.total, description = totalAmount)
+        } else {
+            CreditCard(cardInfo = cardInfo, rotated = rotated, onCardClick = onCardClick)
+            CardDetails(
+                modifier = modifier,
+                onHolderNameChanged = onHolderNameChanged,
+                onCardNumberChanged = onCardNumberChanged,
+                onCvcChanged = onCvcChanged,
+                onExpiryDateChanged = onExpiryDateChanged,
+                cardInfo = cardInfo,
+                onCardInputClicked = onCardInputClicked
+            )
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = dimensionResource(id = R.dimen.four_level_margin))
+                    .height(96.dp),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.four_level_margin))
+            ) {
+                PaymentDetail(
+                    modifier = modifier,
+                    titleId = R.string.delivery,
+                    description = DELIVERY_FEE
+                )
+                PaymentDetail(
+                    modifier = modifier,
+                    titleId = R.string.total,
+                    description = totalAmount
+                )
+            }
+            PaymentButton(modifier = modifier, onPaymentClicked = onPaymentClicked)
         }
-        PaymentButton(modifier = modifier)
     }
 }
 
 @Composable
-private fun PaymentButton(modifier: Modifier) {
+fun PaymentSuccessView(modifier: Modifier, onContinueShoppingClick: () -> Unit) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimensionResource(id = R.dimen.four_level_margin)),
+            painter = painterResource(id = R.drawable.payment_success),
+            contentDescription = null,
+            contentScale = ContentScale.Fit
+        )
+        Text(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimensionResource(id = R.dimen.four_level_margin))
+                .padding(
+                    top = dimensionResource(id = R.dimen.two_level_margin)
+                ),
+            text = stringResource(id = R.string.payment_success),
+            textAlign = TextAlign.Center
+        )
+        ShoppingButton(
+            modifier = modifier.padding(top = dimensionResource(id = R.dimen.two_level_margin)),
+            onClick = onContinueShoppingClick,
+            buttonText = stringResource(id = R.string.continue_shopping)
+        )
+    }
+}
+
+@Composable
+private fun PaymentButton(modifier: Modifier, onPaymentClicked: () -> Unit) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        ShoppingButton(onClick = { /*TODO*/ }, buttonText = stringResource(id = R.string.payment))
+        ShoppingButton(
+            onClick = onPaymentClicked,
+            buttonText = stringResource(id = R.string.payment)
+        )
     }
 }
 

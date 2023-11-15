@@ -112,7 +112,13 @@ fun NavGraph(
                     navArgument(NavKeys.TOTAL_AMOUNT) { type = NavType.FloatType }
                 )
             ) {
-                PaymentScreen()
+                PaymentScreen(onNavigateHomeScreen = {
+                    navController.navigate(NavScreen.HomeScreen.route) {
+                        popUpTo(NavScreen.HomeScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                })
             }
             composable(
                 route = "${NavScreen.ProductScreen.route}/{${NavKeys.PRODUCT}}",

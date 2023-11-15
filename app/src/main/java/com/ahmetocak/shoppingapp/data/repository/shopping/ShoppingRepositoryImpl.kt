@@ -56,4 +56,7 @@ class ShoppingRepositoryImpl @Inject constructor(
 
     override suspend fun decreaseCartItemCount(cartItemId: Int): Response<Unit> =
         cartLocalDataSource.decreaseCartItemCount(cartItemId)
+
+    override suspend fun deleteAllCartItems(): Response<Unit> =
+        cartLocalDataSource.deleteAllItemsFromCart()
 }
