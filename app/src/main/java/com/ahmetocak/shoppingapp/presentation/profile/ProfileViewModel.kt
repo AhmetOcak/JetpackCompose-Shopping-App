@@ -235,6 +235,7 @@ class ProfileViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(userMessages = listOf("Your birthdate updated successfully"))
                     }
+                    getUserDetails()
                 } else {
                     _uiState.update {
                         it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
