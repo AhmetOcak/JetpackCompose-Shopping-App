@@ -70,9 +70,7 @@ fun ProductScreen(modifier: Modifier = Modifier, onNavigateCartScreen: () -> Uni
         modifier = modifier,
         product = uiState.product,
         isProductFavorite = uiState.isProductFavorite,
-        onFavoriteBtnClicked = {
-            viewModel.onFavoriteProductClick()
-        },
+        onFavoriteBtnClicked = viewModel::onFavoriteProductClick,
         onAddToCartClicked = {
             if (uiState.isProductInCart) {
                 onNavigateCartScreen()

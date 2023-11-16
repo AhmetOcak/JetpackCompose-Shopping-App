@@ -160,7 +160,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
         },
         showUpdateDialog = showUpdateDialog,
         updateValue = viewModel.updateValue,
-        onUpdateValueChange = { viewModel.updateAccountInfoValue(it) },
+        onUpdateValueChange = viewModel::updateAccountInfoValue,
         onDismissRequest = {
             viewModel.clearAccountInfoValue()
             showUpdateDialog = false
@@ -193,15 +193,11 @@ fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
         },
         showVerifyPhoneNumberDialog = showVerifyPhoneNumberDialog,
         codeValue = viewModel.verificationCode,
-        onCodeValueChange = {
-            viewModel.updateVerificationCodeValue(it)
-        },
+        onCodeValueChange = viewModel::updateVerificationCodeValue,
         onVerifyPhoneNumberDismiss = {
             showVerifyPhoneNumberDialog = false
         },
-        verifyPhoneNumber = {
-            viewModel.verifyUserPhoneNumber()
-        },
+        verifyPhoneNumber = viewModel::verifyUserPhoneNumber,
         datePickerState = datePickerState,
         onDatePickerDialogDismiss = {
             showUpdateDialog = false

@@ -41,13 +41,13 @@ fun SignUpScreen(modifier: Modifier = Modifier, onNavigate: () -> Unit) {
     SignUpScreenContent(
         modifier = modifier,
         emailValue = viewModel.email,
-        onEmailValueChange = { viewModel.updateEmailField(it) },
+        onEmailValueChange = viewModel::updateEmailField,
         emailFieldError = uiState.emailFieldErrorMessage != null,
         passwordValue = viewModel.password,
-        onPasswordChange = { viewModel.updatePasswordField(it) },
+        onPasswordChange = viewModel::updatePasswordField,
         passwordFieldError = uiState.passwordFieldErrorMessage != null,
         verifyPasswordValue = viewModel.verifyPassword,
-        onVerifyPasswordChange = { viewModel.updateVerifyPasswordField(it) },
+        onVerifyPasswordChange = viewModel::updateVerifyPasswordField,
         verifyPasswordFieldError = uiState.verifyPasFieldErrorMessage != null,
         emailLabel = uiState.emailFieldErrorMessage?.asString()
             ?: stringResource(id = R.string.unknown_error),

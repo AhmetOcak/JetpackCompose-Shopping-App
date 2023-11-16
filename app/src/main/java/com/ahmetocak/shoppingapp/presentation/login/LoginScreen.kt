@@ -72,7 +72,7 @@ fun LoginScreen(
         ForgotPasswordDialog(
             modifier = modifier,
             forgotPassValue = viewModel.passwordResetEmail,
-            onForgotPassValChange = { viewModel.updatePasswordResetEmail(it) },
+            onForgotPassValChange = viewModel::updatePasswordResetEmail,
             isForgotPassFieldError = uiState.resetPasswordEmailFieldErrorMessage != null,
             forgotPassFieldLabel = if (uiState.resetPasswordEmailFieldErrorMessage != null) {
                 uiState.resetPasswordEmailFieldErrorMessage ?: stringResource(
@@ -81,8 +81,8 @@ fun LoginScreen(
             } else {
                 stringResource(id = R.string.enter_email)
             },
-            onDismissRequest = { viewModel.consumedResetPasswordState() },
-            onSendPasswordResetEmailClick = { viewModel.sendPasswordResetEmail() }
+            onDismissRequest = viewModel::consumedResetPasswordState,
+            onSendPasswordResetEmailClick = viewModel::sendPasswordResetEmail
         )
     }
 
@@ -90,12 +90,8 @@ fun LoginScreen(
         modifier = modifier,
         emailValue = viewModel.email,
         passwordValue = viewModel.password,
-        onEmailValueChange = {
-            viewModel.updateEmailField(it)
-        },
-        onPasswordValueChange = {
-            viewModel.updatePasswordField(it)
-        },
+        onEmailValueChange = viewModel::updateEmailField,
+        onPasswordValueChange = viewModel::updatePasswordField,
         emailFieldError = uiState.emailFieldErrorMessage != null,
         emailFieldLabel = if (uiState.emailFieldErrorMessage == null) {
             stringResource(id = R.string.enter_email)
@@ -112,9 +108,7 @@ fun LoginScreen(
         onCheckedChange = { viewModel.updateRememberMeBox() },
         onLoginClicked = { viewModel.login(onNavigateHome) },
         onRegisterClick = onNavigateSignUp,
-        onForgotPasswordClick = {
-            viewModel.showPasswordResetDialog()
-        },
+        onForgotPasswordClick = viewModel::showPasswordResetDialog,
         isLoading = uiState.isLoading,
         isLoginEnd = uiState.isLoginEnd
     )
