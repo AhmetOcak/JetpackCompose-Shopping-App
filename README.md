@@ -2,6 +2,24 @@
 
 <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/a6f34238-a018-4493-8ddd-2fe5d530d565" width="192" height="192" />
 
+## Tech Stack 📚
+
+* [Android Architecture Components](https://developer.android.com/topic/architecture)
+    * [Navigation](https://developer.android.com/guide/navigation)
+    * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+    * [Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle)
+    * [Repository](https://developer.android.com/topic/architecture/data-layer?hl=en)
+* [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
+* [Room](https://developer.android.com/training/data-storage/room)
+* [Retrofit](https://github.com/square/retrofit)
+* [Coil](https://github.com/coil-kt/coil)
+* [Firebase Auth](https://firebase.google.com/docs/auth)
+* [Firebase Storage](https://firebase.google.com/docs/storage?hl=en)
+* [Firebase Firestore](https://firebase.google.com/docs/firestore?hl=en)
+* [Image Cropper](https://github.com/mr0xf00/easycrop)
+
+## Outputs 🖼
+
 |                  | Light | Dark |
 |------------------|-------|------|
 | Login Screen     | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/df2fb363-8c9f-43f5-9bf0-8cece45dc53f" width="240" height="480"/>      | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/96b0287f-2be4-4833-b370-6e530db25269" width="240" height="480"/>     |
