@@ -29,10 +29,10 @@ fun SignUpScreen(modifier: Modifier = Modifier, onNavigate: () -> Unit) {
 
     val uiState by viewModel.uiState.collectAsState()
 
-    if (uiState.errorMessage != null) {
+    if (uiState.errorMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            uiState.errorMessage,
+            uiState.errorMessages.first().asString(),
             Toast.LENGTH_LONG
         ).show()
         viewModel.consumedErrorMessage()
@@ -49,21 +49,12 @@ fun SignUpScreen(modifier: Modifier = Modifier, onNavigate: () -> Unit) {
         verifyPasswordValue = viewModel.verifyPassword,
         onVerifyPasswordChange = { viewModel.updateVerifyPasswordField(it) },
         verifyPasswordFieldError = uiState.verifyPasFieldErrorMessage != null,
-        emailLabel = if (uiState.emailFieldErrorMessage == null) {
-            stringResource(id = R.string.enter_email)
-        } else {
-            uiState.emailFieldErrorMessage ?: stringResource(id = R.string.unknown_error)
-        },
-        passwordLabel = if (uiState.passwordFieldErrorMessage == null) {
-            stringResource(id = R.string.enter_password)
-        } else {
-            uiState.passwordFieldErrorMessage ?: stringResource(id = R.string.unknown_error)
-        },
-        verifyPasswordLabel = if (uiState.verifyPasFieldErrorMessage == null) {
-            stringResource(id = R.string.verify_password)
-        } else {
-            uiState.verifyPasFieldErrorMessage ?: stringResource(id = R.string.verify_password)
-        },
+        emailLabel = uiState.emailFieldErrorMessage?.asString()
+            ?: stringResource(id = R.string.unknown_error),
+        passwordLabel = uiState.passwordFieldErrorMessage?.asString()
+            ?: stringResource(id = R.string.unknown_error),
+        verifyPasswordLabel = uiState.verifyPasFieldErrorMessage?.asString()
+            ?: stringResource(id = R.string.unknown_error),
         onSignUpClick = { viewModel.signUp(onNavigate) },
         isLoading = uiState.isLoading,
         isSignUpEnd = uiState.isSignUpEnd

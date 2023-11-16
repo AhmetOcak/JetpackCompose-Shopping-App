@@ -46,7 +46,7 @@ fun SearchScreen(modifier: Modifier = Modifier, onNavigateProductScreen: (Produc
     if (uiState.errorMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            stringResource(id = uiState.errorMessages.first()),
+            uiState.errorMessages.first().asString(),
             Toast.LENGTH_SHORT
         ).show()
         viewModel.errorConsumed()

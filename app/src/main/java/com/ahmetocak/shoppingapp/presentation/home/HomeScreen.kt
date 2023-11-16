@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.ui.components.ProductItem
 
@@ -74,7 +75,7 @@ private fun HomeScreenContent(
     isProductListLoading: Boolean,
     onProductClick: (Product) -> Unit,
     onShoppingCartClicked: () -> Unit,
-    errors: List<Int>
+    errors: List<UiText>
 ) {
     var selectedCatName by rememberSaveable { mutableStateOf(ALL) }
 
@@ -104,7 +105,7 @@ private fun HomeScreenContent(
 @Composable
 private fun ErrorView(
     modifier: Modifier,
-    errors: List<Int>
+    errors: List<UiText>
 ) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
@@ -124,7 +125,7 @@ private fun ErrorView(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.one_level_margin)),
-                text = stringResource(id = errors.first()),
+                text = errors.first().asString(),
                 textAlign = TextAlign.Center
             )
         }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +42,9 @@ class FavoritesViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessages = listOf(response.errorMessageId)
+                            errorMessages = listOf(
+                                UiText.StringResource(resId = response.errorMessageId)
+                            )
                         )
                     }
                 }
@@ -60,7 +63,9 @@ class FavoritesViewModel @Inject constructor(
 
                     _uiState.update {
                         it.copy(
-                            userMessages = listOf(R.string.product_removed_favorites),
+                            userMessages = listOf(
+                                UiText.StringResource(resId = R.string.product_removed_favorites)
+                            ),
                             favoriteList = currentList
                         )
                     }
@@ -68,7 +73,9 @@ class FavoritesViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(resId = response.errorMessageId)
+                        ))
                     }
                 }
             }
@@ -90,7 +97,7 @@ class FavoritesViewModel @Inject constructor(
 
 data class FavoritesUiState(
     val isLoading: Boolean = false,
-    val errorMessages: List<Int> = listOf(),
-    val userMessages: List<Int> = listOf(),
+    val errorMessages: List<UiText> = listOf(),
+    val userMessages: List<UiText> = listOf(),
     val favoriteList: List<ProductEntity> = listOf()
 )

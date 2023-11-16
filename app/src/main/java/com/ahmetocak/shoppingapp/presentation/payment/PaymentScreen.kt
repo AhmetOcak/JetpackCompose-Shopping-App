@@ -53,7 +53,7 @@ fun PaymentScreen(modifier: Modifier = Modifier, onNavigateHomeScreen: () -> Uni
     if (uiState.errorMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            uiState.errorMessages.first(),
+            uiState.errorMessages.first().asString(),
             Toast.LENGTH_SHORT
         ).show()
         viewModel.consumedErrorMessage()

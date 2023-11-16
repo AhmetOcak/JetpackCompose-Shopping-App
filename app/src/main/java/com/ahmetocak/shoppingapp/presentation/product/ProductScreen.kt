@@ -51,7 +51,7 @@ fun ProductScreen(modifier: Modifier = Modifier, onNavigateCartScreen: () -> Uni
     if (uiState.userMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            stringResource(id = uiState.userMessages.first()),
+            uiState.userMessages.first().asString(),
             Toast.LENGTH_SHORT
         ).show()
         viewModel.consumedUserMessages()
@@ -60,7 +60,7 @@ fun ProductScreen(modifier: Modifier = Modifier, onNavigateCartScreen: () -> Uni
     if (uiState.errorMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            stringResource(id = uiState.errorMessages.first()),
+            uiState.errorMessages.first().asString(),
             Toast.LENGTH_SHORT
         ).show()
         viewModel.consumedErrorMessages()

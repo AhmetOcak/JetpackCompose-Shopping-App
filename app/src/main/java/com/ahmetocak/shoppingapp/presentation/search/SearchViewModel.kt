@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +49,9 @@ class SearchViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(response.errorMessageId)
+                        ))
                     }
                 }
             }
@@ -78,6 +81,6 @@ class SearchViewModel @Inject constructor(
 data class SearchScreenUiState(
     val productList: List<ProductEntity> = listOf(),
     val searchResult: List<ProductEntity> = listOf(),
-    val errorMessages: List<Int> = listOf(),
+    val errorMessages: List<UiText> = listOf(),
     val isSearchResultEmpty: Boolean = false
 )

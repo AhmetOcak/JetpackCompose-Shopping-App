@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.AuthFieldCheckers
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.auth.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,10 +53,18 @@ class SignUpViewModel @Inject constructor(
         val isEmailOk = AuthFieldCheckers.checkEmailField(
             email = email,
             onBlank = {
-                _uiState.update { it.copy(emailFieldErrorMessage = "Please fill in this field") }
+                _uiState.update {
+                    it.copy(
+                        emailFieldErrorMessage = UiText.StringResource(R.string.fill_this_field)
+                    )
+                }
             },
             onUnValid = {
-                _uiState.update { it.copy(emailFieldErrorMessage = "Please enter a valid email") }
+                _uiState.update {
+                    it.copy(
+                        emailFieldErrorMessage = UiText.StringResource(R.string.enter_valid_email)
+                    )
+                }
             },
             onCheckSuccess = {
                 _uiState.update { it.copy(emailFieldErrorMessage = null) }
@@ -64,11 +74,15 @@ class SignUpViewModel @Inject constructor(
         val isPasswordOk = AuthFieldCheckers.checkPassword(
             password = password,
             onBlank = {
-                _uiState.update { it.copy(passwordFieldErrorMessage = "Please fill in this field") }
+                _uiState.update {
+                    it.copy(
+                        passwordFieldErrorMessage = UiText.StringResource(R.string.fill_this_field)
+                    )
+                }
             },
             onUnValid = {
                 _uiState.update {
-                    it.copy(passwordFieldErrorMessage = "Password must be at least 6 characters in length")
+                    it.copy(passwordFieldErrorMessage = UiText.StringResource(R.string.pass_length))
                 }
             },
             onCheckSuccess = {
@@ -89,26 +103,39 @@ class SignUpViewModel @Inject constructor(
                 firebaseRepository.createAccount(auth = Auth(email, password))
                     .addOnCompleteListener { signUpTask ->
                         if (signUpTask.isSuccessful) {
-                            firebaseRepository.sendEmailVerification()?.addOnCompleteListener { verificationTask ->
-                                if (verificationTask.isSuccessful) {
-                                    _uiState.update {
-                                        it.copy(isLoading = false, isSignUpEnd = true)
-                                    }
-                                    onNavigate()
-                                } else {
-                                    _uiState.update {
-                                        it.copy(
-                                            isLoading = false,
-                                            errorMessage = signUpTask.exception?.message
-                                        )
+                            firebaseRepository.sendEmailVerification()
+                                ?.addOnCompleteListener { verificationTask ->
+                                    if (verificationTask.isSuccessful) {
+                                        _uiState.update {
+                                            it.copy(isLoading = false, isSignUpEnd = true)
+                                        }
+                                        onNavigate()
+                                    } else {
+                                        _uiState.update {
+                                            it.copy(
+                                                isLoading = false,
+                                                errorMessages = listOf(
+                                                    signUpTask.exception?.message?.let { message ->
+                                                        UiText.DynamicString(message)
+                                                    } ?: kotlin.run {
+                                                        UiText.StringResource(R.string.unknown_error)
+                                                    }
+                                                )
+                                            )
+                                        }
                                     }
                                 }
-                            }
                         } else {
                             _uiState.update {
                                 it.copy(
                                     isLoading = false,
-                                    errorMessage = signUpTask.exception?.message
+                                    errorMessages = listOf(
+                                        signUpTask.exception?.message?.let { message ->
+                                            UiText.DynamicString(message)
+                                        } ?: kotlin.run {
+                                            UiText.StringResource(R.string.unknown_error)
+                                        }
+                                    )
                                 )
                             }
                         }
@@ -120,12 +147,12 @@ class SignUpViewModel @Inject constructor(
     private fun checkVerifyPasswordField(): Boolean {
         return if (verifyPassword.isBlank()) {
             _uiState.update {
-                it.copy(verifyPasFieldErrorMessage = "Please fill in this field")
+                it.copy(verifyPasFieldErrorMessage = UiText.StringResource(R.string.fill_this_field))
             }
             false
         } else if (verifyPassword != password) {
             _uiState.update {
-                it.copy(verifyPasFieldErrorMessage = "Passwords do not match")
+                it.copy(verifyPasFieldErrorMessage = UiText.StringResource(R.string.pass_dont_match))
             }
             false
         } else {
@@ -138,16 +165,16 @@ class SignUpViewModel @Inject constructor(
 
     fun consumedErrorMessage() {
         _uiState.update {
-            it.copy(errorMessage = null)
+            it.copy(errorMessages = listOf())
         }
     }
 }
 
 data class SignUpUiState(
     val isLoading: Boolean = false,
-    val errorMessage: String? = null,
+    val errorMessages: List<UiText> = listOf(),
     val isSignUpEnd: Boolean = false,
-    val emailFieldErrorMessage: String? = null,
-    val passwordFieldErrorMessage: String? = null,
-    val verifyPasFieldErrorMessage: String? = null
+    val emailFieldErrorMessage: UiText? = null,
+    val passwordFieldErrorMessage: UiText? = null,
+    val verifyPasFieldErrorMessage: UiText? = null
 )

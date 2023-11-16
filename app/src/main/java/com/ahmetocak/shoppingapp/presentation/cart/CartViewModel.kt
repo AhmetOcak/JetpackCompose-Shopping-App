@@ -3,6 +3,7 @@ package com.ahmetocak.shoppingapp.presentation.cart
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,7 +42,9 @@ class CartViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(resId = response.errorMessageId)
+                        ))
                     }
                 }
             }
@@ -62,7 +65,9 @@ class CartViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(resId = response.errorMessageId)
+                        ))
                     }
                 }
             }
@@ -78,7 +83,9 @@ class CartViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(resId = response.errorMessageId)
+                        ))
                     }
                 }
             }
@@ -94,7 +101,9 @@ class CartViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(resId = response.errorMessageId)
+                        ))
                     }
                 }
             }
@@ -104,12 +113,6 @@ class CartViewModel @Inject constructor(
     fun consumedErrorMessage() {
         _uiState.update {
             it.copy(errorMessages = listOf())
-        }
-    }
-
-    fun consumedUserMessage() {
-        _uiState.update {
-            it.copy(userMessages = listOf())
         }
     }
 
@@ -124,7 +127,6 @@ class CartViewModel @Inject constructor(
 
 data class CartScreenUiState(
     val cartList: List<CartEntity> = listOf(),
-    val userMessages: List<Int> = listOf(),
-    val errorMessages: List<Int> = listOf(),
+    val errorMessages: List<UiText> = listOf(),
     val subtotal: Double = 0.0
 )

@@ -7,7 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.AuthFieldCheckers
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.common.helpers.rememberMe
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.auth.Auth
@@ -115,7 +117,13 @@ class LoginViewModel @Inject constructor(
                         onNavigate()
                     } else {
                         _uiState.update {
-                            it.copy(isLoading = false, errorMessage = task.exception?.message)
+                            it.copy(isLoading = false, errorMessages = listOf(
+                                task.exception?.message?.let { message ->
+                                    UiText.DynamicString(message)
+                                } ?: kotlin.run {
+                                    UiText.StringResource(resId = R.string.unknown_error)
+                                }
+                            ))
                         }
                     }
                 }
@@ -159,7 +167,13 @@ class LoginViewModel @Inject constructor(
                             it.copy(
                                 isLoading = false,
                                 isResetPasswordMailSend = false,
-                                errorMessage = task.exception?.message
+                                errorMessages = listOf(
+                                    task.exception?.message?.let { message ->
+                                        UiText.DynamicString(message)
+                                    } ?: kotlin.run {
+                                        UiText.StringResource(resId = R.string.unknown_error)
+                                    }
+                                )
                             )
                         }
                     }
@@ -183,7 +197,7 @@ class LoginViewModel @Inject constructor(
 
     fun consumedErrorMessage() {
         _uiState.update {
-            it.copy(errorMessage = null)
+            it.copy(errorMessages = listOf())
         }
     }
 }
@@ -193,7 +207,7 @@ data class LoginUiState(
     val isLoginEnd: Boolean = false,
     val isResetPasswordMailSend: Boolean = false,
     val showPasswordResetDialog: Boolean = false,
-    val errorMessage: String? = null,
+    val errorMessages: List<UiText> = listOf(),
     val emailFieldErrorMessage: String? = null,
     val passwordFieldErrorMessage: String? = null,
     val resetPasswordEmailFieldErrorMessage: String? = null

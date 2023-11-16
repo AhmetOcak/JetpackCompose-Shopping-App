@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.utils.NavKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -100,7 +101,9 @@ class PaymentViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
-                                errorMessages = listOf(response.errorMessageId)
+                                errorMessages = listOf(
+                                    UiText.StringResource(response.errorMessageId)
+                                )
                             )
                         }
                     }
@@ -108,7 +111,9 @@ class PaymentViewModel @Inject constructor(
             }
         } else {
             _uiState.update {
-                it.copy(errorMessages = listOf(R.string.fill_all_fields))
+                it.copy(errorMessages = listOf(
+                    UiText.StringResource(R.string.fill_all_fields)
+                ))
             }
         }
     }
@@ -122,7 +127,7 @@ class PaymentViewModel @Inject constructor(
 
 data class PaymentUiState(
     val isLoading: Boolean = false,
-    val errorMessages: List<Int> = listOf(),
+    val errorMessages: List<UiText> = listOf(),
     val totalAmount: Double = 0.0,
     val isPaymentDone: Boolean = false
 )

@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.user_detail.UserDetail
 import com.google.firebase.FirebaseException
@@ -23,8 +25,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-const val UNKNOWN_ERROR = "Something went wrong. Please try again later."
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -44,7 +44,11 @@ class ProfileViewModel @Inject constructor(
 
         if (user == null) {
             _uiState.update {
-                it.copy(errorMessages = listOf(UNKNOWN_ERROR))
+                it.copy(
+                    errorMessages = listOf(
+                        UiText.StringResource(resId = R.string.unknown_error)
+                    )
+                )
             }
         } else {
             _uiState.update {
@@ -96,7 +100,9 @@ class ProfileViewModel @Inject constructor(
                 _uiState.value.userDetail?.address ?: ""
             }
 
-            else -> { "" }
+            else -> {
+                ""
+            }
         }
     }
 
@@ -110,12 +116,22 @@ class ProfileViewModel @Inject constructor(
                         _uiState.update {
                             it.copy(
                                 name = auth.currentUser?.displayName,
-                                userMessages = listOf("Name updated successfully")
+                                userMessages = listOf(
+                                    UiText.StringResource(resId = R.string.name_updated_suc)
+                                )
                             )
                         }
                     } else {
                         _uiState.update {
-                            it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
+                            it.copy(
+                                errorMessages = listOf(
+                                    task.exception?.message?.let { message ->
+                                        UiText.DynamicString(message)
+                                    } ?: kotlin.run {
+                                        UiText.StringResource(resId = R.string.unknown_error)
+                                    }
+                                )
+                            )
                         }
                     }
                 }
@@ -128,12 +144,20 @@ class ProfileViewModel @Inject constructor(
             repository.uploadUserProfileImage(uri).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
-                        it.copy(userMessages = listOf("Image uploaded successfully"))
+                        it.copy(userMessages = listOf(
+                            UiText.StringResource(resId = R.string.img_upload_suc))
+                        )
                     }
                     getUserProfileImage()
                 } else {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
+                        it.copy(errorMessages = listOf(
+                            task.exception?.message?.let { message ->
+                                UiText.DynamicString(message)
+                            } ?: kotlin.run {
+                                UiText.StringResource(resId = R.string.unknown_error)
+                            }
+                        ))
                     }
                 }
             }
@@ -149,7 +173,13 @@ class ProfileViewModel @Inject constructor(
                     }
                 } else {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
+                        it.copy(errorMessages = listOf(
+                            task.exception?.message?.let { message ->
+                                UiText.DynamicString(message)
+                            } ?: kotlin.run {
+                                UiText.StringResource(resId = R.string.unknown_error)
+                            }
+                        ))
                     }
                 }
             }
@@ -164,7 +194,13 @@ class ProfileViewModel @Inject constructor(
                 override fun onVerificationFailed(e: FirebaseException) {
                     _uiState.update {
                         it.copy(
-                            errorMessages = listOf(e.message ?: UNKNOWN_ERROR),
+                            errorMessages = listOf(
+                                e.message?.let { message ->
+                                    UiText.DynamicString(message)
+                                } ?: kotlin.run {
+                                    UiText.StringResource(resId = R.string.unknown_error)
+                                }
+                            ),
                             verifyPhoneNumber = VerifyPhoneNumberState.NOTHING
                         )
                     }
@@ -203,7 +239,13 @@ class ProfileViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         verifyPhoneNumber = VerifyPhoneNumberState.NOTHING,
-                        errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR)
+                        errorMessages = listOf(
+                            task.exception?.message?.let { message ->
+                                UiText.DynamicString(message)
+                            } ?: kotlin.run {
+                                UiText.StringResource(resId = R.string.unknown_error)
+                            }
+                        )
                     )
                 }
             }
@@ -216,12 +258,22 @@ class ProfileViewModel @Inject constructor(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _uiState.update {
-                            it.copy(userMessages = listOf("Your address updated successfully"))
+                            it.copy(userMessages = listOf(
+                                UiText.StringResource(resId = R.string.upload_address_suc)
+                            ))
                         }
                         getUserDetails()
                     } else {
                         _uiState.update {
-                            it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
+                            it.copy(
+                                errorMessages = listOf(
+                                    task.exception?.message?.let { message ->
+                                        UiText.DynamicString(message)
+                                    } ?: kotlin.run {
+                                        UiText.StringResource(resId = R.string.unknown_error)
+                                    }
+                                )
+                            )
                         }
                     }
                 }
@@ -230,18 +282,29 @@ class ProfileViewModel @Inject constructor(
 
     fun updateUserBirthdate(birthdate: Long) {
         viewModelScope.launch(ioDispatcher) {
-            repository.uploadUserBirthdate(birthdate, auth.uid ?: "").addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _uiState.update {
-                        it.copy(userMessages = listOf("Your birthdate updated successfully"))
-                    }
-                    getUserDetails()
-                } else {
-                    _uiState.update {
-                        it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
+            repository.uploadUserBirthdate(birthdate, auth.uid ?: "")
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        _uiState.update {
+                            it.copy(userMessages = listOf(
+                                UiText.StringResource(resId = R.string.upload_birthdate_suc)
+                            ))
+                        }
+                        getUserDetails()
+                    } else {
+                        _uiState.update {
+                            it.copy(
+                                errorMessages = listOf(
+                                    task.exception?.message?.let { message ->
+                                        UiText.DynamicString(message)
+                                    } ?: kotlin.run {
+                                        UiText.StringResource(resId = R.string.unknown_error)
+                                    }
+                                )
+                            )
+                        }
                     }
                 }
-            }
         }
     }
 
@@ -254,7 +317,13 @@ class ProfileViewModel @Inject constructor(
                     }
                 } else {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(task.exception?.message ?: UNKNOWN_ERROR))
+                        it.copy(errorMessages = listOf(
+                            task.exception?.message?.let { message ->
+                                UiText.DynamicString(message)
+                            } ?: kotlin.run {
+                                UiText.StringResource(resId = R.string.unknown_error)
+                            }
+                        ))
                     }
                 }
             }
@@ -276,12 +345,12 @@ class ProfileViewModel @Inject constructor(
 
 data class ProfileUiState(
     val isLoading: Boolean = false,
-    val errorMessages: List<String> = listOf(),
+    val errorMessages: List<UiText> = listOf(),
+    val userMessages: List<UiText> = listOf(),
     val name: String? = null,
     val email: String? = null,
     val photoUrl: Uri? = null,
     val phoneNumber: String? = null,
-    val userMessages: List<String> = listOf(),
     val verifyPhoneNumber: VerifyPhoneNumberState = VerifyPhoneNumberState.NOTHING,
     val userDetail: UserDetail? = null
 )

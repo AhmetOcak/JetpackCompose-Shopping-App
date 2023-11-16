@@ -104,7 +104,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
     if (uiState.errorMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            uiState.errorMessages.first(),
+            uiState.errorMessages.first().asString(),
             Toast.LENGTH_SHORT
         ).show()
         viewModel.consumedErrorMessage()
@@ -113,7 +113,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
     if (uiState.userMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            uiState.userMessages.first(),
+            uiState.userMessages.first().asString(),
             Toast.LENGTH_SHORT
         ).show()
         viewModel.consumedUserMessage()

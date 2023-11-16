@@ -15,7 +15,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
+import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -50,10 +50,10 @@ fun LoginScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    if (uiState.errorMessage != null) {
+    if (uiState.errorMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            uiState.errorMessage,
+            uiState.errorMessages.first().asString(),
             Toast.LENGTH_LONG
         ).show()
         viewModel.consumedErrorMessage()
@@ -229,7 +229,7 @@ private fun RememberMeBox(
             .padding(bottom = dimensionResource(id = R.dimen.two_level_margin)),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+        CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
             Checkbox(
                 checked = checked,
                 onCheckedChange = onCheckedChange

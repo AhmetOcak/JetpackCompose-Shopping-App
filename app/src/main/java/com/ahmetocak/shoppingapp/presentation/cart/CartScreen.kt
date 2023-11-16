@@ -66,19 +66,10 @@ fun CartScreen(modifier: Modifier = Modifier, onNavigatePaymentScreen: (Float) -
     if (uiState.errorMessages.isNotEmpty()) {
         Toast.makeText(
             LocalContext.current,
-            stringResource(id = uiState.errorMessages.first()),
+            uiState.errorMessages.first().asString(),
             Toast.LENGTH_SHORT
         ).show()
         viewModel.consumedErrorMessage()
-    }
-
-    if (uiState.userMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            stringResource(id = uiState.userMessages.first()),
-            Toast.LENGTH_SHORT
-        ).show()
-        viewModel.consumedUserMessage()
     }
 
     CartScreenContent(

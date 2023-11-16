@@ -58,4 +58,12 @@
     <string name="fill_all_fields">Please fill in all fields!!</string>
     <string name="payment_success">Payment completed successfully. Thanks for shopping.</string>
     <string name="continue_shopping">Continue shopping</string>
+    <string name="name_updated_suc">Name updated successfully</string>
+    <string name="img_upload_suc">Image uploaded successfully</string>
+    <string name="upload_address_suc">Your address updated successfully</string>
+    <string name="upload_birthdate_suc">Your birthdate updated successfully</string>
+    <string name="fill_this_field">"Please fill in this field"</string>
+    <string name="pass_dont_match">Passwords do not match</string>
+    <string name="pass_length">Password must be at least 6 characters in length</string>
+    <string name="enter_valid_email">Please enter a valid email</string>
 </resources>

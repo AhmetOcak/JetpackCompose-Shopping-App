@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.Response
+import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.common.mapper.toProductEntity
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
@@ -53,7 +54,9 @@ class ProductViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(response.errorMessageId)
+                        ))
                     }
                 }
             }
@@ -77,7 +80,9 @@ class ProductViewModel @Inject constructor(
                 is Response.Success -> {
                     _uiState.update {
                         it.copy(
-                            userMessages = listOf(R.string.product_added_favorites),
+                            userMessages = listOf(
+                                UiText.StringResource(R.string.product_added_favorites)
+                            ),
                             isProductFavorite = true
                         )
                     }
@@ -85,13 +90,17 @@ class ProductViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(response.errorMessageId)
+                        ))
                     }
                 }
 
                 else -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(R.string.unknown_error))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(R.string.unknown_error)
+                        ))
                     }
                 }
             }
@@ -106,7 +115,9 @@ class ProductViewModel @Inject constructor(
                 is Response.Success -> {
                     _uiState.update {
                         it.copy(
-                            userMessages = listOf(R.string.product_removed_favorites),
+                            userMessages = listOf(
+                                UiText.StringResource(R.string.product_removed_favorites)
+                            ),
                             isProductFavorite = false
                         )
                     }
@@ -114,13 +125,17 @@ class ProductViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(response.errorMessageId)
+                        ))
                     }
                 }
 
                 else -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(R.string.unknown_error))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(R.string.unknown_error)
+                        ))
                     }
                 }
             }
@@ -144,14 +159,18 @@ class ProductViewModel @Inject constructor(
                     is Response.Success -> {
                         _uiState.update {
                             it.copy(
-                                userMessages = listOf(R.string.product_added_cart),
+                                userMessages = listOf(
+                                    UiText.StringResource(R.string.product_added_cart)
+                                ),
                                 isProductInCart = true
                             )
                         }
                     }
                     is Response.Error -> {
                         _uiState.update {
-                            it.copy(errorMessages = listOf(response.errorMessageId))
+                            it.copy(errorMessages = listOf(
+                                UiText.StringResource(response.errorMessageId)
+                            ))
                         }
                     }
                 }
@@ -170,7 +189,9 @@ class ProductViewModel @Inject constructor(
 
                 is Response.Error -> {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(response.errorMessageId))
+                        it.copy(errorMessages = listOf(
+                            UiText.StringResource(response.errorMessageId)
+                        ))
                     }
                 }
             }
@@ -193,7 +214,7 @@ class ProductViewModel @Inject constructor(
 data class ProductScreenUiState(
     val product: Product? = null,
     val isProductFavorite: Boolean = false,
-    val userMessages: List<Int> = listOf(),
-    val errorMessages: List<Int> = listOf(),
+    val userMessages: List<UiText> = listOf(),
+    val errorMessages: List<UiText> = listOf(),
     val isProductInCart: Boolean = false
 )
