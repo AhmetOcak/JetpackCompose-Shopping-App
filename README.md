@@ -7,7 +7,6 @@
 * [Android Architecture Components](https://developer.android.com/topic/architecture)
     * [Navigation](https://developer.android.com/guide/navigation)
     * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
-    * [Lifecycle](https://developer.android.com/topic/libraries/architecture/lifecycle)
     * [Repository](https://developer.android.com/topic/architecture/data-layer?hl=en)
 * [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 * [Room](https://developer.android.com/training/data-storage/room)
