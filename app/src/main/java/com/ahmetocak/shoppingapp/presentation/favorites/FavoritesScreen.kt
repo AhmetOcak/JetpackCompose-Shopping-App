@@ -83,12 +83,8 @@ fun FavoritesScreen(modifier: Modifier = Modifier, onNavigateProductScreen: (Pro
         modifier = modifier,
         isLoading = uiState.isLoading,
         favoriteProductList = uiState.favoriteList,
-        onRemoveFavoriteClicked = { id ->
-            id?.let { viewModel.removeProductFromFavorites(it) }
-        },
-        onFavoriteItemClicked = { entity ->
-            onNavigateProductScreen(entity.toProduct())
-        }
+        onRemoveFavoriteClicked = { id -> id?.let { viewModel.removeProductFromFavorites(it) } },
+        onFavoriteItemClicked = { entity -> onNavigateProductScreen(entity.toProduct()) }
     )
 }
 

@@ -180,9 +180,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
             InfoType.BIRTHDATE -> { stringResource(id = R.string.birthdate) }
         },
         infoType = viewModel.infoType,
-        onUserPhotoClicked = {
-            launcher.launch("image/*")
-        },
+        onUserPhotoClicked = { launcher.launch("image/*") },
         imageUri = imageUri,
         showImageCropDialog = showImageCropperDialog,
         uploadPhoto = {
@@ -194,14 +192,10 @@ fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
         showVerifyPhoneNumberDialog = showVerifyPhoneNumberDialog,
         codeValue = viewModel.verificationCode,
         onCodeValueChange = viewModel::updateVerificationCodeValue,
-        onVerifyPhoneNumberDismiss = {
-            showVerifyPhoneNumberDialog = false
-        },
+        onVerifyPhoneNumberDismiss = { showVerifyPhoneNumberDialog = false },
         verifyPhoneNumber = viewModel::verifyUserPhoneNumber,
         datePickerState = datePickerState,
-        onDatePickerDialogDismiss = {
-            showUpdateDialog = false
-        },
+        onDatePickerDialogDismiss = { showUpdateDialog = false },
         onDateConfirmClick = {
             datePickerState.selectedDateMillis?.let { viewModel.updateUserBirthdate(it) }
             showUpdateDialog = false

@@ -79,9 +79,7 @@ fun CartScreen(modifier: Modifier = Modifier, onNavigatePaymentScreen: (Float) -
         subtotal = uiState.subtotal,
         onIncreaseClicked = viewModel::increaseProductCount,
         onDecreaseClicked = viewModel::decreaseProductCount,
-        onCheckoutBtnClicked = {
-            onNavigatePaymentScreen((uiState.subtotal).toFloat())
-        }
+        onCheckoutBtnClicked = { onNavigatePaymentScreen((uiState.subtotal).toFloat()) }
     )
 }
 
