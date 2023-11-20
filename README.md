@@ -2,6 +2,9 @@
 
 <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/a6f34238-a018-4493-8ddd-2fe5d530d565" width="192" height="192" />
 
+Shopping App is a fictional shopping application. To access the application, an account needs to be created. The main screen displays various products. Products can be filtered based on categories. In the search screen, you can search for any desired product. You can add your desired product to favorites and quickly access it from the favorites screen. In the profile screen, you can update your username, phone number, address, profile picture, and date of birth.
+
+
 ## Tech Stack 📚
 
 * [Android Architecture Components](https://developer.android.com/topic/architecture)
