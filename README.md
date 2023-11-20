@@ -1,4 +1,4 @@
-# JetpackCompose-Shopping-App 🛍
+# Shopping-App 🛍
 
 <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/a6f34238-a018-4493-8ddd-2fe5d530d565" width="192" height="192" />
 
