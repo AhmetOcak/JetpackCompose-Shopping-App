@@ -44,10 +44,11 @@ import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
-fun PaymentScreen(modifier: Modifier = Modifier, onNavigateHomeScreen: () -> Unit) {
-
-    val viewModel: PaymentViewModel = hiltViewModel()
-
+fun PaymentScreen(
+    modifier: Modifier = Modifier,
+    onNavigateHomeScreen: () -> Unit,
+    viewModel: PaymentViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.errorMessages.isNotEmpty()) {

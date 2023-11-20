@@ -23,10 +23,11 @@ import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
 import com.ahmetocak.shoppingapp.ui.components.WelcomeText
 
 @Composable
-fun SignUpScreen(modifier: Modifier = Modifier, onNavigate: () -> Unit) {
-
-    val viewModel: SignUpViewModel = hiltViewModel()
-
+fun SignUpScreen(
+    modifier: Modifier = Modifier,
+    onNavigate: () -> Unit,
+    viewModel: SignUpViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.errorMessages.isNotEmpty()) {

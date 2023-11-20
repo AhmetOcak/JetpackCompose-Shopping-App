@@ -83,10 +83,11 @@ import com.mr0xf00.easycrop.ui.ImageCropperDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier, onSignOutClicked: () -> Unit) {
-
-    val viewModel: ProfileViewModel = hiltViewModel()
-
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    onSignOutClicked: () -> Unit,
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     var showUpdateDialog by remember { mutableStateOf(false) }

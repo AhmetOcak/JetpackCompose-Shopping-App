@@ -44,10 +44,9 @@ import com.ahmetocak.shoppingapp.ui.components.WelcomeText
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onNavigateSignUp: () -> Unit,
-    onNavigateHome: () -> Unit
+    onNavigateHome: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val viewModel: LoginViewModel = hiltViewModel()
-
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.errorMessages.isNotEmpty()) {

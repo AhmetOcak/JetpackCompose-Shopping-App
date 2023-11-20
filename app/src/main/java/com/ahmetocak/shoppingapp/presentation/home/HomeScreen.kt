@@ -48,10 +48,9 @@ private const val ALL = "All"
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateProductScreen: (Product) -> Unit,
-    onNavigateCartScreen: () -> Unit
+    onNavigateCartScreen: () -> Unit,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val viewModel: HomeViewModel = hiltViewModel()
-
     val uiState by viewModel.uiState.collectAsState()
 
     HomeScreenContent(

@@ -42,10 +42,11 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.Product
 
 @Composable
-fun ProductScreen(modifier: Modifier = Modifier, onNavigateCartScreen: () -> Unit) {
-
-    val viewModel: ProductViewModel = hiltViewModel()
-
+fun ProductScreen(
+    modifier: Modifier = Modifier,
+    onNavigateCartScreen: () -> Unit,
+    viewModel: ProductViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.userMessages.isNotEmpty()) {

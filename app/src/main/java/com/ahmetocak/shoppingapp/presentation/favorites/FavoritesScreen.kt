@@ -53,9 +53,11 @@ import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 
 @Composable
-fun FavoritesScreen(modifier: Modifier = Modifier, onNavigateProductScreen: (Product) -> Unit) {
-
-    val viewModel: FavoritesViewModel = hiltViewModel()
+fun FavoritesScreen(
+    modifier: Modifier = Modifier,
+    onNavigateProductScreen: (Product) -> Unit,
+    viewModel: FavoritesViewModel = hiltViewModel()
+) {
 
     val uiState by viewModel.uiState.collectAsState()
 
@@ -150,15 +152,19 @@ private fun FavoriteItem(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        border = BorderStroke(1.dp, Brush.horizontalGradient(listOf(
-            colorResource(id = R.color.dark_green),
-            colorResource(id = R.color.hunter_green),
-            colorResource(id = R.color.dark_moss_green),
-            colorResource(id = R.color.walnut_brown),
-            colorResource(id = R.color.bole),
-            colorResource(id = R.color.cordovan),
-            colorResource(id = R.color.redwood),
-        ))),
+        border = BorderStroke(
+            1.dp, Brush.horizontalGradient(
+                listOf(
+                    colorResource(id = R.color.dark_green),
+                    colorResource(id = R.color.hunter_green),
+                    colorResource(id = R.color.dark_moss_green),
+                    colorResource(id = R.color.walnut_brown),
+                    colorResource(id = R.color.bole),
+                    colorResource(id = R.color.cordovan),
+                    colorResource(id = R.color.redwood),
+                )
+            )
+        ),
         onClick = onFavoriteItemClicked
     ) {
         Column(

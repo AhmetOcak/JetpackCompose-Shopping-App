@@ -57,10 +57,11 @@ import com.ahmetocak.shoppingapp.ui.components.CartItemCountSetter
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
-fun CartScreen(modifier: Modifier = Modifier, onNavigatePaymentScreen: (Float) -> Unit) {
-
-    val viewModel: CartViewModel = hiltViewModel()
-
+fun CartScreen(
+    modifier: Modifier = Modifier,
+    onNavigatePaymentScreen: (Float) -> Unit,
+    viewModel: CartViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.errorMessages.isNotEmpty()) {

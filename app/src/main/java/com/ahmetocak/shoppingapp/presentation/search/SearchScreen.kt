@@ -37,10 +37,11 @@ import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import com.ahmetocak.shoppingapp.ui.components.ProductItem
 
 @Composable
-fun SearchScreen(modifier: Modifier = Modifier, onNavigateProductScreen: (Product) -> Unit) {
-
-    val viewModel: SearchViewModel = hiltViewModel()
-
+fun SearchScreen(
+    modifier: Modifier = Modifier,
+    onNavigateProductScreen: (Product) -> Unit,
+    viewModel: SearchViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.errorMessages.isNotEmpty()) {
