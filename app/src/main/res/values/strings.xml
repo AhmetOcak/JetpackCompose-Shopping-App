@@ -66,4 +66,5 @@
     <string name="pass_dont_match">Passwords do not match</string>
     <string name="pass_length">Password must be at least 6 characters in length</string>
     <string name="enter_valid_email">Please enter a valid email</string>
+    <string name="confirm">Confirm</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.designsystem.components
+package com.ahmetocak.shoppingapp.presentation.cart.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement

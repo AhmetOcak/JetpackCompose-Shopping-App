@@ -40,7 +40,7 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.CreditCard
 
 @Composable
-fun CreditCard(cardInfo: CreditCard, rotated: Boolean, onCardClick: () -> Unit) {
+fun ShoppingCreditCard(cardInfo: CreditCard, rotated: Boolean, onCardClick: () -> Unit) {
 
     val cardType = when (findCreditCardType(cardInfo.number)) {
         CardType.VISA -> { painterResource(id = R.drawable.visa) }
