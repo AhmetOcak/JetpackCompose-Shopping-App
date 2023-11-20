@@ -1,6 +1,5 @@
 package com.ahmetocak.shoppingapp.presentation.favorites
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,12 +13,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.mapper.toProduct
 import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import com.ahmetocak.shoppingapp.presentation.favorites.components.EmptyFavoriteListView
@@ -36,20 +35,12 @@ fun FavoritesScreen(
     viewModel.getAllFavoriteProducts()
 
     if (uiState.errorMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            uiState.errorMessages.first().asString(),
-            Toast.LENGTH_SHORT
-        ).show()
+        ShoppingShowToastMessage(message = uiState.errorMessages.first().asString())
         viewModel.errorMessageConsumed()
     }
 
     if (uiState.userMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            uiState.userMessages.first().asString(),
-            Toast.LENGTH_SHORT
-        ).show()
+        ShoppingShowToastMessage(message = uiState.userMessages.first().asString())
         viewModel.userMessagesConsumed()
     }
 

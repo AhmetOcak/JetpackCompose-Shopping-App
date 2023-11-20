@@ -2,7 +2,6 @@ package com.ahmetocak.shoppingapp.presentation.profile
 
 import android.app.Activity
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -41,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.formatDate
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.presentation.profile.components.ImageCropper
 import com.ahmetocak.shoppingapp.presentation.profile.components.Info
 import com.ahmetocak.shoppingapp.presentation.profile.components.ProfileImage
@@ -71,20 +71,12 @@ fun ProfileScreen(
     val activity = LocalContext.current as Activity
 
     if (uiState.errorMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            uiState.errorMessages.first().asString(),
-            Toast.LENGTH_SHORT
-        ).show()
+        ShoppingShowToastMessage(message = uiState.errorMessages.first().asString())
         viewModel.consumedErrorMessage()
     }
 
     if (uiState.userMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            uiState.userMessages.first().asString(),
-            Toast.LENGTH_SHORT
-        ).show()
+        ShoppingShowToastMessage(message = uiState.userMessages.first().asString())
         viewModel.consumedUserMessage()
         showUpdateDialog = false
     }
@@ -97,11 +89,7 @@ fun ProfileScreen(
         VerifyPhoneNumberState.ON_VERIFICATION_COMPLETED -> {
             showUpdateDialog = false
             showVerifyPhoneNumberDialog = false
-            Toast.makeText(
-                LocalContext.current,
-                stringResource(id = R.string.verification_completed),
-                Toast.LENGTH_SHORT
-            ).show()
+            ShoppingShowToastMessage(message = stringResource(id = R.string.verification_completed))
         }
 
         VerifyPhoneNumberState.ON_CODE_SENT -> {

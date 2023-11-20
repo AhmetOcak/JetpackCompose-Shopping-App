@@ -1,6 +1,5 @@
 package com.ahmetocak.shoppingapp.presentation.payment
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,15 +13,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingCreditCard
 import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingCreditCard
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.CreditCard
 import com.ahmetocak.shoppingapp.presentation.payment.components.CardDetails
 import com.ahmetocak.shoppingapp.presentation.payment.components.PaymentDetail
@@ -38,11 +37,7 @@ fun PaymentScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.errorMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            uiState.errorMessages.first().asString(),
-            Toast.LENGTH_SHORT
-        ).show()
+        ShoppingShowToastMessage(message = uiState.errorMessages.first().asString())
         viewModel.consumedErrorMessage()
     }
 

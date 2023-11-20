@@ -1,6 +1,5 @@
 package com.ahmetocak.shoppingapp.presentation.cart
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,10 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.presentation.cart.components.CartList
 import com.ahmetocak.shoppingapp.presentation.cart.components.CheckOutButton
@@ -27,11 +26,7 @@ fun CartScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.errorMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            uiState.errorMessages.first().asString(),
-            Toast.LENGTH_SHORT
-        ).show()
+        ShoppingShowToastMessage(message = uiState.errorMessages.first().asString())
         viewModel.consumedErrorMessage()
     }
 

@@ -1,6 +1,5 @@
 package com.ahmetocak.shoppingapp.presentation.product
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,12 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.presentation.product.components.AddToCartRow
 import com.ahmetocak.shoppingapp.presentation.product.components.ProductImage
@@ -32,20 +31,12 @@ fun ProductScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.userMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            uiState.userMessages.first().asString(),
-            Toast.LENGTH_SHORT
-        ).show()
+        ShoppingShowToastMessage(message = uiState.userMessages.first().asString())
         viewModel.consumedUserMessages()
     }
 
     if (uiState.errorMessages.isNotEmpty()) {
-        Toast.makeText(
-            LocalContext.current,
-            uiState.errorMessages.first().asString(),
-            Toast.LENGTH_SHORT
-        ).show()
+        ShoppingShowToastMessage(message = uiState.errorMessages.first().asString())
         viewModel.consumedErrorMessages()
     }
 
