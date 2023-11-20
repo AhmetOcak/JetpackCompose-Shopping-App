@@ -1,4 +1,4 @@
-# ShoppingApp
+# JetpackCompose-Shopping-App 🛍
 
 <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/a6f34238-a018-4493-8ddd-2fe5d530d565" width="192" height="192" />
 
@@ -17,9 +17,7 @@ Enter the required information in the local.properties file as specified in the 
 Creating the instance for the second Firebase application.
 
 <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/bb0617f6-93e0-48a4-be5b-32ddecd00a7e" />
-
-⚠ 
-
+ 
 ## Tech Stack 📚
 
 * [Android Architecture Components](https://developer.android.com/topic/architecture)
