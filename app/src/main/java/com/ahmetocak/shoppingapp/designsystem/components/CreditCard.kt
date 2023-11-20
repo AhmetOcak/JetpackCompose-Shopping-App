@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.ui.components
+package com.ahmetocak.shoppingapp.designsystem.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween

@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,8 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.CreditCard
-import com.ahmetocak.shoppingapp.ui.components.CreditCard
-import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
+import com.ahmetocak.shoppingapp.designsystem.components.CreditCard
+import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
@@ -106,9 +106,7 @@ private fun PaymentScreenContent(
             .padding(dimensionResource(id = R.dimen.two_level_margin))
     ) {
         if (isLoading) {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+            FullScreenCircularLoading()
         } else if (isPaymentDone) {
             PaymentSuccessView(
                 modifier = modifier,

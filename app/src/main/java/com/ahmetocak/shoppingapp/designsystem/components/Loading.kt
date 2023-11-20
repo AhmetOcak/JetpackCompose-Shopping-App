@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.ui.components
+package com.ahmetocak.shoppingapp.designsystem.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

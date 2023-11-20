@@ -33,12 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.ui.components.AuthBackground
-import com.ahmetocak.shoppingapp.ui.components.AuthEnterEmailOtf
-import com.ahmetocak.shoppingapp.ui.components.AuthEnterPasswordOtf
-import com.ahmetocak.shoppingapp.ui.components.FullScreenCircularLoading
-import com.ahmetocak.shoppingapp.ui.components.ShoppingButton
-import com.ahmetocak.shoppingapp.ui.components.WelcomeText
+import com.ahmetocak.shoppingapp.designsystem.components.AuthBackground
+import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterEmailOtf
+import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterPasswordOtf
+import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
+import com.ahmetocak.shoppingapp.designsystem.components.WelcomeText
 
 @Composable
 fun LoginScreen(

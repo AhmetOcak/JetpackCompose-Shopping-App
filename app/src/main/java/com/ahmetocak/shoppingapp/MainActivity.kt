@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import com.ahmetocak.shoppingapp.common.helpers.getRememberMe
 import com.ahmetocak.shoppingapp.core.navigation.graph.NavGraph
 import com.ahmetocak.shoppingapp.core.navigation.screens.NavScreen
-import com.ahmetocak.shoppingapp.ui.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.designsystem.theme.ShoppingAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

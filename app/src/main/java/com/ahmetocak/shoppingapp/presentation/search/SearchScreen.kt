@@ -34,7 +34,7 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.mapper.toProduct
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
-import com.ahmetocak.shoppingapp.ui.components.ProductItem
+import com.ahmetocak.shoppingapp.designsystem.components.ProductItem
 
 @Composable
 fun SearchScreen(

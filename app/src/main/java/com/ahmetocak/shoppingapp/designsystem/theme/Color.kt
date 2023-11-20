@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.ui.theme
+package com.ahmetocak.shoppingapp.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

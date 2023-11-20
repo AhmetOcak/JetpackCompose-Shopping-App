@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.ui.components
+package com.ahmetocak.shoppingapp.designsystem.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,12 +23,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import com.ahmetocak.shoppingapp.R
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun AuthEnterPasswordOtf(
     modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    isVerifyVersion: Boolean = false,
     isError: Boolean ,
     labelText: String,
     keyboardActions: KeyboardActions = KeyboardActions()

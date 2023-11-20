@@ -53,7 +53,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
-import com.ahmetocak.shoppingapp.ui.components.CartItemCountSetter
+import com.ahmetocak.shoppingapp.designsystem.components.CartItemCountSetter
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable

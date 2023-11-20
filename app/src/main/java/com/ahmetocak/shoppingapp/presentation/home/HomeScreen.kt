@@ -40,7 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.model.shopping.Product
-import com.ahmetocak.shoppingapp.ui.components.ProductItem
+import com.ahmetocak.shoppingapp.designsystem.components.ProductItem
 
 private const val ALL = "All"
 
