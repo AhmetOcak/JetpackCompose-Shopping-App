@@ -4,8 +4,9 @@
 
 Shopping App is a fictional shopping application. To access the application, an account needs to be created. The main screen displays various products. Products can be filtered based on categories. In the search screen, you can search for any desired product. You can add your desired product to favorites and quickly access it from the favorites screen. In the profile screen, you can update your username, phone number, address, profile picture, and date of birth.
 
-The application uses [Firebase Authentication](https://firebase.google.com/docs/auth) for user verification. Additionally, a phone number can be added. When adding a phone number, a verification code is sent to the added phone number. After entering the received code in the application, the phone number gets associated with the account. User profile images are stored using [Firebase Storage](https://firebase.google.com/docs/storage).
+The application uses [Firebase Authentication](https://firebase.google.com/docs/auth) for user verification. Additionally, a phone number can be added. When adding a phone number, a verification code is sent to the added phone number. After entering the received code in the application, the phone number gets associated with the account. User profile images are stored using [Firebase Storage](https://firebase.google.com/docs/storage). The user's address and date of birth information are stored using [Cloud Firestore](https://firebase.google.com/docs/firestore).
 
+A new Firebase application has been created to store user addresses and date of birth information using Cloud Firestore. To learn how multiple Firebase applications are used within a project, [Configure multiple projects in your application.](https://firebase.google.com/docs/projects/multiprojects?hl=en#use_multiple_projects_in_your_application)
 
 ## Tech Stack 📚
 
