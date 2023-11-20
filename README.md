@@ -8,6 +8,18 @@ The application uses [Firebase Authentication](https://firebase.google.com/docs/
 
 A new Firebase application has been created to store user addresses and date of birth information using Cloud Firestore. To learn how multiple Firebase applications are used within a project, [Configure multiple projects in your application.](https://firebase.google.com/docs/projects/multiprojects?hl=en#use_multiple_projects_in_your_application)
 
+### <b>Setting up the second Firebase application</b> 🛠
+
+Enter the required information in the local.properties file as specified in the provided link.
+
+<img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/5939bc5b-e3c6-48ba-865a-a9f96e5b192b" />
+
+Creating the instance for the second Firebase application.
+
+<img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/bb0617f6-93e0-48a4-be5b-32ddecd00a7e" />
+
+⚠ 
+
 ## Tech Stack 📚
 
 * [Android Architecture Components](https://developer.android.com/topic/architecture)
