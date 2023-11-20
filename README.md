@@ -33,3 +33,10 @@ Shopping App is a fictional shopping application. To access the application, an 
 | Product Screen   | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/829178f7-5817-44c3-9fc0-f50a0dd28280" width="240" height="480"/>      | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/ac6eb116-4f53-428d-a3cf-b43caa2c8abc" width="240" height="480"/>     |
 | Cart Screen      | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/5153dc58-4b83-45d8-847f-dc3fed2951de" width="240" height="480"/>      | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/d0ef5cf2-7206-4e0a-9f3d-9d48240c8f51" width="240" height="480"/>     |
 | Payment Screen   | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/a79dd356-852e-44b8-bf2c-03d0d58061ee" width="240" height="480"/>      | <img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/098d3741-32f9-4ee7-801e-cf56a85de79e" width="240" height="480"/>     |
+
+## Architecture 🏗
+The app uses MVVM [Model-View-ViewModel] architecture to have a unidirectional flow of data, separation of concern, testability, and a lot more.
+
+![mvvm](https://user-images.githubusercontent.com/73544434/197416569-d42a6bbe-126e-4776-9c8f-2791925f738c.png)
+
+
