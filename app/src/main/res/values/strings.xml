@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ShoppingApp</string>
+    <string name="app_name">Shopping App</string>
 
     <string name="hello_again">Hello again !</string>
     <string name="no_account">Don\'t have an account?</string>
