@@ -21,3 +21,7 @@ object Storage {
 object Firestore {
     const val COLLECTION_KEY = "user_details"
 }
+
+object NotificationChannelIds {
+    const val SHOPPING_NOTIFICATION = "shopping_notification_channel"
+}

@@ -67,4 +67,8 @@
     <string name="pass_length">Password must be at least 6 characters in length</string>
     <string name="enter_valid_email">Please enter a valid email</string>
     <string name="confirm">Confirm</string>
+    <string name="shopping_notification_title">Don\'t forget to shop</string>
+    <string name="shop_notification_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae odio in mauris elementum commodo id ut neque. Sed a blandit justo, eu porta libero.</string>
+    <string name="shopping_channel_name">Shopping channel</string>
+    <string name="shopping_channel_description">Daily shopping reminder</string>
 </resources>
