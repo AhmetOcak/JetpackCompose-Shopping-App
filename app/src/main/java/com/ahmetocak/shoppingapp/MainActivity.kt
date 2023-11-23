@@ -14,7 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import com.ahmetocak.shoppingapp.common.helpers.getRememberMe
-import com.ahmetocak.shoppingapp.core.alarm.ShoppingAlarmManager
+import com.ahmetocak.shoppingapp.core.alarm.ShoppingAlarmScheduler
 import com.ahmetocak.shoppingapp.core.navigation.graph.NavGraph
 import com.ahmetocak.shoppingapp.core.navigation.screens.NavScreen
 import com.ahmetocak.shoppingapp.designsystem.theme.ShoppingAppTheme
@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
     lateinit var sharedPreferences: SharedPreferences
 
     @Inject
-    lateinit var shoppingAlarmManager: ShoppingAlarmManager
+    lateinit var shoppingAlarmScheduler: ShoppingAlarmScheduler
 
     private var hasNotificationPermission: Boolean = false
 
@@ -49,10 +49,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            shoppingAlarmManager.initShoppingNotificationAlarm()
+            shoppingAlarmScheduler.schedule()
 
             ShoppingAppTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
