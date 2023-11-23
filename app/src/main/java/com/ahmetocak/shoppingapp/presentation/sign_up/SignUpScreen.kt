@@ -46,11 +46,11 @@ fun SignUpScreen(
         onVerifyPasswordChange = viewModel::updateVerifyPasswordField,
         verifyPasswordFieldError = uiState.verifyPasFieldErrorMessage != null,
         emailLabel = uiState.emailFieldErrorMessage?.asString()
-            ?: stringResource(id = R.string.unknown_error),
+            ?: stringResource(id = R.string.enter_email),
         passwordLabel = uiState.passwordFieldErrorMessage?.asString()
-            ?: stringResource(id = R.string.unknown_error),
+            ?: stringResource(id = R.string.enter_password),
         verifyPasswordLabel = uiState.verifyPasFieldErrorMessage?.asString()
-            ?: stringResource(id = R.string.unknown_error),
+            ?: stringResource(id = R.string.verify_password),
         onSignUpClick = { viewModel.signUp(onNavigate) },
         isLoading = uiState.isLoading,
         isSignUpEnd = uiState.isSignUpEnd
