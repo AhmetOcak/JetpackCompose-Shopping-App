@@ -10,8 +10,15 @@ import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductL
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductLocalDataSourceImpl
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.db.ProductDao
 import com.ahmetocak.shoppingapp.data.datasource.remote.api.ShoppingApi
-import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteDataSource
-import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteDatasourceImpl
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.*
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.auth.FirebaseAuthDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.auth.FirebaseAuthDataSourceImpl
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.fcm.FirebaseFcmDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.fcm.FirebaseFcmDataSourceImpl
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.storage.FirebaseStorageDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.storage.FirebaseStorageDataSourceImpl
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.store.FirebaseFirestoreDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.store.FirebaseFirestoreDataSourceImpl
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSourceImpl
 import com.google.firebase.auth.FirebaseAuth
@@ -30,13 +37,29 @@ object DataSourceModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseRemoteDataSource(
+    fun provideFirebaseAuthDataSource(auth: FirebaseAuth): FirebaseAuthDataSource {
+        return FirebaseAuthDataSourceImpl(auth)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFcmDataSource(cloudMessaging: FirebaseMessaging): FirebaseFcmDataSource {
+        return FirebaseFcmDataSourceImpl(cloudMessaging)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseStorageDataSource(
         auth: FirebaseAuth,
-        storage: FirebaseStorage,
-        db: FirebaseFirestore,
-        messaging: FirebaseMessaging
-    ): FirebaseRemoteDataSource {
-        return FirebaseRemoteDatasourceImpl(auth, storage, db, messaging)
+        storage: FirebaseStorage
+    ): FirebaseStorageDataSource {
+        return FirebaseStorageDataSourceImpl(auth, storage)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFirestoreDataSource(firestoreDb: FirebaseFirestore): FirebaseFirestoreDataSource {
+        return FirebaseFirestoreDataSourceImpl(firestoreDb)
     }
 
     @Provides

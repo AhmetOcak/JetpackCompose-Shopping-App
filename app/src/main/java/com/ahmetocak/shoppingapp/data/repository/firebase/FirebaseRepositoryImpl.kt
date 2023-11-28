@@ -2,7 +2,10 @@ package com.ahmetocak.shoppingapp.data.repository.firebase
 
 import android.app.Activity
 import android.net.Uri
-import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.auth.FirebaseAuthDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.fcm.FirebaseFcmDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.storage.FirebaseStorageDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.store.FirebaseFirestoreDataSource
 import com.ahmetocak.shoppingapp.model.auth.Auth
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.PhoneAuthCredential
@@ -12,60 +15,63 @@ import com.google.firebase.firestore.DocumentSnapshot
 import javax.inject.Inject
 
 class FirebaseRepositoryImpl @Inject constructor(
-    private val dataSource: FirebaseRemoteDataSource
+    private val authDataSource: FirebaseAuthDataSource,
+    private val storageDataSource: FirebaseStorageDataSource,
+    private val firestoreDataSource: FirebaseFirestoreDataSource,
+    private val fcmDataSource: FirebaseFcmDataSource
 ) : FirebaseRepository {
 
-    override fun createAccount(auth: Auth) = dataSource.createAccount(auth)
+    override fun createAccount(auth: Auth) = authDataSource.createAccount(auth)
 
-    override fun login(auth: Auth) = dataSource.login(auth)
+    override fun login(auth: Auth) = authDataSource.login(auth)
 
     override fun updateUserProfile(profileUpdates: UserProfileChangeRequest) =
-        dataSource.updateUserProfile(profileUpdates)
+        authDataSource.updateUserProfile(profileUpdates)
 
-    override fun sendEmailVerification() = dataSource.sendEmailVerification()
+    override fun sendEmailVerification() = authDataSource.sendEmailVerification()
 
-    override fun changePassword(newPassword: String) = dataSource.changePassword(newPassword)
+    override fun changePassword(newPassword: String) = authDataSource.changePassword(newPassword)
 
     override fun sendResetPasswordEmail(emailAddress: String) =
-        dataSource.sendResetPasswordEmail(emailAddress)
+        authDataSource.sendResetPasswordEmail(emailAddress)
 
-    override fun deleteAccount() = dataSource.deleteAccount()
+    override fun deleteAccount() = authDataSource.deleteAccount()
 
-    override fun reAuthenticate(auth: Auth) = dataSource.reAuthenticate(auth)
+    override fun reAuthenticate(auth: Auth) = authDataSource.reAuthenticate(auth)
 
-    override fun uploadUserProfileImage(imgUri: Uri) = dataSource.uploadUserProfileImage(imgUri)
+    override fun uploadUserProfileImage(imgUri: Uri) = storageDataSource.uploadUserProfileImage(imgUri)
 
-    override fun getUserProfileImage() = dataSource.getUserProfileImage()
+    override fun getUserProfileImage() = storageDataSource.getUserProfileImage()
 
     override fun sendVerificationCode(
         phoneNumber: String,
         activity: Activity,
         callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     ) {
-        dataSource.sendVerificationCode(phoneNumber, activity, callbacks)
+        authDataSource.sendVerificationCode(phoneNumber, activity, callbacks)
     }
 
     override fun verifyUserPhoneNumber(phoneAuthCredential: PhoneAuthCredential): Task<Void>? {
-        return dataSource.verifyUserPhoneNumber(phoneAuthCredential)
+        return authDataSource.verifyUserPhoneNumber(phoneAuthCredential)
     }
 
     override fun uploadUserAddress(address: String, userUid: String): Task<Void> {
-        return dataSource.uploadUserAddress(address, userUid)
+        return firestoreDataSource.uploadUserAddress(address, userUid)
     }
 
     override fun uploadUserBirthdate(birthdate: Long, userUid: String): Task<Void> {
-        return dataSource.uploadUserBirthdate(birthdate, userUid)
+        return firestoreDataSource.uploadUserBirthdate(birthdate, userUid)
     }
 
     override fun getAllUserDetails(userUid: String): Task<DocumentSnapshot> {
-        return dataSource.getAllUserDetails(userUid)
+        return firestoreDataSource.getAllUserDetails(userUid)
     }
 
     override fun uploadUserFCMToken(token: String, userUid: String): Task<Void> {
-        return dataSource.uploadUserFCMToken(token, userUid)
+        return firestoreDataSource.uploadUserFCMToken(token, userUid)
     }
 
     override fun getFCMToken(): Task<String> {
-        return dataSource.getFCMToken()
+        return fcmDataSource.getFCMToken()
     }
 }

@@ -3,7 +3,10 @@ package com.ahmetocak.shoppingapp.di
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.cart.CartLocalDataSource
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.FavoriteProductLocalDatasource
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductLocalDataSource
-import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.FirebaseRemoteDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.auth.FirebaseAuthDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.fcm.FirebaseFcmDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.storage.FirebaseStorageDataSource
+import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.store.FirebaseFirestoreDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSource
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepositoryImpl
@@ -21,8 +24,18 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseRepository(dataSource: FirebaseRemoteDataSource): FirebaseRepository {
-        return FirebaseRepositoryImpl(dataSource)
+    fun provideFirebaseRepository(
+        authDataSource: FirebaseAuthDataSource,
+        storageDataSource: FirebaseStorageDataSource,
+        firestoreDataSource: FirebaseFirestoreDataSource,
+        fcmDataSource: FirebaseFcmDataSource
+    ): FirebaseRepository {
+        return FirebaseRepositoryImpl(
+            authDataSource,
+            storageDataSource,
+            firestoreDataSource,
+            fcmDataSource
+        )
     }
 
     @Provides
