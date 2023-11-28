@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.common.mapper.toProductEntity
+import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.Product
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val shoppingRepository: ShoppingRepository,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val firebaseRepository: FirebaseRepository,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeScreeUiState())
@@ -28,6 +32,7 @@ class HomeViewModel @Inject constructor(
     init {
         getCategoryList()
         getAllProducts()
+        getFCMTokenAndUpload()
     }
 
     private fun getCategoryList() {
@@ -87,6 +92,21 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             productList.forEach {
                 shoppingRepository.addProduct(it.toProductEntity())
+            }
+        }
+    }
+
+    private fun getFCMTokenAndUpload() {
+        viewModelScope.launch(ioDispatcher) {
+            firebaseRepository.getFCMToken().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    firebaseAuth.uid?.let {
+                        firebaseRepository.uploadUserFCMToken(
+                            token = task.result,
+                            userUid = it
+                        )
+                    }
+                }
             }
         }
     }

@@ -16,6 +16,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import java.util.concurrent.TimeUnit
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class FirebaseRemoteDatasourceImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     firebaseStorage: FirebaseStorage,
-    private val firestoreDb: FirebaseFirestore
+    private val firestoreDb: FirebaseFirestore,
+    private val firebaseMessaging: FirebaseMessaging
 ) : FirebaseRemoteDataSource {
 
     private val storageRef = firebaseStorage.reference
@@ -101,5 +103,15 @@ class FirebaseRemoteDatasourceImpl @Inject constructor(
 
     override fun getAllUserDetails(userUid: String): Task<DocumentSnapshot> {
         return firestoreDb.collection(Firestore.COLLECTION_KEY).document(userUid).get()
+    }
+
+    override fun uploadUserFCMToken(token: String, userUid: String): Task<Void> {
+        return firestoreDb.collection(Firestore.FCM_COLLECTION_KEY)
+            .document(userUid)
+            .set(hashMapOf("token" to token), SetOptions.merge())
+    }
+
+    override fun getFCMToken(): Task<String> {
+        return firebaseMessaging.token
     }
 }

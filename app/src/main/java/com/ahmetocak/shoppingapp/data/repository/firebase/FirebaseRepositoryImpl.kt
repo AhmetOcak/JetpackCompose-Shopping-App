@@ -60,4 +60,12 @@ class FirebaseRepositoryImpl @Inject constructor(
     override fun getAllUserDetails(userUid: String): Task<DocumentSnapshot> {
         return dataSource.getAllUserDetails(userUid)
     }
+
+    override fun uploadUserFCMToken(token: String, userUid: String): Task<Void> {
+        return dataSource.uploadUserFCMToken(token, userUid)
+    }
+
+    override fun getFCMToken(): Task<String> {
+        return dataSource.getFCMToken()
+    }
 }

@@ -110,6 +110,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-messaging-ktx")
 
     // Image Cropper
     implementation("io.github.mr0xf00:easycrop:0.1.1")

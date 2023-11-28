@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.initialize
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import dagger.Module
@@ -63,4 +64,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDispatcherIO(): CoroutineDispatcher = Dispatchers.IO
+
+    @Provides
+    @Singleton
+    fun provideFirebaseMessaging(): FirebaseMessaging = FirebaseMessaging.getInstance()
 }

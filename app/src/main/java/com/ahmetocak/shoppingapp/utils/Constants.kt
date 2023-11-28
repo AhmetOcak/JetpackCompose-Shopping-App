@@ -20,6 +20,7 @@ object Storage {
 
 object Firestore {
     const val COLLECTION_KEY = "user_details"
+    const val FCM_COLLECTION_KEY = "fcm_tokens"
 }
 
 object NotificationChannelIds {
