@@ -9,15 +9,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.presentation.home.components.CategoryList
 import com.ahmetocak.shoppingapp.presentation.home.components.ErrorView
 import com.ahmetocak.shoppingapp.presentation.home.components.PageHeader
 import com.ahmetocak.shoppingapp.presentation.home.components.ProductList
-
-private const val ALL = "All"
 
 @Composable
 fun HomeScreen(
@@ -51,7 +51,8 @@ private fun HomeScreenContent(
     onShoppingCartClicked: () -> Unit,
     errors: List<UiText>
 ) {
-    var selectedCatName by rememberSaveable { mutableStateOf(ALL) }
+    val allKeyword = stringResource(id = R.string.all)
+    var selectedCatName by rememberSaveable { mutableStateOf(allKeyword) }
 
     Column(modifier = modifier.fillMaxSize()) {
         if (errors.isNotEmpty()) {
@@ -71,7 +72,7 @@ private fun HomeScreenContent(
                 isProductListLoading = isProductListLoading,
                 selectedCatName = selectedCatName,
                 onProductClick = onProductClick,
-                allCatText = ALL
+                allCatText = stringResource(id = R.string.all)
             )
         }
     }
