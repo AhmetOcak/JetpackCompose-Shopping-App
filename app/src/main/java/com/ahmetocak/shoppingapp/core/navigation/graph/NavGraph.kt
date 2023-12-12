@@ -135,9 +135,7 @@ fun NavGraph(
                     sharedPreferences.edit().removeRememberMe()
 
                     navController.navigate(NavScreen.LoginScreen.route) {
-                        popUpTo(NavScreen.HomeScreen.route) {
-                            inclusive = true
-                        }
+                        popUpTo(0)
                     }
                 })
             }
