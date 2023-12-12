@@ -31,6 +31,7 @@ Creating the instance for the second Firebase application.
 * [Firebase Auth](https://firebase.google.com/docs/auth)
 * [Firebase Storage](https://firebase.google.com/docs/storage?hl=en)
 * [Firebase Firestore](https://firebase.google.com/docs/firestore?hl=en)
+* [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging)
 * [Image Cropper](https://github.com/mr0xf00/easycrop)
 
 ## Outputs 🖼
