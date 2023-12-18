@@ -16,8 +16,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -345,7 +345,7 @@ private fun AccountInfoSection(
                     infoType = it.infoType,
                     onAccountInfoClicked = onAccountInfoClicked
                 )
-                HorizontalDivider(modifier = modifier.fillMaxWidth())
+                Divider(modifier = modifier.fillMaxWidth())
             }
         }
     }

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -121,7 +121,7 @@ private fun ProductDetails(
             onFavoriteBtnClicked = onFavoriteBtnClicked,
             isProductFavorite = isProductFavorite
         )
-        HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Color.Black)
+        Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = Color.Black)
         AddToCartRow(
             modifier = Modifier.weight(1f),
             price = price,
