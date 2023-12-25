@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.common.mapper.toProductEntity
+import com.ahmetocak.shoppingapp.data.mapper.toProductEntity
 import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.Product

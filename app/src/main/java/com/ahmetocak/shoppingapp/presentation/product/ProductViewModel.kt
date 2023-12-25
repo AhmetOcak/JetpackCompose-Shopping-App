@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.common.mapper.toProductEntity
+import com.ahmetocak.shoppingapp.data.mapper.toProductEntity
 import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.model.shopping.Product

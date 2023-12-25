@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.common.mapper
+package com.ahmetocak.shoppingapp.data.mapper
 
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
