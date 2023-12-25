@@ -79,7 +79,7 @@ private fun FavoritesScreenContent(
                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.two_level_margin)),
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.two_level_margin))
             ) {
-                items(favoriteProductList) {
+                items(favoriteProductList, key = { it.id }) {
                     FavoriteItem(
                         modifier = modifier,
                         imgUrl = it.image ?: "",

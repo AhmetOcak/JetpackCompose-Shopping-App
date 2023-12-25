@@ -1,7 +1,10 @@
 package com.ahmetocak.shoppingapp.model.shopping
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class Product(
-    val id: Int? = null,
+    val id: Int,
     val title: String? = null,
     val price: String? = null,
     val description: String? = null,
@@ -10,6 +13,7 @@ data class Product(
     val rating: Rating? = null
 )
 
+@Immutable
 data class Rating(
     val rate: Double? = null,
     val count: Int? = null

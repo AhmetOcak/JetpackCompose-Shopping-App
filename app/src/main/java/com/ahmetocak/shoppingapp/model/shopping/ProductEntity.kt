@@ -9,7 +9,7 @@ data class ProductEntity(
 
     @PrimaryKey
     @ColumnInfo("id")
-    val id: Int?,
+    val id: Int,
 
     @ColumnInfo("title")
     val title: String?,

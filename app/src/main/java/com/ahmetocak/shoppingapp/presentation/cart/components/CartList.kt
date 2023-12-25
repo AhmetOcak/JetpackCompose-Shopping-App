@@ -38,7 +38,7 @@ fun CartList(
         contentPadding = PaddingValues(dimensionResource(id = R.dimen.two_level_margin)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
     ) {
-        items(cartList) { cart ->
+        items(cartList, key = { it.id }) { cart ->
             CartItem(
                 id = cart.id,
                 imageUrl = cart.image,
