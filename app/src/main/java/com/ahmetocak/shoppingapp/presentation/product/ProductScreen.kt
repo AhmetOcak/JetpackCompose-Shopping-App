@@ -9,6 +9,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -45,11 +46,13 @@ fun ProductScreen(
         product = uiState.product,
         isProductFavorite = uiState.isProductFavorite,
         onFavoriteBtnClicked = viewModel::onFavoriteProductClick,
-        onAddToCartClicked = {
-            if (uiState.isProductInCart) {
-                onNavigateCartScreen()
-            } else {
-                viewModel.addProductToCart()
+        onAddToCartClicked = remember {
+            {
+                if (uiState.isProductInCart) {
+                    onNavigateCartScreen()
+                } else {
+                    viewModel.addProductToCart()
+                }
             }
         },
         cartButtonText = if (uiState.isProductInCart) {

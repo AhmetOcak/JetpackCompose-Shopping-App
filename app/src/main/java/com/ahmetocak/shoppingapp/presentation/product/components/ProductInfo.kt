@@ -71,7 +71,8 @@ fun ProductInfo(
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
-                .padding(top = dimensionResource(id = R.dimen.one_level_margin)), text = description
+                .padding(top = dimensionResource(id = R.dimen.one_level_margin)),
+            text = description
         )
     }
 }
