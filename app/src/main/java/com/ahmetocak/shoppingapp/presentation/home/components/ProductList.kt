@@ -48,7 +48,7 @@ fun ProductList(
             items(
                 if (selectedCatName == allCatText) productList
                 else productList.filter { it.category?.uppercase() == selectedCatName.uppercase() },
-                key = { it.id!! }
+                key = { it.id }
             ) {
                 ShoppingProductItem(
                     modifier = modifier,
