@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
+import com.ahmetocak.shoppingapp.domain.repository.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.data.repository.shopping
+package com.ahmetocak.shoppingapp.domain.repository
 
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
+import com.ahmetocak.shoppingapp.domain.repository.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.user_detail.UserDetail
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth

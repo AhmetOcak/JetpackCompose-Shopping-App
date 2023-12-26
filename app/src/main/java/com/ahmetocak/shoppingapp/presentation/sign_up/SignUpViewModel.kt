@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.AuthFieldCheckers
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
+import com.ahmetocak.shoppingapp.domain.repository.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.auth.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

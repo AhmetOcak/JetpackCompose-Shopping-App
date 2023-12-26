@@ -8,10 +8,10 @@ import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.fcm.FirebaseFcm
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.storage.FirebaseStorageDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.store.FirebaseFirestoreDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSource
-import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepository
-import com.ahmetocak.shoppingapp.data.repository.firebase.FirebaseRepositoryImpl
-import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepository
-import com.ahmetocak.shoppingapp.data.repository.shopping.ShoppingRepositoryImpl
+import com.ahmetocak.shoppingapp.domain.repository.FirebaseRepository
+import com.ahmetocak.shoppingapp.data.repository.FirebaseRepositoryImpl
+import com.ahmetocak.shoppingapp.domain.repository.ShoppingRepository
+import com.ahmetocak.shoppingapp.data.repository.ShoppingRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

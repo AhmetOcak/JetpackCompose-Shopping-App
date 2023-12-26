@@ -1,10 +1,11 @@
-package com.ahmetocak.shoppingapp.data.repository.shopping
+package com.ahmetocak.shoppingapp.data.repository
 
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.cart.CartLocalDataSource
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.favorite_product.FavoriteProductLocalDatasource
 import com.ahmetocak.shoppingapp.data.datasource.local.shopping.product.ProductLocalDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.shopping.ShoppingRemoteDataSource
+import com.ahmetocak.shoppingapp.domain.repository.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity

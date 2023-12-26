@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.data.repository.firebase
+package com.ahmetocak.shoppingapp.data.repository
 
 import android.app.Activity
 import android.net.Uri
@@ -6,6 +6,7 @@ import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.auth.FirebaseAu
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.fcm.FirebaseFcmDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.storage.FirebaseStorageDataSource
 import com.ahmetocak.shoppingapp.data.datasource.remote.firebase.store.FirebaseFirestoreDataSource
+import com.ahmetocak.shoppingapp.domain.repository.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.auth.Auth
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.PhoneAuthCredential

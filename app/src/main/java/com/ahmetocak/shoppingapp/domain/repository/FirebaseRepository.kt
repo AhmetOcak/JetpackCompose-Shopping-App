@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.data.repository.firebase
+package com.ahmetocak.shoppingapp.domain.repository
 
 import android.app.Activity
 import android.net.Uri
