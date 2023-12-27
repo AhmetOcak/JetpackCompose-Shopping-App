@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
@@ -80,13 +81,16 @@ fun NavGraph(
                 })
             }
             composable(route = NavScreen.SignUpScreen.route) {
-                SignUpScreen(onNavigate = { navController.navigateUp() })
+                SignUpScreen(onNavigate = navController::navigateUp)
             }
             composable(route = NavScreen.HomeScreen.route) {
                 HomeScreen(
                     onNavigateProductScreen = { product ->
                         val encodedValue =
-                            URLEncoder.encode(Gson().toJson(product), StandardCharsets.UTF_8.toString())
+                            URLEncoder.encode(
+                                Gson().toJson(product),
+                                StandardCharsets.UTF_8.toString()
+                            )
                         navController.navigate("${NavScreen.ProductScreen.route}/$encodedValue")
                     },
                     onNavigateCartScreen = {
@@ -161,24 +165,28 @@ private fun BottomNavigationView(
 
             NavigationBarItem(
                 selected = isSelected,
-                icon = {
-                    Icon(
-                        imageVector = if (isSelected) {
-                            screen.selectedIcon
-                        } else {
-                            screen.unSelectedIcon
-                        },
-                        contentDescription = null
-                    )
+                icon = remember {
+                    {
+                        Icon(
+                            imageVector = if (isSelected) {
+                                screen.selectedIcon
+                            } else {
+                                screen.unSelectedIcon
+                            },
+                            contentDescription = null
+                        )
+                    }
                 },
-                onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
+                onClick = remember {
+                    {
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
 
-                        launchSingleTop = true
-                        restoreState = true
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 },
                 label = { Text(text = stringResource(id = screen.labelId)) }

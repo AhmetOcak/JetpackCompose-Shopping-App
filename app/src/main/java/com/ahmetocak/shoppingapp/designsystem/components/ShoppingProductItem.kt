@@ -40,15 +40,18 @@ import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.Product
 
+private val imageModifier = Modifier
+    .fillMaxWidth()
+    .height(128.dp)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingProductItem(
-    modifier: Modifier = Modifier,
     product: Product,
     onProductClick: (Product) -> Unit
 ) {
     Card(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         onClick = { onProductClick(product) },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = BorderStroke(
@@ -66,15 +69,13 @@ fun ShoppingProductItem(
         )
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(dimensionResource(id = R.dimen.one_level_margin)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(128.dp),
+                modifier = imageModifier,
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(product.image)
                     .crossfade(true)
@@ -84,7 +85,7 @@ fun ShoppingProductItem(
                 contentScale = ContentScale.Fit
             )
             MinLineText(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.one_level_margin))
                     .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
@@ -97,7 +98,7 @@ fun ShoppingProductItem(
                 color = Color.Black
             )
             Text(
-                modifier = modifier.padding(top = dimensionResource(id = R.dimen.one_level_margin)),
+                modifier = Modifier.padding(top = dimensionResource(id = R.dimen.one_level_margin)),
                 text = "$${product.price}",
                 color = Color.Black
             )

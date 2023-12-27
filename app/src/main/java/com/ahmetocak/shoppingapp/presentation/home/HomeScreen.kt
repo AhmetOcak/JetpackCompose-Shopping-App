@@ -35,7 +35,7 @@ fun HomeScreen(
         productList = uiState.productList,
         isProductListLoading = uiState.isProductListLoading,
         onProductClick = { onNavigateProductScreen(it) },
-        onShoppingCartClicked = { onNavigateCartScreen() },
+        onShoppingCartClicked = onNavigateCartScreen,
         errors = uiState.errorMessages
     )
 }

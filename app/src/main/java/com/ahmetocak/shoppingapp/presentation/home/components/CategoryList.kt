@@ -48,7 +48,7 @@ fun CategoryList(
                     onCategoryClick = onCategoryClick
                 )
             }
-            items(categories) { category ->
+            items(categories, key = { it }) { category ->
                 CategoryItem(
                     categoryName = category.replaceFirstChar { it.uppercase() },
                     selectedCatName = selectedCatName,

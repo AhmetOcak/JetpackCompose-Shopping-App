@@ -51,7 +51,6 @@ fun ProductList(
                 key = { it.id }
             ) {
                 ShoppingProductItem(
-                    modifier = modifier,
                     product = it,
                     onProductClick = onProductClick
                 )

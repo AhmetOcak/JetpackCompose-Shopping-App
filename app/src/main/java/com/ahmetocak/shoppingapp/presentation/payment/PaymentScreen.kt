@@ -60,7 +60,7 @@ fun PaymentScreen(
         onPaymentClicked = viewModel::payment,
         isPaymentDone = uiState.isPaymentDone,
         isLoading = uiState.isLoading,
-        onContinueShoppingClick = { onNavigateHomeScreen() }
+        onContinueShoppingClick = onNavigateHomeScreen
     )
 }
 
