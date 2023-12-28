@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.common.helpers.UiText
+import com.ahmetocak.shoppingapp.core.navigation.MainDestinations
 import com.ahmetocak.shoppingapp.domain.repository.ShoppingRepository
-import com.ahmetocak.shoppingapp.utils.NavKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -32,7 +32,7 @@ class PaymentViewModel @Inject constructor(
     val uiState: StateFlow<PaymentUiState> = _uiState.asStateFlow()
 
     init {
-        savedStateHandle.get<Float>(NavKeys.TOTAL_AMOUNT)?.let { amount ->
+        savedStateHandle.get<Float>(MainDestinations.PAYMENT_AMOUNT_KEY)?.let { amount ->
             _uiState.update {
                 it.copy(totalAmount = amount.toDouble())
             }

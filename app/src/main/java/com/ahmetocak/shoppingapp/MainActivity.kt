@@ -9,18 +9,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import com.ahmetocak.shoppingapp.common.helpers.getRememberMe
 import com.ahmetocak.shoppingapp.core.alarm.ShoppingAlarmScheduler
-import com.ahmetocak.shoppingapp.core.navigation.graph.NavGraph
-import com.ahmetocak.shoppingapp.core.navigation.screens.NavScreen
-import com.ahmetocak.shoppingapp.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.core.navigation.MainDestinations
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -47,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 onResult = { hasNotificationPermission = it }
             )
 
-            if (!hasNotificationPermission){
+            if (!hasNotificationPermission) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     SideEffect {
                         permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -60,24 +54,10 @@ class MainActivity : ComponentActivity() {
                 viewModel.onUiEventConsumed()
             }
 
-            ShoppingAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    if (sharedPreferences.getRememberMe()) {
-                        NavGraph(
-                            startDestination = NavScreen.HomeScreen.route,
-                            sharedPreferences = sharedPreferences
-                        )
-                    } else {
-                        NavGraph(
-                            startDestination = NavScreen.LoginScreen.route,
-                            sharedPreferences = sharedPreferences
-                        )
-                    }
-                }
-            }
+            ShoppingApp(
+                startDestination = if (sharedPreferences.getRememberMe()) MainDestinations.PRODUCT_ROUTE
+                else MainDestinations.LOGIN_ROUTE
+            )
         }
     }
 }

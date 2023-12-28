@@ -29,8 +29,8 @@ import com.ahmetocak.shoppingapp.presentation.login.components.RememberMeBox
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onNavigateSignUp: () -> Unit,
-    onNavigateHome: () -> Unit,
+    onSignUpClick: () -> Unit,
+    onLoginClick: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -84,9 +84,9 @@ fun LoginScreen(
             uiState.passwordFieldErrorMessage ?: stringResource(id = R.string.unknown_error)
         },
         checked = viewModel.rememberMe,
-        onCheckedChange = { viewModel.updateRememberMeBox() },
-        onLoginClicked = { viewModel.login(onNavigateHome) },
-        onRegisterClick = onNavigateSignUp,
+        onCheckedChange = viewModel::updateRememberMeBox,
+        onLoginClicked = { viewModel.login(onLoginClick) },
+        onRegisterClick = onSignUpClick,
         onForgotPasswordClick = viewModel::showPasswordResetDialog,
         isLoading = uiState.isLoading,
         isLoginEnd = uiState.isLoginEnd
@@ -105,7 +105,7 @@ private fun LoginScreenContent(
     passwordFieldError: Boolean,
     passwordFieldLabel: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    onCheckedChange: () -> Unit,
     onLoginClicked: () -> Unit,
     onRegisterClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
@@ -146,7 +146,7 @@ private fun LoginScreenContent(
             RememberMeBox(
                 modifier = modifier,
                 checked = checked,
-                onCheckedChange = onCheckedChange
+                onCheckedChange = { onCheckedChange() }
             )
             ShoppingButton(
                 modifier = modifier,

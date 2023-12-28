@@ -24,7 +24,7 @@ import com.ahmetocak.shoppingapp.designsystem.components.WelcomeText
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
-    onNavigate: () -> Unit,
+    upPress: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -51,7 +51,7 @@ fun SignUpScreen(
             ?: stringResource(id = R.string.enter_password),
         verifyPasswordLabel = uiState.verifyPasFieldErrorMessage?.asString()
             ?: stringResource(id = R.string.verify_password),
-        onSignUpClick = { viewModel.signUp(onNavigate) },
+        onSignUpClick = { viewModel.signUp(upPress) },
         isLoading = uiState.isLoading,
         isSignUpEnd = uiState.isSignUpEnd
     )

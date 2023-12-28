@@ -20,7 +20,7 @@ import com.ahmetocak.shoppingapp.presentation.cart.components.EmptyCartListView
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
-    onNavigatePaymentScreen: (Float) -> Unit,
+    onPaymentClick: (Float) -> Unit,
     viewModel: CartViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -37,7 +37,7 @@ fun CartScreen(
         subtotal = uiState.subtotal,
         onIncreaseClicked = viewModel::increaseProductCount,
         onDecreaseClicked = viewModel::decreaseProductCount,
-        onCheckoutBtnClicked = { onNavigatePaymentScreen((uiState.subtotal).toFloat()) }
+        onCheckoutBtnClicked = { onPaymentClick((uiState.subtotal).toFloat()) }
     )
 }
 

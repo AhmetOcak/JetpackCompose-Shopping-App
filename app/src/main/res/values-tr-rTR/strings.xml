@@ -68,4 +68,5 @@
     <string name="confirm">Doğrula</string>
     <string name="shopping_notification_title">Alışveriş yapmayı unutma</string>
     <string name="shop_notification_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae odio in mauris elementum commodo id ut neque. Sed a blandit justo, eu porta libero.</string>
+    <string name="products">Ürünler</string>
 </resources>

@@ -31,7 +31,7 @@ import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 @Composable
 fun PaymentScreen(
     modifier: Modifier = Modifier,
-    onNavigateHomeScreen: () -> Unit,
+    onContinueShoppingClick: () -> Unit,
     viewModel: PaymentViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -60,7 +60,7 @@ fun PaymentScreen(
         onPaymentClicked = viewModel::payment,
         isPaymentDone = uiState.isPaymentDone,
         isLoading = uiState.isLoading,
-        onContinueShoppingClick = onNavigateHomeScreen
+        onContinueShoppingClick = onContinueShoppingClick
     )
 }
 

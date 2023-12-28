@@ -9,11 +9,6 @@ object EndPoints {
     const val PRODUCT = "products"
 }
 
-object NavKeys {
-    const val PRODUCT = "product"
-    const val TOTAL_AMOUNT = "total_amount"
-}
-
 object Storage {
     const val USER_PROFILE_IMG = "user_profile_images"
 }
