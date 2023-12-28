@@ -69,11 +69,7 @@ class ShoppingAppNavController(
 
     fun navigateToSignUp(from: NavBackStackEntry) {
         if (shouldNavigate(from)) {
-            navController.navigate(MainDestinations.SIGNUP_ROUTE) {
-                popUpTo(MainDestinations.LOGIN_ROUTE) {
-                    inclusive = true
-                }
-            }
+            navController.navigate(MainDestinations.SIGNUP_ROUTE)
         }
     }
 
