@@ -1,9 +1,8 @@
 package com.ahmetocak.shoppingapp.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.ahmetocak.shoppingapp.BuildConfig
-import com.ahmetocak.shoppingapp.utils.USER_REMEMBER_ME_KEY
+import com.ahmetocak.shoppingapp.common.helpers.PreferenceManager
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.app
@@ -29,25 +28,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(@ApplicationContext context: Context) : SharedPreferences {
-        return context.getSharedPreferences(USER_REMEMBER_ME_KEY, Context.MODE_PRIVATE)
-    }
-
-    @Provides
-    @Singleton
-    fun provideFirebaseAuth() : FirebaseAuth {
+    fun provideFirebaseAuth(): FirebaseAuth {
         return Firebase.auth
     }
 
     @Provides
     @Singleton
-    fun provideFirebaseStorage() : FirebaseStorage {
+    fun provideFirebaseStorage(): FirebaseStorage {
         return Firebase.storage
     }
 
     @Provides
     @Singleton
-    fun provideFirestore(@ApplicationContext context: Context) : FirebaseFirestore {
+    fun provideFirestore(@ApplicationContext context: Context): FirebaseFirestore {
         val options = FirebaseOptions.Builder()
             .setProjectId(BuildConfig.PROJECT_ID)
             .setApplicationId(BuildConfig.APPLICATION_ID)
@@ -68,4 +61,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFirebaseMessaging(): FirebaseMessaging = FirebaseMessaging.getInstance()
+
+    @Provides
+    @Singleton
+    fun providePreferenceManager(@ApplicationContext context: Context): PreferenceManager =
+        PreferenceManager(context)
 }

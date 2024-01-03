@@ -16,16 +16,20 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.common.helpers.PreferenceManager
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.presentation.home.favorites.FavoritesScreen
 import com.ahmetocak.shoppingapp.presentation.home.product.ProductScreen
 import com.ahmetocak.shoppingapp.presentation.home.profile.ProfileScreen
 import com.ahmetocak.shoppingapp.presentation.home.search.SearchScreen
+import com.ahmetocak.shoppingapp.utils.REMEMBER_ME
+import com.google.firebase.auth.FirebaseAuth
 
 fun NavGraphBuilder.addHomeGraph(
     onProductClick: (Product, NavBackStackEntry) -> Unit,
@@ -53,8 +57,13 @@ fun NavGraphBuilder.addHomeGraph(
         )
     }
     composable(HomeSections.PROFILE.route) { from ->
+        val preferenceManager = PreferenceManager(LocalContext.current)
         ProfileScreen(
-            onSignOutClicked = { onSignOutClick(from) },
+            onSignOutClicked = {
+                FirebaseAuth.getInstance().signOut()
+                preferenceManager.saveData(REMEMBER_ME, false)
+                onSignOutClick(from)
+            },
             onNavigateRoute = onNavigateToRoute
         )
     }
@@ -68,8 +77,18 @@ enum class HomeSections(
 ) {
     PRODUCT(R.string.home, Icons.Filled.Home, Icons.Outlined.Home, "home/product"),
     SEARCH(R.string.search, Icons.Filled.Search, Icons.Outlined.Search, "home/search"),
-    FAVORITES(R.string.favorites, Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, "home/favorite"),
-    PROFILE(R.string.profile, Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle, "home/profile")
+    FAVORITES(
+        R.string.favorites,
+        Icons.Filled.Favorite,
+        Icons.Outlined.FavoriteBorder,
+        "home/favorite"
+    ),
+    PROFILE(
+        R.string.profile,
+        Icons.Filled.AccountCircle,
+        Icons.Outlined.AccountCircle,
+        "home/profile"
+    )
 }
 
 @Composable

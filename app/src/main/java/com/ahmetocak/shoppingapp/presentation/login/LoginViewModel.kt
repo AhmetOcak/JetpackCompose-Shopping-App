@@ -1,7 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.login
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,10 +8,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.AuthFieldCheckers
+import com.ahmetocak.shoppingapp.common.helpers.PreferenceManager
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.common.helpers.rememberMe
 import com.ahmetocak.shoppingapp.domain.repository.FirebaseRepository
 import com.ahmetocak.shoppingapp.model.auth.Auth
+import com.ahmetocak.shoppingapp.utils.REMEMBER_ME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,8 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val firebaseRepository: FirebaseRepository,
-    private val sharedPreferences: SharedPreferences,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val preferenceManager: PreferenceManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -106,27 +106,31 @@ class LoginViewModel @Inject constructor(
                     it.copy(isLoading = true)
                 }
 
-                firebaseRepository.login(auth = Auth(email, password)).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        _uiState.update {
-                            it.copy(isLoading = false, isLoginEnd = true)
-                        }
-                        if (rememberMe) {
-                            sharedPreferences.edit().rememberMe()
-                        }
-                        onNavigate()
-                    } else {
-                        _uiState.update {
-                            it.copy(isLoading = false, errorMessages = listOf(
-                                task.exception?.message?.let { message ->
-                                    UiText.DynamicString(message)
-                                } ?: kotlin.run {
-                                    UiText.StringResource(resId = R.string.unknown_error)
-                                }
-                            ))
+                firebaseRepository.login(auth = Auth(email, password))
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            _uiState.update {
+                                it.copy(isLoading = false, isLoginEnd = true)
+                            }
+                            if (rememberMe) {
+                                preferenceManager.saveData(
+                                    REMEMBER_ME,
+                                    true
+                                )
+                            }
+                            onNavigate()
+                        } else {
+                            _uiState.update {
+                                it.copy(isLoading = false, errorMessages = listOf(
+                                    task.exception?.message?.let { message ->
+                                        UiText.DynamicString(message)
+                                    } ?: kotlin.run {
+                                        UiText.StringResource(resId = R.string.unknown_error)
+                                    }
+                                ))
+                            }
                         }
                     }
-                }
             }
         }
     }
@@ -157,27 +161,28 @@ class LoginViewModel @Inject constructor(
                     it.copy(isLoading = true)
                 }
 
-                firebaseRepository.sendResetPasswordEmail(passwordResetEmail)?.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        _uiState.update {
-                            it.copy(isLoading = false, isResetPasswordMailSend = true)
-                        }
-                    } else {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                isResetPasswordMailSend = false,
-                                errorMessages = listOf(
-                                    task.exception?.message?.let { message ->
-                                        UiText.DynamicString(message)
-                                    } ?: kotlin.run {
-                                        UiText.StringResource(resId = R.string.unknown_error)
-                                    }
+                firebaseRepository.sendResetPasswordEmail(passwordResetEmail)
+                    ?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            _uiState.update {
+                                it.copy(isLoading = false, isResetPasswordMailSend = true)
+                            }
+                        } else {
+                            _uiState.update {
+                                it.copy(
+                                    isLoading = false,
+                                    isResetPasswordMailSend = false,
+                                    errorMessages = listOf(
+                                        task.exception?.message?.let { message ->
+                                            UiText.DynamicString(message)
+                                        } ?: kotlin.run {
+                                            UiText.StringResource(resId = R.string.unknown_error)
+                                        }
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
-                }
             }
         }
     }

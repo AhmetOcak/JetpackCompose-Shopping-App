@@ -1,7 +1,6 @@
 package com.ahmetocak.shoppingapp
 
 import android.Manifest
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,9 +11,10 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.ahmetocak.shoppingapp.common.helpers.getRememberMe
+import com.ahmetocak.shoppingapp.common.helpers.PreferenceManager
 import com.ahmetocak.shoppingapp.core.alarm.ShoppingAlarmScheduler
 import com.ahmetocak.shoppingapp.core.navigation.MainDestinations
+import com.ahmetocak.shoppingapp.utils.REMEMBER_ME
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -22,10 +22,10 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var sharedPreferences: SharedPreferences
+    lateinit var shoppingAlarmScheduler: ShoppingAlarmScheduler
 
     @Inject
-    lateinit var shoppingAlarmScheduler: ShoppingAlarmScheduler
+    lateinit var preferenceManager: PreferenceManager
 
     private var hasNotificationPermission: Boolean = false
 
@@ -55,7 +55,11 @@ class MainActivity : ComponentActivity() {
             }
 
             ShoppingApp(
-                startDestination = if (sharedPreferences.getRememberMe()) MainDestinations.PRODUCT_ROUTE
+                startDestination = if (preferenceManager.getData(
+                        REMEMBER_ME,
+                        false
+                    )
+                ) MainDestinations.PRODUCT_ROUTE
                 else MainDestinations.LOGIN_ROUTE
             )
         }

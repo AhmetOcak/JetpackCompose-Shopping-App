@@ -1,6 +1,10 @@
 package com.ahmetocak.shoppingapp.utils
 
-const val USER_REMEMBER_ME_KEY = "user_remember_me"
+// Preferences Keys
+const val MY_PREF = "app_preferences"
+const val REMEMBER_ME = "remember_me_pref"
+
+
 const val BASE_URL = "https://fakestoreapi.com/"
 const val DELIVERY_FEE = 5.00
 
