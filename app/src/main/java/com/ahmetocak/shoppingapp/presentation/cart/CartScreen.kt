@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
@@ -55,15 +56,19 @@ fun CartScreen(
         viewModel.consumedErrorMessage()
     }
 
-    CartScreenContent(
-        modifier = modifier,
-        cartList = uiState.cartList,
-        onRemoveItemClick = viewModel::removeProductFromCart,
-        subtotal = uiState.subtotal,
-        onIncreaseClicked = viewModel::increaseProductCount,
-        onDecreaseClicked = viewModel::decreaseProductCount,
-        onCheckoutBtnClicked = { onPaymentClick((uiState.subtotal).toFloat()) }
-    )
+    ShoppingScaffold(
+        modifier = modifier
+    ) { paddingValues ->
+        CartScreenContent(
+            modifier = Modifier.padding(paddingValues),
+            cartList = uiState.cartList,
+            onRemoveItemClick = viewModel::removeProductFromCart,
+            subtotal = uiState.subtotal,
+            onIncreaseClicked = viewModel::increaseProductCount,
+            onDecreaseClicked = viewModel::decreaseProductCount,
+            onCheckoutBtnClicked = { onPaymentClick((uiState.subtotal).toFloat()) }
+        )
+    }
 }
 
 @Composable

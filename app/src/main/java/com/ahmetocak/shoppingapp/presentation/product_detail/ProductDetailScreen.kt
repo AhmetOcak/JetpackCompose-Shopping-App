@@ -39,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.Product
 
@@ -60,26 +61,28 @@ fun ProductDetailScreen(
         viewModel.consumedErrorMessages()
     }
 
-    ProductDetailScreenContent(
-        modifier = modifier,
-        product = uiState.product,
-        isProductFavorite = uiState.isProductFavorite,
-        onFavoriteBtnClicked = viewModel::onFavoriteProductClick,
-        onAddToCartClicked = remember {
-            {
-                if (uiState.isProductInCart) {
-                    onCartClick()
-                } else {
-                    viewModel.addProductToCart()
+    ShoppingScaffold(modifier = modifier) { paddingValues ->
+        ProductDetailScreenContent(
+            modifier = Modifier.padding(paddingValues),
+            product = uiState.product,
+            isProductFavorite = uiState.isProductFavorite,
+            onFavoriteBtnClicked = viewModel::onFavoriteProductClick,
+            onAddToCartClicked = remember {
+                {
+                    if (uiState.isProductInCart) {
+                        onCartClick()
+                    } else {
+                        viewModel.addProductToCart()
+                    }
                 }
+            },
+            cartButtonText = if (uiState.isProductInCart) {
+                stringResource(id = R.string.go_to_cart)
+            } else {
+                stringResource(id = R.string.add_to_cart)
             }
-        },
-        cartButtonText = if (uiState.isProductInCart) {
-            stringResource(id = R.string.go_to_cart)
-        } else {
-            stringResource(id = R.string.add_to_cart)
-        }
-    )
+        )
+    }
 }
 
 @Composable

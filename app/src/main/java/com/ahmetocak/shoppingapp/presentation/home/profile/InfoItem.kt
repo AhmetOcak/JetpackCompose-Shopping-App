@@ -29,7 +29,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.presentation.home.profile.InfoType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

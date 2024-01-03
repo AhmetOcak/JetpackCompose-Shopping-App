@@ -36,6 +36,7 @@ import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterEmailOtf
 import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterPasswordOtf
 import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.designsystem.components.WelcomeText
 
@@ -68,14 +69,14 @@ fun LoginScreen(
                     .height(200.dp),
             ) {
                 Column(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     AuthEnterEmailOtf(
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         value = viewModel.passwordResetEmail,
                         onValueChange = viewModel::updatePasswordResetEmail,
                         isError = uiState.resetPasswordEmailFieldErrorMessage != null,
@@ -87,7 +88,7 @@ fun LoginScreen(
                             stringResource(id = R.string.enter_email)
                         }
                     )
-                    Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.two_level_margin)))
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.two_level_margin)))
                     ShoppingButton(
                         onClick = viewModel::sendPasswordResetEmail,
                         buttonText = stringResource(id = R.string.send)
@@ -97,32 +98,34 @@ fun LoginScreen(
         }
     }
 
-    LoginScreenContent(
-        modifier = modifier,
-        emailValue = viewModel.email,
-        passwordValue = viewModel.password,
-        onEmailValueChange = viewModel::updateEmailField,
-        onPasswordValueChange = viewModel::updatePasswordField,
-        emailFieldError = uiState.emailFieldErrorMessage != null,
-        emailFieldLabel = if (uiState.emailFieldErrorMessage == null) {
-            stringResource(id = R.string.enter_email)
-        } else {
-            uiState.emailFieldErrorMessage ?: stringResource(id = R.string.unknown_error)
-        },
-        passwordFieldError = uiState.passwordFieldErrorMessage != null,
-        passwordFieldLabel = if (uiState.passwordFieldErrorMessage == null) {
-            stringResource(id = R.string.enter_password)
-        } else {
-            uiState.passwordFieldErrorMessage ?: stringResource(id = R.string.unknown_error)
-        },
-        checked = viewModel.rememberMe,
-        onCheckedChange = viewModel::updateRememberMeBox,
-        onLoginClicked = { viewModel.login(onLoginClick) },
-        onRegisterClick = onSignUpClick,
-        onForgotPasswordClick = viewModel::showPasswordResetDialog,
-        isLoading = uiState.isLoading,
-        isLoginEnd = uiState.isLoginEnd
-    )
+    ShoppingScaffold(modifier = modifier) { paddingValues ->
+        LoginScreenContent(
+            modifier = Modifier.padding(paddingValues),
+            emailValue = viewModel.email,
+            passwordValue = viewModel.password,
+            onEmailValueChange = viewModel::updateEmailField,
+            onPasswordValueChange = viewModel::updatePasswordField,
+            emailFieldError = uiState.emailFieldErrorMessage != null,
+            emailFieldLabel = if (uiState.emailFieldErrorMessage == null) {
+                stringResource(id = R.string.enter_email)
+            } else {
+                uiState.emailFieldErrorMessage ?: stringResource(id = R.string.unknown_error)
+            },
+            passwordFieldError = uiState.passwordFieldErrorMessage != null,
+            passwordFieldLabel = if (uiState.passwordFieldErrorMessage == null) {
+                stringResource(id = R.string.enter_password)
+            } else {
+                uiState.passwordFieldErrorMessage ?: stringResource(id = R.string.unknown_error)
+            },
+            checked = viewModel.rememberMe,
+            onCheckedChange = viewModel::updateRememberMeBox,
+            onLoginClicked = { viewModel.login(onLoginClick) },
+            onRegisterClick = onSignUpClick,
+            onForgotPasswordClick = viewModel::showPasswordResetDialog,
+            isLoading = uiState.isLoading,
+            isLoginEnd = uiState.isLoginEnd
+        )
+    }
 }
 
 @Composable
@@ -157,16 +160,16 @@ private fun LoginScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-            WelcomeText(modifier = modifier, text = stringResource(id = R.string.hello_again))
+            WelcomeText(modifier = Modifier, text = stringResource(id = R.string.hello_again))
             AuthEnterEmailOtf(
-                modifier = modifier,
+                modifier = Modifier,
                 value = emailValue,
                 onValueChange = onEmailValueChange,
                 isError = emailFieldError,
                 labelText = emailFieldLabel
             )
             AuthEnterPasswordOtf(
-                modifier = modifier,
+                modifier = Modifier,
                 value = passwordValue,
                 onValueChange = onPasswordValueChange,
                 isError = passwordFieldError,
@@ -176,12 +179,11 @@ private fun LoginScreenContent(
                 )
             )
             RememberMeBox(
-                modifier = modifier,
                 checked = checked,
                 onCheckedChange = onCheckedChange
             )
             ShoppingButton(
-                modifier = modifier,
+                modifier = Modifier,
                 onClick = onLoginClicked,
                 buttonText = stringResource(id = R.string.login)
             )
@@ -193,14 +195,13 @@ private fun LoginScreenContent(
                 )
             }
             Row(
-                modifier = modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(text = stringResource(id = R.string.no_account))
-                Spacer(modifier = modifier.width(4.dp))
+                Spacer(modifier = Modifier.width(4.dp))
                 TextButton(
-                    modifier = modifier,
                     onClick = onRegisterClick,
                     contentPadding = PaddingValues(0.dp)
                 ) {
@@ -214,12 +215,11 @@ private fun LoginScreenContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RememberMeBox(
-    modifier: Modifier,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = dimensionResource(id = R.dimen.two_level_margin)),
         verticalAlignment = Alignment.CenterVertically
@@ -230,7 +230,7 @@ private fun RememberMeBox(
                 onCheckedChange = onCheckedChange
             )
         }
-        Spacer(modifier = modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(4.dp))
         Text(text = stringResource(id = R.string.remember_me))
     }
 }

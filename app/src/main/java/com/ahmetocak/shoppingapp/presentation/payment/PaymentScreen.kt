@@ -35,6 +35,7 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingCreditCard
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.CreditCard
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
@@ -52,27 +53,29 @@ fun PaymentScreen(
         viewModel.consumedErrorMessage()
     }
 
-    PaymentScreenContent(
-        modifier = modifier,
-        cardInfo = CreditCard(
-            holderName = viewModel.holderName,
-            number = viewModel.cardNumber,
-            expiryDate = viewModel.expiryDate,
-            cvc = viewModel.cvc
-        ),
-        onHolderNameChanged = viewModel::updateHolderName,
-        onCardNumberChanged = viewModel::updateCardNumber,
-        onCvcChanged = viewModel::updateCVC,
-        onExpiryDateChanged = viewModel::updateExpiryDate,
-        totalAmount = uiState.totalAmount + DELIVERY_FEE,
-        onCardInputClicked = viewModel::updateRotateCard,
-        rotated = viewModel.rotateCard,
-        onCardClick = { viewModel.updateRotateCard(!viewModel.rotateCard) },
-        onPaymentClicked = viewModel::payment,
-        isPaymentDone = uiState.isPaymentDone,
-        isLoading = uiState.isLoading,
-        onContinueShoppingClick = onContinueShoppingClick
-    )
+    ShoppingScaffold(modifier = modifier) { paddingValues ->
+        PaymentScreenContent(
+            modifier = Modifier.padding(paddingValues),
+            cardInfo = CreditCard(
+                holderName = viewModel.holderName,
+                number = viewModel.cardNumber,
+                expiryDate = viewModel.expiryDate,
+                cvc = viewModel.cvc
+            ),
+            onHolderNameChanged = viewModel::updateHolderName,
+            onCardNumberChanged = viewModel::updateCardNumber,
+            onCvcChanged = viewModel::updateCVC,
+            onExpiryDateChanged = viewModel::updateExpiryDate,
+            totalAmount = uiState.totalAmount + DELIVERY_FEE,
+            onCardInputClicked = viewModel::updateRotateCard,
+            rotated = viewModel.rotateCard,
+            onCardClick = { viewModel.updateRotateCard(!viewModel.rotateCard) },
+            onPaymentClicked = viewModel::payment,
+            isPaymentDone = uiState.isPaymentDone,
+            isLoading = uiState.isLoading,
+            onContinueShoppingClick = onContinueShoppingClick
+        )
+    }
 }
 
 @Composable

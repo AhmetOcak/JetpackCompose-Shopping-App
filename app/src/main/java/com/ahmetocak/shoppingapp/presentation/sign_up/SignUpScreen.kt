@@ -18,6 +18,7 @@ import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterEmailOtf
 import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterPasswordOtf
 import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
+import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.designsystem.components.WelcomeText
 
@@ -34,27 +35,29 @@ fun SignUpScreen(
         viewModel.consumedErrorMessage()
     }
 
-    SignUpScreenContent(
-        modifier = modifier,
-        emailValue = viewModel.email,
-        onEmailValueChange = viewModel::updateEmailField,
-        emailFieldError = uiState.emailFieldErrorMessage != null,
-        passwordValue = viewModel.password,
-        onPasswordChange = viewModel::updatePasswordField,
-        passwordFieldError = uiState.passwordFieldErrorMessage != null,
-        verifyPasswordValue = viewModel.verifyPassword,
-        onVerifyPasswordChange = viewModel::updateVerifyPasswordField,
-        verifyPasswordFieldError = uiState.verifyPasFieldErrorMessage != null,
-        emailLabel = uiState.emailFieldErrorMessage?.asString()
-            ?: stringResource(id = R.string.enter_email),
-        passwordLabel = uiState.passwordFieldErrorMessage?.asString()
-            ?: stringResource(id = R.string.enter_password),
-        verifyPasswordLabel = uiState.verifyPasFieldErrorMessage?.asString()
-            ?: stringResource(id = R.string.verify_password),
-        onSignUpClick = { viewModel.signUp(upPress) },
-        isLoading = uiState.isLoading,
-        isSignUpEnd = uiState.isSignUpEnd
-    )
+    ShoppingScaffold(modifier = modifier) { paddingValues ->
+        SignUpScreenContent(
+            modifier = Modifier.padding(paddingValues),
+            emailValue = viewModel.email,
+            onEmailValueChange = viewModel::updateEmailField,
+            emailFieldError = uiState.emailFieldErrorMessage != null,
+            passwordValue = viewModel.password,
+            onPasswordChange = viewModel::updatePasswordField,
+            passwordFieldError = uiState.passwordFieldErrorMessage != null,
+            verifyPasswordValue = viewModel.verifyPassword,
+            onVerifyPasswordChange = viewModel::updateVerifyPasswordField,
+            verifyPasswordFieldError = uiState.verifyPasFieldErrorMessage != null,
+            emailLabel = uiState.emailFieldErrorMessage?.asString()
+                ?: stringResource(id = R.string.enter_email),
+            passwordLabel = uiState.passwordFieldErrorMessage?.asString()
+                ?: stringResource(id = R.string.enter_password),
+            verifyPasswordLabel = uiState.verifyPasFieldErrorMessage?.asString()
+                ?: stringResource(id = R.string.verify_password),
+            onSignUpClick = { viewModel.signUp(upPress) },
+            isLoading = uiState.isLoading,
+            isSignUpEnd = uiState.isSignUpEnd
+        )
+    }
 }
 
 @Composable
