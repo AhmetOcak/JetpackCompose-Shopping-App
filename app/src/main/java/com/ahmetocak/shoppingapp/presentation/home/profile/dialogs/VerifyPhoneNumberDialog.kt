@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.presentation.home.profile.components
+package com.ahmetocak.shoppingapp.presentation.home.profile.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

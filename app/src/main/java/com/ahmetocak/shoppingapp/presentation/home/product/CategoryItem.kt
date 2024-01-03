@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.presentation.home.product.components
+package com.ahmetocak.shoppingapp.presentation.home.product
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults

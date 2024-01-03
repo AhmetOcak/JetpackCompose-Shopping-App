@@ -1,21 +1,46 @@
 package com.ahmetocak.shoppingapp.presentation.cart
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
-import com.ahmetocak.shoppingapp.presentation.cart.components.CartList
-import com.ahmetocak.shoppingapp.presentation.cart.components.CheckOutButton
-import com.ahmetocak.shoppingapp.presentation.cart.components.CheckoutDetails
-import com.ahmetocak.shoppingapp.presentation.cart.components.EmptyCartListView
+import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
 fun CartScreen(
@@ -58,26 +83,140 @@ private fun CartScreenContent(
                 .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
         ) {
             CartList(
-                modifier = modifier.weight(4f),
+                modifier = Modifier.weight(4f),
                 cartList = cartList,
                 onRemoveItemClick = onRemoveItemClick,
                 onDecreaseClicked = onDecreaseClicked,
                 onIncreaseClicked = onIncreaseClicked
             )
-            CheckoutDetails(
-                modifier = modifier
+            Column(
+                modifier = Modifier
                     .weight(1f)
+                    .fillMaxSize()
+                    .padding(top = dimensionResource(id = R.dimen.two_level_margin))
                     .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
-                subtotal = subtotal
-            )
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = stringResource(id = R.string.sub_total))
+                    Text(text = "$${String.format("%.2f", subtotal)}", fontWeight = FontWeight.Bold)
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = stringResource(id = R.string.delivery_fee))
+                    Text(
+                        text = "$${String.format("%.2f", DELIVERY_FEE)}",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
             CheckOutButton(
-                modifier = modifier
-                    .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
                 subtotal = subtotal,
                 onCheckoutBtnClicked = onCheckoutBtnClicked
             )
         }
     } else {
         EmptyCartListView(modifier = modifier, messageId = R.string.cart_empty)
+    }
+}
+
+@Composable
+private fun CartList(
+    modifier: Modifier,
+    cartList: List<CartEntity>,
+    onRemoveItemClick: (Int) -> Unit,
+    onIncreaseClicked: (Int) -> Unit,
+    onDecreaseClicked: (Int) -> Unit
+) {
+    LazyVerticalGrid(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    listOf(
+                        colorResource(id = R.color.mauve),
+                        colorResource(id = R.color.pale_purple),
+                    ),
+                )
+            ),
+        columns = GridCells.Fixed(1),
+        contentPadding = PaddingValues(dimensionResource(id = R.dimen.two_level_margin)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
+    ) {
+        items(cartList, key = { it.id }) { cart ->
+            CartItem(
+                id = cart.id,
+                imageUrl = cart.image,
+                title = cart.title,
+                price = cart.price * cart.count,
+                onRemoveItemClick = onRemoveItemClick,
+                itemCount = cart.count,
+                onIncreaseClicked = onIncreaseClicked,
+                onDecreaseClicked = onDecreaseClicked
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyCartListView(
+    modifier: Modifier,
+    messageId: Int,
+    imageSize: Dp = 112.dp
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            modifier = Modifier.size(imageSize),
+            painter = painterResource(id = R.drawable.search_result_empty),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = dimensionResource(id = R.dimen.two_level_margin))
+                .padding(horizontal = dimensionResource(id = R.dimen.four_level_margin)),
+            text = stringResource(id = messageId),
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun CheckOutButton(
+    modifier: Modifier,
+    subtotal: Double,
+    onCheckoutBtnClicked: () -> Unit
+) {
+    Divider(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
+    )
+    Button(
+        modifier = modifier.fillMaxWidth(),
+        onClick = onCheckoutBtnClicked,
+        contentPadding = PaddingValues(vertical = 16.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Text(
+            text = buildAnnotatedString {
+                append(stringResource(id = R.string.checkout))
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(" $${String.format("%.2f", subtotal + DELIVERY_FEE)}")
+                }
+            },
+            style = MaterialTheme.typography.titleMedium
+        )
     }
 }

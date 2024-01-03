@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.presentation.payment.components
+package com.ahmetocak.shoppingapp.presentation.payment
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,14 +15,14 @@ import androidx.compose.ui.text.font.FontWeight
 import com.ahmetocak.shoppingapp.R
 
 @Composable
-fun RowScope.PaymentDetail(modifier: Modifier, titleId: Int, description: Double) {
+fun RowScope.PaymentDetailItem(titleId: Int, description: Double) {
     Card(
-        modifier = modifier
+        modifier = Modifier
             .weight(1f)
             .fillMaxSize()
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(dimensionResource(id = R.dimen.two_level_margin)),
             verticalArrangement = Arrangement.Center

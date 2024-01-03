@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.presentation.home.favorites.components
+package com.ahmetocak.shoppingapp.presentation.home.favorites
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box

@@ -1,20 +1,29 @@
 package com.ahmetocak.shoppingapp.presentation.home.favorites
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.data.mapper.toProduct
@@ -23,8 +32,6 @@ import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
-import com.ahmetocak.shoppingapp.presentation.home.favorites.components.EmptyFavoriteListView
-import com.ahmetocak.shoppingapp.presentation.home.favorites.components.FavoriteItem
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
 
@@ -111,7 +118,26 @@ private fun FavoritesScreenContent(
                     }
                 }
             } else {
-                EmptyFavoriteListView(messageId = R.string.no_favorite)
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        modifier = Modifier.size(112.dp),
+                        painter = painterResource(id = R.drawable.search_result_empty),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop
+                    )
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = dimensionResource(id = R.dimen.two_level_margin))
+                            .padding(horizontal = dimensionResource(id = R.dimen.four_level_margin)),
+                        text = stringResource(id = R.string.no_favorite),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
     }

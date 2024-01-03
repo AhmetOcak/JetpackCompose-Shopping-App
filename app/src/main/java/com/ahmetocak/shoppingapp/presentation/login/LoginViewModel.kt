@@ -52,8 +52,8 @@ class LoginViewModel @Inject constructor(
         password = value
     }
 
-    fun updateRememberMeBox() {
-        rememberMe = !rememberMe
+    fun updateRememberMeBox(value: Boolean) {
+        rememberMe = value
     }
 
     fun updatePasswordResetEmail(value: String) {

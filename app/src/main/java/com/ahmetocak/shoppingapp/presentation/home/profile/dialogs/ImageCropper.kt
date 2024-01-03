@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.presentation.home.profile.components
+package com.ahmetocak.shoppingapp.presentation.home.profile.dialogs
 
 import android.content.Context
 import android.net.Uri

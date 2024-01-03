@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.presentation.home.profile.components
+package com.ahmetocak.shoppingapp.presentation.home.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -33,7 +33,7 @@ import com.ahmetocak.shoppingapp.presentation.home.profile.InfoType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Info(
+fun InfoItem(
     modifier: Modifier = Modifier,
     imageId: Int,
     titleId: Int,

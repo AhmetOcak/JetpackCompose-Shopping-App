@@ -1,21 +1,33 @@
 package com.ahmetocak.shoppingapp.presentation.home.search
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.data.mapper.toProduct
@@ -26,8 +38,6 @@ import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
-import com.ahmetocak.shoppingapp.presentation.home.search.components.SearchField
-import com.ahmetocak.shoppingapp.presentation.home.search.components.SearchResultEmptyView
 
 @Composable
 fun SearchScreen(
@@ -80,7 +90,17 @@ private fun SearchScreenContent(
                 .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            SearchField(searchValue = searchValue, onSearchValChanged = onSearchValChanged)
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimensionResource(id = R.dimen.two_level_margin)),
+                value = searchValue,
+                onValueChange = onSearchValChanged,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                placeholder = {
+                    Text(text = stringResource(id = R.string.search))
+                }
+            )
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(
@@ -107,5 +127,33 @@ private fun SearchScreenContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SearchResultEmptyView(
+    imageId: Int,
+    messageId: Int,
+    imageSize: Dp = 112.dp
+) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            modifier = Modifier.size(imageSize),
+            painter = painterResource(id = imageId),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = dimensionResource(id = R.dimen.two_level_margin))
+                .padding(horizontal = dimensionResource(id = R.dimen.four_level_margin)),
+            text = stringResource(id = messageId),
+            textAlign = TextAlign.Center
+        )
     }
 }
