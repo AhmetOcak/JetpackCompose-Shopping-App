@@ -45,7 +45,6 @@ object AppModule {
             .setProjectId(BuildConfig.PROJECT_ID)
             .setApplicationId(BuildConfig.APPLICATION_ID)
             .setApiKey(BuildConfig.API_KEY)
-            .setStorageBucket(BuildConfig.STORAGE_BUCKET)
             .build()
 
         Firebase.initialize(context, options, "secondary")

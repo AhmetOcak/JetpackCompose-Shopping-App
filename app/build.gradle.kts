@@ -30,7 +30,6 @@ android {
         buildConfigField("String", "API_KEY", p.getProperty("API_KEY"))
         buildConfigField("String", "PROJECT_ID", p.getProperty("PROJECT_ID"))
         buildConfigField("String", "APPLICATION_ID", p.getProperty("APPLICATION_ID"))
-        buildConfigField("String", "STORAGE_BUCKET", p.getProperty("STORAGE_BUCKET"))
     }
 
     buildTypes {
