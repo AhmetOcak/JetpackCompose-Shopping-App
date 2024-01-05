@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.designsystem.components
+package com.ahmetocak.shoppingapp.presentation.designsystem.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
 
 @Composable
-fun AuthBackground(modifier: Modifier) {
+fun AuthBackground() {
     var sizeImage by remember { mutableStateOf(IntSize.Zero) }
 
     val gradient = Brush.verticalGradient(
@@ -38,7 +38,7 @@ fun AuthBackground(modifier: Modifier) {
 
     Box {
         Image(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(LocalConfiguration.current.screenHeightDp.dp / 2)
                 .onGloballyPositioned { sizeImage = it.size },

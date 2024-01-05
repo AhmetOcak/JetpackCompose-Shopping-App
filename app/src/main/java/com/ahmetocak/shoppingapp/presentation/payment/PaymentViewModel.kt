@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.payment
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.core.navigation.MainDestinations
+import com.ahmetocak.shoppingapp.presentation.navigation.MainDestinations
 import com.ahmetocak.shoppingapp.domain.repository.ShoppingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class PaymentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,

@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -68,8 +69,8 @@ fun CartItem(
                 CartPriceAndCount(
                     itemCount = itemCount,
                     price = price,
-                    onIncreaseClicked = { onIncreaseClicked(id) },
-                    onDecreaseClicked = { onDecreaseClicked(id) }
+                    onIncreaseClicked = remember { { onIncreaseClicked(id) } },
+                    onDecreaseClicked = remember { { onDecreaseClicked(id) } }
                 )
             }
         }

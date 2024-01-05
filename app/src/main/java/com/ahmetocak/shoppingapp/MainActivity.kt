@@ -13,7 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.ahmetocak.shoppingapp.common.helpers.PreferenceManager
 import com.ahmetocak.shoppingapp.core.alarm.ShoppingAlarmScheduler
-import com.ahmetocak.shoppingapp.core.navigation.MainDestinations
+import com.ahmetocak.shoppingapp.presentation.navigation.MainDestinations
 import com.ahmetocak.shoppingapp.utils.REMEMBER_ME
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

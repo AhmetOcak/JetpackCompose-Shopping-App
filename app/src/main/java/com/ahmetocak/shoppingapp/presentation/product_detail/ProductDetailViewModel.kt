@@ -1,12 +1,13 @@
 package com.ahmetocak.shoppingapp.presentation.product_detail
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.Response
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.core.navigation.MainDestinations
+import com.ahmetocak.shoppingapp.presentation.navigation.MainDestinations
 import com.ahmetocak.shoppingapp.data.mapper.toProductEntity
 import com.ahmetocak.shoppingapp.domain.repository.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
@@ -23,6 +24,7 @@ import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class ProductDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,

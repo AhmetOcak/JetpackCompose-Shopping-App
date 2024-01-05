@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.designsystem.components
+package com.ahmetocak.shoppingapp.presentation.designsystem.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
@@ -39,6 +39,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.model.shopping.Product
+import com.ahmetocak.shoppingapp.model.shopping.Rating
 
 private val imageModifier = Modifier
     .fillMaxWidth()
@@ -47,12 +48,21 @@ private val imageModifier = Modifier
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingProductItem(
-    product: Product,
+    id: Int,
+    title: String?,
+    price: String?,
+    description: String?,
+    category: String?,
+    image: String?,
+    rate: Double?,
+    count: Int?,
     onProductClick: (Product) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxSize(),
-        onClick = { onProductClick(product) },
+        onClick = remember { { onProductClick(
+            Product(id, title, price, description, category, image, Rating(rate, count))
+        ) } },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = BorderStroke(
             1.dp, Brush.horizontalGradient(
@@ -77,7 +87,7 @@ fun ShoppingProductItem(
             AsyncImage(
                 modifier = imageModifier,
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(product.image)
+                    .data(image)
                     .crossfade(true)
                     .build(),
                 error = painterResource(id = R.drawable.error_image),
@@ -89,7 +99,7 @@ fun ShoppingProductItem(
                     .fillMaxWidth()
                     .padding(top = dimensionResource(id = R.dimen.one_level_margin))
                     .padding(horizontal = dimensionResource(id = R.dimen.one_level_margin)),
-                text = product.title ?: "null",
+                text = title ?: "null",
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 minLines = 2,
@@ -99,7 +109,7 @@ fun ShoppingProductItem(
             )
             Text(
                 modifier = Modifier.padding(top = dimensionResource(id = R.dimen.one_level_margin)),
-                text = "$${product.price}",
+                text = "$${price}",
                 color = Color.Black
             )
         }

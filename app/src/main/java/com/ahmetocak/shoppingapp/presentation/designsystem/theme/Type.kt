@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.designsystem.theme
+package com.ahmetocak.shoppingapp.presentation.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

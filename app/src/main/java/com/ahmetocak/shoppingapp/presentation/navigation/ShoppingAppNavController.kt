@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.core.navigation
+package com.ahmetocak.shoppingapp.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable

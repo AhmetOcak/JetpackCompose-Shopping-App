@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -38,8 +39,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
@@ -66,7 +67,9 @@ fun CartScreen(
             subtotal = uiState.subtotal,
             onIncreaseClicked = viewModel::increaseProductCount,
             onDecreaseClicked = viewModel::decreaseProductCount,
-            onCheckoutBtnClicked = { onPaymentClick((uiState.subtotal).toFloat()) }
+            onCheckoutBtnClicked = remember {
+                { onPaymentClick((uiState.subtotal).toFloat()) }
+            }
         )
     }
 }
@@ -121,7 +124,6 @@ private fun CartScreenContent(
                 }
             }
             CheckOutButton(
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
                 subtotal = subtotal,
                 onCheckoutBtnClicked = onCheckoutBtnClicked
             )
@@ -199,17 +201,19 @@ private fun EmptyCartListView(
 
 @Composable
 fun CheckOutButton(
-    modifier: Modifier,
     subtotal: Double,
     onCheckoutBtnClicked: () -> Unit
 ) {
     Divider(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
             .padding(bottom = dimensionResource(id = R.dimen.two_level_margin))
     )
     Button(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin)),
         onClick = onCheckoutBtnClicked,
         contentPadding = PaddingValues(vertical = 16.dp),
         shape = RoundedCornerShape(16.dp)

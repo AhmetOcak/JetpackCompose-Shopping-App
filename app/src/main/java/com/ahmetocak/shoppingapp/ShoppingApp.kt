@@ -1,6 +1,7 @@
 package com.ahmetocak.shoppingapp
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -8,9 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.ahmetocak.shoppingapp.core.navigation.MainDestinations
-import com.ahmetocak.shoppingapp.core.navigation.rememberShoppingAppNavController
-import com.ahmetocak.shoppingapp.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.presentation.navigation.MainDestinations
+import com.ahmetocak.shoppingapp.presentation.navigation.rememberShoppingAppNavController
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.presentation.cart.CartScreen
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
@@ -70,7 +71,7 @@ private fun NavGraphBuilder.shoppingAppGraph(
         SignUpScreen(upPress = upPress)
     }
     composable(route = MainDestinations.CART_ROUTE) { from ->
-        CartScreen(onPaymentClick = { amount -> onPaymentClick(amount, from) })
+        CartScreen(onPaymentClick = remember { { amount -> onPaymentClick(amount, from) } })
     }
     composable(
         route = "${MainDestinations.PAYMENT_ROUTE}/{${MainDestinations.PAYMENT_AMOUNT_KEY}}",
@@ -78,7 +79,7 @@ private fun NavGraphBuilder.shoppingAppGraph(
             type = NavType.FloatType
         })
     ) { from ->
-        PaymentScreen(onContinueShoppingClick = { onContinueShoppingClick(from) })
+        PaymentScreen(onContinueShoppingClick = remember { { onContinueShoppingClick(from) } })
     }
     composable(
         route = "${MainDestinations.PRODUCT_DETAIL_ROUTE}/{${MainDestinations.PRODUCT_DETAIL_KEY}}",
@@ -86,6 +87,6 @@ private fun NavGraphBuilder.shoppingAppGraph(
             navArgument(MainDestinations.PRODUCT_DETAIL_KEY) { type = NavType.StringType }
         )
     ) { from ->
-        ProductDetailScreen(onCartClick = { onCartClick(from) })
+        ProductDetailScreen(onCartClick = remember { { onCartClick(from) } })
     }
 }

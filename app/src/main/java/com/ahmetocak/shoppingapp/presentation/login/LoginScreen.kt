@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -31,14 +31,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.designsystem.components.AuthBackground
-import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterEmailOtf
-import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterPasswordOtf
-import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
-import com.ahmetocak.shoppingapp.designsystem.components.WelcomeText
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.AuthBackground
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.AuthEnterEmailOtf
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.AuthEnterPasswordOtf
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.FullScreenCircularLoading
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingButton
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.WelcomeText
 
 @Composable
 fun LoginScreen(
@@ -99,12 +99,13 @@ fun LoginScreen(
     }
 
     ShoppingScaffold(modifier = modifier) { paddingValues ->
+        AuthBackground()
         LoginScreenContent(
             modifier = Modifier.padding(paddingValues),
             emailValue = viewModel.email,
             passwordValue = viewModel.password,
-            onEmailValueChange = viewModel::updateEmailField,
-            onPasswordValueChange = viewModel::updatePasswordField,
+            onEmailValueChange = remember(viewModel) { viewModel::updateEmailField },
+            onPasswordValueChange = remember(viewModel) { viewModel::updatePasswordField },
             emailFieldError = uiState.emailFieldErrorMessage != null,
             emailFieldLabel = if (uiState.emailFieldErrorMessage == null) {
                 stringResource(id = R.string.enter_email)
@@ -118,7 +119,7 @@ fun LoginScreen(
                 uiState.passwordFieldErrorMessage ?: stringResource(id = R.string.unknown_error)
             },
             checked = viewModel.rememberMe,
-            onCheckedChange = viewModel::updateRememberMeBox,
+            onCheckedChange = remember(viewModel) { viewModel::updateRememberMeBox },
             onLoginClicked = { viewModel.login(onLoginClick) },
             onRegisterClick = onSignUpClick,
             onForgotPasswordClick = viewModel::showPasswordResetDialog,
@@ -147,8 +148,6 @@ private fun LoginScreenContent(
     isLoading: Boolean,
     isLoginEnd: Boolean
 ) {
-    AuthBackground(modifier)
-
     if (isLoading) {
         FullScreenCircularLoading()
     } else if (!isLoginEnd) {
@@ -173,10 +172,7 @@ private fun LoginScreenContent(
                 value = passwordValue,
                 onValueChange = onPasswordValueChange,
                 isError = passwordFieldError,
-                labelText = passwordFieldLabel,
-                keyboardActions = KeyboardActions(
-                    onDone = { onLoginClicked() }
-                )
+                labelText = passwordFieldLabel
             )
             RememberMeBox(
                 checked = checked,
@@ -205,7 +201,10 @@ private fun LoginScreenContent(
                     onClick = onRegisterClick,
                     contentPadding = PaddingValues(0.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.register_now), fontWeight = FontWeight.Bold)
+                    Text(
+                        text = stringResource(id = R.string.register_now),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }

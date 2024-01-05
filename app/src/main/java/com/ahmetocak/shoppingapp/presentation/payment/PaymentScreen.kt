@@ -32,12 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingCreditCard
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
-import com.ahmetocak.shoppingapp.model.shopping.CreditCard
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.FullScreenCircularLoading
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingButton
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingCreditCard
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
@@ -56,20 +55,18 @@ fun PaymentScreen(
     ShoppingScaffold(modifier = modifier) { paddingValues ->
         PaymentScreenContent(
             modifier = Modifier.padding(paddingValues),
-            cardInfo = CreditCard(
-                holderName = viewModel.holderName,
-                number = viewModel.cardNumber,
-                expiryDate = viewModel.expiryDate,
-                cvc = viewModel.cvc
-            ),
-            onHolderNameChanged = viewModel::updateHolderName,
-            onCardNumberChanged = viewModel::updateCardNumber,
-            onCvcChanged = viewModel::updateCVC,
-            onExpiryDateChanged = viewModel::updateExpiryDate,
+            cardHolderName = viewModel.holderName,
+            cardNumber = viewModel.cardNumber,
+            cardExpiryDate = viewModel.expiryDate,
+            cvc = viewModel.cvc,
+            onHolderNameChanged = remember(viewModel) { viewModel::updateHolderName },
+            onCardNumberChanged = remember(viewModel) { viewModel::updateCardNumber },
+            onCvcChanged = remember(viewModel) { viewModel::updateCVC },
+            onExpiryDateChanged = remember(viewModel) { viewModel::updateExpiryDate },
             totalAmount = uiState.totalAmount + DELIVERY_FEE,
-            onCardInputClicked = viewModel::updateRotateCard,
+            onCardInputClicked = remember(viewModel) { viewModel::updateRotateCard },
             rotated = viewModel.rotateCard,
-            onCardClick = { viewModel.updateRotateCard(!viewModel.rotateCard) },
+            onCardClick = remember(viewModel) { { viewModel.updateRotateCard(!viewModel.rotateCard) } },
             onPaymentClicked = viewModel::payment,
             isPaymentDone = uiState.isPaymentDone,
             isLoading = uiState.isLoading,
@@ -81,7 +78,10 @@ fun PaymentScreen(
 @Composable
 private fun PaymentScreenContent(
     modifier: Modifier,
-    cardInfo: CreditCard,
+    cardHolderName: String,
+    cardNumber: String,
+    cardExpiryDate: String,
+    cvc: String,
     onHolderNameChanged: (String) -> Unit,
     onCardNumberChanged: (String) -> Unit,
     onExpiryDateChanged: (String) -> Unit,
@@ -131,14 +131,24 @@ private fun PaymentScreenContent(
                 )
             }
         } else {
-            ShoppingCreditCard(cardInfo = cardInfo, rotated = rotated, onCardClick = onCardClick)
+            ShoppingCreditCard(
+                cardHolderName = cardHolderName,
+                cardNumber = cardNumber,
+                cardExpiryDate = cardExpiryDate,
+                cvc = cvc,
+                rotated = rotated,
+                onCardClick = onCardClick
+            )
             CardDetails(
                 onHolderNameChanged = onHolderNameChanged,
                 onCardNumberChanged = onCardNumberChanged,
                 onCvcChanged = onCvcChanged,
                 onExpiryDateChanged = onExpiryDateChanged,
-                cardInfo = cardInfo,
-                onCardInputClicked = onCardInputClicked
+                onCardInputClicked = onCardInputClicked,
+                cardHolderName = cardHolderName,
+                cardExpiryDate = cardExpiryDate,
+                cardNumber = cardNumber,
+                cvc = cvc
             )
             Row(
                 modifier = Modifier
@@ -172,24 +182,27 @@ fun CardDetails(
     onCardNumberChanged: (String) -> Unit,
     onCvcChanged: (String) -> Unit,
     onExpiryDateChanged: (String) -> Unit,
-    cardInfo: CreditCard,
+    cardHolderName: String,
+    cardNumber: String,
+    cardExpiryDate: String,
+    cvc: String,
     onCardInputClicked: (Boolean) -> Unit
 ) {
     CardHolderName(
         onHolderNameChanged = onHolderNameChanged,
-        holderNameVal = cardInfo.holderName,
+        holderNameVal = cardHolderName,
         onCardInputClicked = onCardInputClicked
     )
     CardNumber(
         onCardNumberChanged = onCardNumberChanged,
-        cardNumberVal = cardInfo.number,
+        cardNumberVal = cardNumber,
         onCardInputClicked = onCardInputClicked
     )
     CardDateAndCVC(
         onExpiryDateChanged = onExpiryDateChanged,
         onCvcChanged = onCvcChanged,
-        expiryDateVal = cardInfo.expiryDate,
-        cvcVal = cardInfo.cvc,
+        expiryDateVal = cardExpiryDate,
+        cvcVal = cvc,
         onCardInputClicked = onCardInputClicked
     )
 }

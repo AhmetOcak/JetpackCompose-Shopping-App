@@ -15,6 +15,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,30 +40,34 @@ fun NavGraphBuilder.addHomeGraph(
 ) {
     composable(HomeSections.PRODUCT.route) { from ->
         ProductScreen(
-            onProductClick = { product -> onProductClick(product, from) },
-            onCartClick = { onCartClick(from) },
+            onProductClick = remember { { product -> onProductClick(product, from) } },
+            onCartClick = remember { { onCartClick(from) } },
             onNavigateRoute = onNavigateToRoute
         )
     }
     composable(HomeSections.SEARCH.route) { from ->
         SearchScreen(
-            onProductClick = { product -> onProductClick(product, from) },
+            onProductClick = remember { { product -> onProductClick(product, from) } },
             onNavigateRoute = onNavigateToRoute
         )
     }
     composable(HomeSections.FAVORITES.route) { from ->
         FavoritesScreen(
-            onProductClick = { product -> onProductClick(product, from) },
+            onProductClick = remember {
+                { product -> onProductClick(product, from) }
+            },
             onNavigateRoute = onNavigateToRoute
         )
     }
     composable(HomeSections.PROFILE.route) { from ->
         val preferenceManager = PreferenceManager(LocalContext.current)
         ProfileScreen(
-            onSignOutClicked = {
-                FirebaseAuth.getInstance().signOut()
-                preferenceManager.saveData(REMEMBER_ME, false)
-                onSignOutClick(from)
+            onSignOutClicked = remember {
+                {
+                    FirebaseAuth.getInstance().signOut()
+                    preferenceManager.saveData(REMEMBER_ME, false)
+                    onSignOutClick(from)
+                }
             },
             onNavigateRoute = onNavigateToRoute
         )

@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.cart
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Response
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val shoppingRepository: ShoppingRepository,

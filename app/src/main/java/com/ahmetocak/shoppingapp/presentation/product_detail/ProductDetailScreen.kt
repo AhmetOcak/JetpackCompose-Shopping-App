@@ -39,9 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
-import com.ahmetocak.shoppingapp.model.shopping.Product
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 
 @Composable
 fun ProductDetailScreen(
@@ -64,7 +63,11 @@ fun ProductDetailScreen(
     ShoppingScaffold(modifier = modifier) { paddingValues ->
         ProductDetailScreenContent(
             modifier = Modifier.padding(paddingValues),
-            product = uiState.product,
+            title = uiState.product?.title ?: "",
+            description = uiState.product?.description ?: "",
+            price = uiState.product?.price?.toDouble() ?: 0.0,
+            rate = uiState.product?.rating?.rate ?: 0.0,
+            image = uiState.product?.image ?: "",
             isProductFavorite = uiState.isProductFavorite,
             onFavoriteBtnClicked = viewModel::onFavoriteProductClick,
             onAddToCartClicked = remember {
@@ -88,39 +91,41 @@ fun ProductDetailScreen(
 @Composable
 private fun ProductDetailScreenContent(
     modifier: Modifier,
-    product: Product?,
+    title: String,
+    description: String,
+    price: Double,
+    rate: Double,
+    image: String,
     isProductFavorite: Boolean,
     onFavoriteBtnClicked: () -> Unit,
     onAddToCartClicked: () -> Unit,
     cartButtonText: String
 ) {
-    if (product != null) {
-        Column(modifier = modifier.fillMaxSize()) {
-            AsyncImage(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize()
-                    .padding(dimensionResource(id = R.dimen.nine_level_margin)),
-                model = ImageRequest.Builder(LocalContext.current).data(product.image ?: "null")
-                    .crossfade(true).build(),
-                contentDescription = null,
-                error = painterResource(id = R.drawable.error_image),
-                contentScale = ContentScale.Fit
-            )
-            ProductDetails(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize(),
-                title = product.title ?: "null",
-                description = product.description ?: "null",
-                price = product.price?.toDouble() ?: 0.0,
-                rate = product.rating?.rate ?: 0.0,
-                isProductFavorite = isProductFavorite,
-                onFavoriteBtnClicked = onFavoriteBtnClicked,
-                onAddToCartClicked = onAddToCartClicked,
-                cartButtonText = cartButtonText
-            )
-        }
+    Column(modifier = modifier.fillMaxSize()) {
+        AsyncImage(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.nine_level_margin)),
+            model = ImageRequest.Builder(LocalContext.current).data(image)
+                .crossfade(true).build(),
+            contentDescription = null,
+            error = painterResource(id = R.drawable.error_image),
+            contentScale = ContentScale.Fit
+        )
+        ProductDetails(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize(),
+            title = title,
+            description = description,
+            price = price,
+            rate = rate,
+            isProductFavorite = isProductFavorite,
+            onFavoriteBtnClicked = onFavoriteBtnClicked,
+            onAddToCartClicked = onAddToCartClicked,
+            cartButtonText = cartButtonText
+        )
     }
 }
 

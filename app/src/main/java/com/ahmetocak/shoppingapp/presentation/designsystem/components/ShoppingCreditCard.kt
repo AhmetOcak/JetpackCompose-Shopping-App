@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.designsystem.components
+package com.ahmetocak.shoppingapp.presentation.designsystem.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -37,17 +37,36 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.model.shopping.CreditCard
 
 @Composable
-fun ShoppingCreditCard(cardInfo: CreditCard, rotated: Boolean, onCardClick: () -> Unit) {
+fun ShoppingCreditCard(
+    cardHolderName: String,
+    cardNumber: String,
+    cardExpiryDate: String,
+    cvc: String,
+    rotated: Boolean,
+    onCardClick: () -> Unit
+) {
+    val cardType = when (findCreditCardType(cardNumber)) {
+        CardType.VISA -> {
+            painterResource(id = R.drawable.visa)
+        }
 
-    val cardType = when (findCreditCardType(cardInfo.number)) {
-        CardType.VISA -> { painterResource(id = R.drawable.visa) }
-        CardType.MASTERCARD -> { painterResource(id = R.drawable.mastercard) }
-        CardType.AMERICAN_EXPRESS -> { painterResource(id = R.drawable.american_express) }
-        CardType.DISCOVER -> { painterResource(id = R.drawable.discover) }
-        else -> { painterResource(id = R.drawable.credit_card) }
+        CardType.MASTERCARD -> {
+            painterResource(id = R.drawable.mastercard)
+        }
+
+        CardType.AMERICAN_EXPRESS -> {
+            painterResource(id = R.drawable.american_express)
+        }
+
+        CardType.DISCOVER -> {
+            painterResource(id = R.drawable.discover)
+        }
+
+        else -> {
+            painterResource(id = R.drawable.credit_card)
+        }
     }
 
     val rotation by animateFloatAsState(
@@ -130,7 +149,7 @@ fun ShoppingCreditCard(cardInfo: CreditCard, rotated: Boolean, onCardClick: () -
                     }
 
                     Text(
-                        text = cardInfo.number.replace("....".toRegex(), "$0 "),
+                        text = cardNumber.replace("....".toRegex(), "$0 "),
                         modifier = Modifier
                             .padding(top = 16.dp)
                             .graphicsLayer {
@@ -156,7 +175,7 @@ fun ShoppingCreditCard(cardInfo: CreditCard, rotated: Boolean, onCardClick: () -
                                     }
                             )
                             Text(
-                                text = cardInfo.holderName,
+                                text = cardHolderName,
                                 color = Color.White,
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier
@@ -178,7 +197,7 @@ fun ShoppingCreditCard(cardInfo: CreditCard, rotated: Boolean, onCardClick: () -
                                     }
                             )
                             Text(
-                                text = cardInfo.expiryDate.chunked(2).joinToString(separator = "/"),
+                                text = cardExpiryDate.chunked(2).joinToString(separator = "/"),
                                 color = Color.White,
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier
@@ -202,7 +221,7 @@ fun ShoppingCreditCard(cardInfo: CreditCard, rotated: Boolean, onCardClick: () -
                         color = Color.Black
                     )
                     Text(
-                        text = cardInfo.cvc,
+                        text = cvc,
                         color = Color.Black,
                         modifier = Modifier
                             .padding(10.dp)

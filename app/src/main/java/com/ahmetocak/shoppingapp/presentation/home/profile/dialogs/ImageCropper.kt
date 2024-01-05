@@ -15,13 +15,13 @@ import com.mr0xf00.easycrop.rememberImageCropper
 import com.mr0xf00.easycrop.ui.ImageCropperDialog
 
 @Composable
-fun ImageCropper(imageUri: Uri?, context: Context, uploadPhoto: (Uri?) -> Unit) {
+fun ImageCropper(imageUri: String?, context: Context, uploadPhoto: (Uri?) -> Unit) {
     val imageCropper = rememberImageCropper()
     val errorMessage = stringResource(id = R.string.unknown_error)
 
     if (imageUri != null) {
         LaunchedEffect(true) {
-            when (val result = imageCropper.crop(imageUri, context)) {
+            when (val result = imageCropper.crop(Uri.parse(imageUri), context)) {
                 CropResult.Cancelled -> {}
                 is CropError -> {
                     Toast.makeText(

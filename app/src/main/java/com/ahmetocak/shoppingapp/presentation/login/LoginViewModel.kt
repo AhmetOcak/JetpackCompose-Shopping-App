@@ -1,6 +1,7 @@
 package com.ahmetocak.shoppingapp.presentation.login
 
 import android.annotation.SuppressLint
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val firebaseRepository: FirebaseRepository,

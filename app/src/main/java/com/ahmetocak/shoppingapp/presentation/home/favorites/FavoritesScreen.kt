@@ -11,14 +11,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,9 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.data.mapper.toProduct
-import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.FullScreenCircularLoading
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
@@ -44,16 +48,16 @@ fun FavoritesScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     viewModel.getAllFavoriteProducts()
 
-    if (uiState.errorMessages.isNotEmpty()) {
-        ShoppingShowToastMessage(message = uiState.errorMessages.first().asString())
-        viewModel.errorMessageConsumed()
-    }
-
     if (uiState.userMessages.isNotEmpty()) {
-        ShoppingShowToastMessage(message = uiState.userMessages.first().asString())
-        viewModel.userMessagesConsumed()
+        val context = LocalContext.current
+        LaunchedEffect(snackbarHostState) {
+            snackbarHostState.showSnackbar(message = uiState.userMessages.first().asString(context))
+            viewModel.userMessagesConsumed()
+        }
     }
 
     ShoppingScaffold(
@@ -64,6 +68,9 @@ fun FavoritesScreen(
                 currentRoute = HomeSections.FAVORITES.route,
                 navigateToRoute = onNavigateRoute
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { paddingValues ->
         FavoritesScreenContent(
@@ -108,11 +115,11 @@ private fun FavoritesScreenContent(
                             imgUrl = it.image ?: "",
                             title = it.title ?: "",
                             price = it.price?.toDouble() ?: 0.0,
-                            onRemoveFavoriteClicked = {
-                                onRemoveFavoriteClicked(it.id)
+                            onRemoveFavoriteClicked = remember {
+                                { onRemoveFavoriteClicked(it.id) }
                             },
-                            onFavoriteItemClicked = {
-                                onFavoriteItemClicked(it.toProduct())
+                            onFavoriteItemClicked = remember {
+                                { onFavoriteItemClicked(it.toProduct()) }
                             }
                         )
                     }

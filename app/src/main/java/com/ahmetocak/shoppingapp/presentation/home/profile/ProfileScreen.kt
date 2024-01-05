@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,8 +57,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.formatDate
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
 import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.ImageCropper
@@ -132,37 +133,43 @@ fun ProfileScreen(
     ) { paddingValues ->
         ProfileScreenContent(
             modifier = Modifier.padding(paddingValues),
-            userImgUrl = uiState.photoUrl,
+            userImgUrl = uiState.photoUrl.toString(),
             userName = uiState.name ?: "",
             phoneNumber = uiState.phoneNumber ?: "",
             address = uiState.userDetail?.address ?: "",
             birthdate = uiState.userDetail?.birthdate?.formatDate() ?: "",
-            onAccountInfoClicked = {
-                viewModel.setAccountInfoType(it)
-                showUpdateDialog = !showUpdateDialog
+            onAccountInfoClicked = remember(viewModel) {
+                {
+                    viewModel.setAccountInfoType(it)
+                    showUpdateDialog = !showUpdateDialog
+                }
             },
             showUpdateDialog = showUpdateDialog,
             updateValue = viewModel.updateValue,
             onUpdateValueChange = viewModel::updateAccountInfoValue,
-            onDismissRequest = {
-                viewModel.clearAccountInfoValue()
-                showUpdateDialog = false
+            onDismissRequest = remember(viewModel) {
+                {
+                    viewModel.clearAccountInfoValue()
+                    showUpdateDialog = false
+                }
             },
-            onUpdateClick = {
-                when (viewModel.infoType) {
-                    InfoType.NAME -> {
-                        viewModel.updateUserName()
-                    }
+            onUpdateClick = remember(viewModel) {
+                {
+                    when (viewModel.infoType) {
+                        InfoType.NAME -> {
+                            viewModel.updateUserName()
+                        }
 
-                    InfoType.MOBILE -> {
-                        viewModel.sendVerificationCode(activity)
-                    }
+                        InfoType.MOBILE -> {
+                            viewModel.sendVerificationCode(activity)
+                        }
 
-                    InfoType.ADDRESS -> {
-                        viewModel.uploadUserAddress()
-                    }
+                        InfoType.ADDRESS -> {
+                            viewModel.uploadUserAddress()
+                        }
 
-                    else -> {}
+                        else -> {}
+                    }
                 }
             },
             dialogTitle = when (viewModel.infoType) {
@@ -183,25 +190,31 @@ fun ProfileScreen(
                 }
             },
             infoType = viewModel.infoType,
-            onUserPhotoClicked = { launcher.launch("image/*") },
-            imageUri = imageUri,
+            onUserPhotoClicked = remember {
+                { launcher.launch("image/*") }
+            },
+            imageUri = imageUri.toString(),
             showImageCropDialog = showImageCropperDialog,
-            uploadPhoto = {
-                if (it != null) {
-                    showImageCropperDialog = false
-                    viewModel.updateUserPhoto(it)
+            uploadPhoto = remember(viewModel) {
+                {
+                    if (it != null) {
+                        showImageCropperDialog = false
+                        viewModel.updateUserPhoto(it)
+                    }
                 }
             },
             showVerifyPhoneNumberDialog = showVerifyPhoneNumberDialog,
             codeValue = viewModel.verificationCode,
             onCodeValueChange = viewModel::updateVerificationCodeValue,
-            onVerifyPhoneNumberDismiss = { showVerifyPhoneNumberDialog = false },
+            onVerifyPhoneNumberDismiss = remember { { showVerifyPhoneNumberDialog = false } },
             verifyPhoneNumber = viewModel::verifyUserPhoneNumber,
             datePickerState = datePickerState,
-            onDatePickerDialogDismiss = { showUpdateDialog = false },
-            onDateConfirmClick = {
-                datePickerState.selectedDateMillis?.let { viewModel.updateUserBirthdate(it) }
-                showUpdateDialog = false
+            onDatePickerDialogDismiss = remember { { showUpdateDialog = false } },
+            onDateConfirmClick = remember(viewModel) {
+                {
+                    datePickerState.selectedDateMillis?.let { viewModel.updateUserBirthdate(it) }
+                    showUpdateDialog = false
+                }
             },
             onSignOutClicked = onSignOutClicked
         )
@@ -212,7 +225,7 @@ fun ProfileScreen(
 @Composable
 private fun ProfileScreenContent(
     modifier: Modifier,
-    userImgUrl: Uri?,
+    userImgUrl: String?,
     userName: String,
     phoneNumber: String,
     address: String,
@@ -226,7 +239,7 @@ private fun ProfileScreenContent(
     dialogTitle: String,
     infoType: InfoType,
     onUserPhotoClicked: () -> Unit,
-    imageUri: Uri?,
+    imageUri: String?,
     showImageCropDialog: Boolean,
     uploadPhoto: (Uri?) -> Unit,
     showVerifyPhoneNumberDialog: Boolean,
@@ -313,7 +326,7 @@ private fun ProfileScreenContent(
 @Composable
 private fun ProfileSection(
     modifier: Modifier,
-    userImgUrl: Uri?,
+    userImgUrl: String?,
     userName: String,
     onUserPhotoClicked: () -> Unit,
     onSignOutClicked: () -> Unit
@@ -366,7 +379,7 @@ private fun ProfileSection(
                 .clip(CircleShape)
                 .clickable(onClick = onUserPhotoClicked),
             model = ImageRequest.Builder(LocalContext.current)
-                .data(userImgUrl)
+                .data(Uri.parse(userImgUrl))
                 .crossfade(true)
                 .build(),
             contentDescription = null,
@@ -448,12 +461,14 @@ private val accountInfoList = listOf(
     AccountInfo(InfoType.BIRTHDATE, R.string.birthdate, R.drawable.ic_birthdate)
 )
 
+@Immutable
 data class AccountInfo(
     val infoType: InfoType,
     val titleId: Int,
     val imageId: Int
 )
 
+@Immutable
 enum class InfoType {
     NAME,
     MOBILE,

@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.home.product
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.common.Response
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class ProductViewModel @Inject constructor(
     private val shoppingRepository: ShoppingRepository,
@@ -26,8 +28,8 @@ class ProductViewModel @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeScreeUiState())
-    val uiState: StateFlow<HomeScreeUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ProductScreenUiState())
+    val uiState: StateFlow<ProductScreenUiState> = _uiState.asStateFlow()
 
     init {
         getCategoryList()
@@ -41,8 +43,10 @@ class ProductViewModel @Inject constructor(
                 is Response.Success -> {
                     _uiState.update {
                         it.copy(
-                            isCategoryListLoading = false,
-                            categoryList = response.data
+                            categoryUiState = CategoryUiState(
+                                isLoading = false,
+                                categoryList = response.data
+                            )
                         )
                     }
                 }
@@ -50,7 +54,7 @@ class ProductViewModel @Inject constructor(
                 is Response.Error -> {
                     _uiState.update {
                         it.copy(
-                            isCategoryListLoading = false,
+                            categoryUiState = CategoryUiState(isLoading = false),
                             errorMessages = listOf(
                                 UiText.StringResource(resId = response.errorMessageId)
                             )
@@ -67,8 +71,10 @@ class ProductViewModel @Inject constructor(
                 is Response.Success -> {
                     _uiState.update {
                         it.copy(
-                            isProductListLoading = false,
-                            productList = response.data
+                            productUiState = ProductUiState(
+                                isLoading = false,
+                                productList = response.data
+                            )
                         )
                     }
                     saveAllProductsToDb(response.data)
@@ -77,7 +83,7 @@ class ProductViewModel @Inject constructor(
                 is Response.Error -> {
                     _uiState.update {
                         it.copy(
-                            isProductListLoading = false,
+                            productUiState = ProductUiState(isLoading = false),
                             errorMessages = listOf(
                                 UiText.StringResource(resId = response.errorMessageId)
                             )
@@ -112,10 +118,18 @@ class ProductViewModel @Inject constructor(
     }
 }
 
-data class HomeScreeUiState(
-    val isCategoryListLoading: Boolean = true,
-    val isProductListLoading: Boolean = true,
-    val categoryList: List<String> = listOf(),
-    val productList: List<Product> = listOf(),
+data class ProductScreenUiState(
+    val categoryUiState: CategoryUiState = CategoryUiState(),
+    val productUiState: ProductUiState = ProductUiState(),
     val errorMessages: List<UiText> = listOf()
+)
+
+data class CategoryUiState(
+    val isLoading: Boolean = true,
+    val categoryList: List<String> = listOf()
+)
+
+data class ProductUiState(
+    val isLoading: Boolean = true,
+    val productList: List<Product> = listOf()
 )

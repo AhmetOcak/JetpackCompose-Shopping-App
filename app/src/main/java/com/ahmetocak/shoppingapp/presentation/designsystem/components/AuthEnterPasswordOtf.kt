@@ -1,10 +1,8 @@
-package com.ahmetocak.shoppingapp.designsystem.components
+package com.ahmetocak.shoppingapp.presentation.designsystem.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -28,8 +26,7 @@ fun AuthEnterPasswordOtf(
     value: String,
     onValueChange: (String) -> Unit,
     isError: Boolean ,
-    labelText: String,
-    keyboardActions: KeyboardActions = KeyboardActions()
+    labelText: String
 ) {
     var visibility by rememberSaveable { mutableStateOf(false) }
 
@@ -62,7 +59,6 @@ fun AuthEnterPasswordOtf(
             PasswordVisualTransformation()
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        keyboardActions = keyboardActions,
         singleLine = true,
         isError = isError
     )

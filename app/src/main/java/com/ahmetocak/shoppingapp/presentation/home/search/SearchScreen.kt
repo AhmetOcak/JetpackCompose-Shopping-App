@@ -30,10 +30,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.data.mapper.toProduct
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingProductItem
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingProductItem
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
@@ -110,8 +109,18 @@ private fun SearchScreenContent(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.two_level_margin)),
                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.two_level_margin))
             ) {
-                items(searchResult) {
-                    ShoppingProductItem(product = it.toProduct(), onProductClick = onProductClick)
+                items(searchResult, key =  { it.id }) {
+                    ShoppingProductItem(
+                        id = it.id,
+                        title = it.title,
+                        price = it.price,
+                        description = it.description,
+                        category = it.category,
+                        image = it.image,
+                        rate = it.rating,
+                        count = it.count,
+                        onProductClick = onProductClick
+                    )
                 }
             }
 

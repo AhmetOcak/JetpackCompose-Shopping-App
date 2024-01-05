@@ -1,5 +1,6 @@
 package com.ahmetocak.shoppingapp.presentation.home.favorites
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
     private val shoppingRepository: ShoppingRepository,
@@ -42,7 +44,7 @@ class FavoritesViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessages = listOf(
+                            userMessages = listOf(
                                 UiText.StringResource(resId = response.errorMessageId)
                             )
                         )
@@ -74,19 +76,13 @@ class FavoritesViewModel @Inject constructor(
 
                     is Response.Error -> {
                         _uiState.update {
-                            it.copy(errorMessages = listOf(
+                            it.copy(userMessages = listOf(
                                 UiText.StringResource(resId = response.errorMessageId)
                             ))
                         }
                     }
                 }
             }
-        }
-    }
-
-    fun errorMessageConsumed() {
-        _uiState.update {
-            it.copy(errorMessages = listOf())
         }
     }
 
@@ -99,7 +95,6 @@ class FavoritesViewModel @Inject constructor(
 
 data class FavoritesUiState(
     val isLoading: Boolean = false,
-    val errorMessages: List<UiText> = listOf(),
     val userMessages: List<UiText> = listOf(),
     val favoriteList: List<ProductEntity> = listOf()
 )

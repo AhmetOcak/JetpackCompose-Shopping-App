@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp.designsystem.components
+package com.ahmetocak.shoppingapp.presentation.designsystem.components
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable

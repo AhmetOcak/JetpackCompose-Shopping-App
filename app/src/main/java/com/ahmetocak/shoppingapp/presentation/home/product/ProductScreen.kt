@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,8 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.UiText
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingProductItem
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingProductItem
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
@@ -66,10 +67,10 @@ fun ProductScreen(
     ) { paddingValues ->
         ProductScreenContent(
             modifier = Modifier.padding(paddingValues),
-            categories = uiState.categoryList,
-            isCategoriesLoading = uiState.isCategoryListLoading,
-            productList = uiState.productList,
-            isProductListLoading = uiState.isProductListLoading,
+            categories = uiState.categoryUiState.categoryList,
+            isCategoriesLoading = uiState.categoryUiState.isLoading,
+            productList = uiState.productUiState.productList,
+            isProductListLoading = uiState.productUiState.isLoading,
             onProductClick = onProductClick,
             onShoppingCartClicked = onCartClick,
             errors = uiState.errorMessages
@@ -140,7 +141,7 @@ private fun ProductScreenContent(
                     categories = categories,
                     isCategoriesLoading = isCategoriesLoading,
                     selectedCatName = selectedCatName,
-                    onCategoryClick = { selectedCatName = it }
+                    onCategoryClick = remember { { selectedCatName = it } }
                 )
                 ProductList(
                     productList = productList,
@@ -229,7 +230,14 @@ fun ProductList(
                 key = { it.id }
             ) {
                 ShoppingProductItem(
-                    product = it,
+                    id = it.id,
+                    title = it.title,
+                    price = it.price,
+                    description = it.description,
+                    category = it.category,
+                    image = it.image,
+                    rate = it.rating?.rate,
+                    count = it.rating?.count,
                     onProductClick = onProductClick
                 )
             }

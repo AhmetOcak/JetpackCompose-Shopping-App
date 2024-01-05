@@ -13,14 +13,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
-import com.ahmetocak.shoppingapp.designsystem.components.AuthBackground
-import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterEmailOtf
-import com.ahmetocak.shoppingapp.designsystem.components.AuthEnterPasswordOtf
-import com.ahmetocak.shoppingapp.designsystem.components.FullScreenCircularLoading
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingButton
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingScaffold
-import com.ahmetocak.shoppingapp.designsystem.components.ShoppingShowToastMessage
-import com.ahmetocak.shoppingapp.designsystem.components.WelcomeText
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.AuthBackground
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.AuthEnterEmailOtf
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.AuthEnterPasswordOtf
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.FullScreenCircularLoading
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingButton
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.components.WelcomeText
 
 @Composable
 fun SignUpScreen(
@@ -36,6 +36,7 @@ fun SignUpScreen(
     }
 
     ShoppingScaffold(modifier = modifier) { paddingValues ->
+        AuthBackground()
         SignUpScreenContent(
             modifier = Modifier.padding(paddingValues),
             emailValue = viewModel.email,
@@ -79,8 +80,6 @@ private fun SignUpScreenContent(
     isLoading: Boolean,
     isSignUpEnd: Boolean
 ) {
-    AuthBackground(modifier = modifier)
-
     if (isLoading) {
         FullScreenCircularLoading()
     } else if (!isSignUpEnd) {
