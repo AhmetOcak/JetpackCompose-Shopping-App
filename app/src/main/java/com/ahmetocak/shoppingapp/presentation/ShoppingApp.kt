@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp
+package com.ahmetocak.shoppingapp.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

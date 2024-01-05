@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
-import com.ahmetocak.shoppingapp.MainActivity
+import com.ahmetocak.shoppingapp.presentation.MainActivity
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.utils.NotificationChannelIds
 import dagger.hilt.android.qualifiers.ApplicationContext

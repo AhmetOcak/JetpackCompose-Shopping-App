@@ -1,4 +1,4 @@
-package com.ahmetocak.shoppingapp
+package com.ahmetocak.shoppingapp.presentation
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

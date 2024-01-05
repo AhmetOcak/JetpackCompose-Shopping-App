@@ -19,7 +19,7 @@
         <receiver android:name=".core.alarm.ShoppingAlarmReceiver"
             android:enabled="true"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ShoppingApp">
             <intent-filter>
