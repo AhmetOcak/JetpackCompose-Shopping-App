@@ -2,6 +2,7 @@ package com.ahmetocak.shoppingapp.presentation.home.profile
 
 import android.app.Activity
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -173,17 +174,8 @@ class ProfileViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(photoUrl = task.result)
                     }
-                } else {
-                    _uiState.update {
-                        it.copy(errorMessages = listOf(
-                            task.exception?.message?.let { message ->
-                                UiText.DynamicString(message)
-                            } ?: kotlin.run {
-                                UiText.StringResource(resId = R.string.unknown_error)
-                            }
-                        ))
-                    }
                 }
+                Log.e("GET USER PROFILE IMAGE", task.exception?.stackTraceToString() ?: "error")
             }
         }
     }
@@ -318,6 +310,7 @@ class ProfileViewModel @Inject constructor(
                         it.copy(userDetail = task.result.toObject<UserDetail>())
                     }
                 } else {
+                    Log.e("GET USER DETAILS", task.exception?.stackTraceToString() ?: "error")
                     _uiState.update {
                         it.copy(errorMessages = listOf(
                             task.exception?.message?.let { message ->
@@ -341,6 +334,12 @@ class ProfileViewModel @Inject constructor(
     fun consumedErrorMessage() {
         _uiState.update {
             it.copy(errorMessages = listOf())
+        }
+    }
+
+    fun setVerifyNumberStateNothing() {
+        _uiState.update {
+            it.copy(verifyPhoneNumber = VerifyPhoneNumberState.NOTHING)
         }
     }
 }

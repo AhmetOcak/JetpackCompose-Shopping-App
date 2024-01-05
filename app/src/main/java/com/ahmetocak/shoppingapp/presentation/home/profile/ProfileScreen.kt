@@ -107,6 +107,7 @@ fun ProfileScreen(
             showUpdateDialog = false
             showVerifyPhoneNumberDialog = false
             ShoppingShowToastMessage(message = stringResource(id = R.string.verification_completed))
+            viewModel.setVerifyNumberStateNothing()
         }
 
         VerifyPhoneNumberState.ON_CODE_SENT -> {

@@ -52,7 +52,7 @@ fun UpdateAccountInfoDialog(
                     onValueChange = onUpdateValueChange,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = when (infoType) {
-                            InfoType.MOBILE -> { KeyboardType.Number }
+                            InfoType.MOBILE -> { KeyboardType.Phone }
                             else -> { KeyboardType.Text }
                         }
                     )
