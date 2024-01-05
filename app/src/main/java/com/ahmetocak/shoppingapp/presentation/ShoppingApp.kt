@@ -63,8 +63,8 @@ private fun NavGraphBuilder.shoppingAppGraph(
     }
     composable(route = MainDestinations.LOGIN_ROUTE) { from ->
         LoginScreen(
-            onSignUpClick = { onSignUpClick(from) },
-            onLoginClick = { onLoginClick(from) }
+            onSignUpClick = remember { { onSignUpClick(from) } },
+            onLoginClick = remember { { onLoginClick(from) } }
         )
     }
     composable(route = MainDestinations.SIGNUP_ROUTE) {

@@ -120,7 +120,7 @@ fun LoginScreen(
             },
             checked = viewModel.rememberMe,
             onCheckedChange = remember(viewModel) { viewModel::updateRememberMeBox },
-            onLoginClicked = { viewModel.login(onLoginClick) },
+            onLoginClicked = remember(viewModel) { { viewModel.login(onLoginClick) } },
             onRegisterClick = onSignUpClick,
             onForgotPasswordClick = viewModel::showPasswordResetDialog,
             isLoading = uiState.isLoading,
