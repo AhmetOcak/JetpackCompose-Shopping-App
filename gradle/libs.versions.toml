@@ -20,7 +20,7 @@ jetbrainsKotlinAndroid = "1.8.10"
 googleDaggerHiltAndroid = "2.44"
 googleGms = "4.4.0"
 compose-bom = "2023.10.01"
-firebase-bom = "32.4.0"
+firebase-bom = "32.7.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist-systemuicontroller" }
@@ -63,12 +63,3 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "jetbrainsKotlinAndroid" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "googleDaggerHiltAndroid" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleGms" }
-
-
-
-
-
-
-
-
-
