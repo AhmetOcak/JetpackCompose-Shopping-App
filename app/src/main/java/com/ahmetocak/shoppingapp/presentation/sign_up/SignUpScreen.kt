@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,6 +22,8 @@ import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingBu
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.WelcomeText
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 
 @Composable
 fun SignUpScreen(
@@ -117,6 +120,34 @@ private fun SignUpScreenContent(
                 modifier = modifier.padding(top = dimensionResource(id = R.dimen.one_level_margin)),
                 onClick = onSignUpClick,
                 buttonText = stringResource(id = R.string.sign_up)
+            )
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun SignUpScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            AuthBackground()
+            SignUpScreenContent(
+                modifier = Modifier,
+                emailValue = "",
+                onEmailValueChange = {},
+                emailFieldError = false,
+                passwordValue = "",
+                onPasswordChange = {},
+                passwordFieldError = false,
+                verifyPasswordValue = "",
+                onVerifyPasswordChange = {},
+                verifyPasswordFieldError = false,
+                emailLabel = "Email",
+                passwordLabel = "Password",
+                verifyPasswordLabel = "VerifyPassword",
+                onSignUpClick = {},
+                isLoading = false,
+                isSignUpEnd = false
             )
         }
     }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,10 +16,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.utils.ComponentPreview
 
 @Composable
 fun AuthEnterPasswordOtf(
@@ -62,4 +66,36 @@ fun AuthEnterPasswordOtf(
         singleLine = true,
         isError = isError
     )
+}
+
+@ComponentPreview
+@Composable
+private fun AuthEnterPasswordOtfPreview() {
+    ShoppingAppTheme {
+        Surface {
+            AuthEnterEmailOtf(
+                modifier = Modifier,
+                value = "",
+                onValueChange = {},
+                isError = false,
+                labelText = stringResource(id = R.string.enter_password)
+            )
+        }
+    }
+}
+
+@ComponentPreview
+@Composable
+private fun AuthEnterPasswordOtfErrorPreview() {
+    ShoppingAppTheme {
+        Surface {
+            AuthEnterEmailOtf(
+                modifier = Modifier,
+                value = "",
+                onValueChange = {},
+                isError = true,
+                labelText = stringResource(id = R.string.pass_length)
+            )
+        }
+    }
 }

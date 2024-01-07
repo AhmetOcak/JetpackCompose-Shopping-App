@@ -42,8 +42,10 @@ import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingProductItem
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.model.shopping.Product
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 
 @Composable
 fun ProductScreen(
@@ -156,7 +158,7 @@ private fun ProductScreenContent(
 }
 
 @Composable
-fun CategoryList(
+private fun CategoryList(
     categories: List<String>,
     isCategoriesLoading: Boolean,
     selectedCatName: String,
@@ -199,7 +201,7 @@ fun CategoryList(
 }
 
 @Composable
-fun ProductList(
+private fun ProductList(
     productList: List<Product>,
     isProductListLoading: Boolean,
     selectedCatName: String,
@@ -241,6 +243,60 @@ fun ProductList(
                     onProductClick = onProductClick
                 )
             }
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun ProductScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            ProductScreenContent(
+                modifier = Modifier,
+                categories = listOf(
+                    "technology",
+                    "electronics",
+                    "jewelery",
+                    "men's clothing",
+                    "women's clothing"
+                ),
+                isCategoriesLoading = false,
+                productList = List(3) {
+                    Product(
+                        id = it,
+                        title = "Product Title",
+                        price = (10 * it).toString(),
+                        description = null,
+                        category = null,
+                        image = null,
+                        rating = null
+                    )
+                },
+                isProductListLoading = false,
+                onProductClick = {},
+                onShoppingCartClicked = {},
+                errors = listOf()
+            )
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun ProductScreenErrorPreview() {
+    ShoppingAppTheme {
+        Surface {
+            ProductScreenContent(
+                modifier = Modifier,
+                categories = listOf(),
+                isCategoriesLoading = false,
+                productList = listOf(),
+                isProductListLoading = false,
+                onProductClick = {},
+                onShoppingCartClicked = {},
+                errors = listOf(UiText.DynamicString("This is a fake error"))
+            )
         }
     }
 }

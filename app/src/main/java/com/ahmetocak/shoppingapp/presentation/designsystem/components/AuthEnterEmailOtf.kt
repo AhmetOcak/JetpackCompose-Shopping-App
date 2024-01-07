@@ -8,14 +8,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.utils.ComponentPreview
 
 @Composable
 fun AuthEnterEmailOtf(
@@ -48,4 +52,36 @@ fun AuthEnterEmailOtf(
         isError = isError,
         singleLine = true
     )
+}
+
+@ComponentPreview
+@Composable
+private fun AuthEnterEmailOtfPreview() {
+    ShoppingAppTheme {
+        Surface {
+            AuthEnterEmailOtf(
+                modifier = Modifier,
+                value = "",
+                onValueChange = {},
+                isError = false,
+                labelText = stringResource(id = R.string.enter_email)
+            )
+        }
+    }
+}
+
+@ComponentPreview
+@Composable
+private fun AuthEnterEmailOtfErrorPreview() {
+    ShoppingAppTheme {
+        Surface {
+            AuthEnterEmailOtf(
+                modifier = Modifier,
+                value = "",
+                onValueChange = {},
+                isError = true,
+                labelText = stringResource(id = R.string.enter_valid_email)
+            )
+        }
+    }
 }

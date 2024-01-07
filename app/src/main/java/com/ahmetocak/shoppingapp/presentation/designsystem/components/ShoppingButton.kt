@@ -5,21 +5,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import com.ahmetocak.shoppingapp.R
+import androidx.compose.ui.unit.dp
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.utils.ComponentPreview
 
 @Composable
 fun ShoppingButton(modifier: Modifier = Modifier, onClick: () -> Unit, buttonText: String) {
     Button(
         modifier = modifier
             .fillMaxWidth()
-            .height(dimensionResource(id = R.dimen.button_height)),
+            .height(56.dp),
         onClick = onClick,
-        shape = RoundedCornerShape(dimensionResource(id = R.dimen.button_corner_size))
+        shape = RoundedCornerShape(4.dp)
     ) {
         Text(text = buttonText, style = MaterialTheme.typography.titleMedium)
+    }
+}
+
+@ComponentPreview
+@Composable
+private fun ShoppingButtonPreview() {
+    ShoppingAppTheme {
+        Surface {
+            ShoppingButton(onClick = {}, buttonText = "Click")
+        }
     }
 }

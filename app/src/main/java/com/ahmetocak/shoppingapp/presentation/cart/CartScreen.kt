@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -42,6 +43,8 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.CartEntity
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
@@ -60,8 +63,7 @@ fun CartScreen(
     ShoppingScaffold(
         modifier = modifier
     ) { paddingValues ->
-        CartScreenContent(
-            modifier = Modifier.padding(paddingValues),
+        CartScreenContent(modifier = Modifier.padding(paddingValues),
             cartList = uiState.cartList,
             onRemoveItemClick = viewModel::removeProductFromCart,
             subtotal = uiState.subtotal,
@@ -69,8 +71,7 @@ fun CartScreen(
             onDecreaseClicked = viewModel::decreaseProductCount,
             onCheckoutBtnClicked = remember {
                 { onPaymentClick((uiState.subtotal).toFloat()) }
-            }
-        )
+            })
     }
 }
 
@@ -124,8 +125,7 @@ private fun CartScreenContent(
                 }
             }
             CheckOutButton(
-                subtotal = subtotal,
-                onCheckoutBtnClicked = onCheckoutBtnClicked
+                subtotal = subtotal, onCheckoutBtnClicked = onCheckoutBtnClicked
             )
         }
     } else {
@@ -173,9 +173,7 @@ private fun CartList(
 
 @Composable
 private fun EmptyCartListView(
-    modifier: Modifier,
-    messageId: Int,
-    imageSize: Dp = 112.dp
+    modifier: Modifier, messageId: Int, imageSize: Dp = 112.dp
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -200,9 +198,8 @@ private fun EmptyCartListView(
 }
 
 @Composable
-fun CheckOutButton(
-    subtotal: Double,
-    onCheckoutBtnClicked: () -> Unit
+private fun CheckOutButton(
+    subtotal: Double, onCheckoutBtnClicked: () -> Unit
 ) {
     Divider(
         modifier = Modifier
@@ -224,8 +221,44 @@ fun CheckOutButton(
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                     append(" $${String.format("%.2f", subtotal + DELIVERY_FEE)}")
                 }
-            },
-            style = MaterialTheme.typography.titleMedium
+            }, style = MaterialTheme.typography.titleMedium
         )
+    }
+}
+
+@CustomPreview
+@Composable
+private fun CartScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            CartScreenContent(
+                modifier = Modifier,
+                cartList = listOf(
+                    CartEntity(0, "This is a preview title", price = 10.0, image = "", count = 1)
+                ),
+                onRemoveItemClick = {},
+                subtotal = 10.0,
+                onIncreaseClicked = {},
+                onDecreaseClicked = {},
+                onCheckoutBtnClicked = {}
+            )
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun CartScreenEmptyCartPreview() {
+    ShoppingAppTheme {
+        Surface {
+            CartScreenContent(modifier = Modifier,
+                cartList = listOf(),
+                onRemoveItemClick = {},
+                subtotal = 0.0,
+                onIncreaseClicked = {},
+                onDecreaseClicked = {},
+                onCheckoutBtnClicked = {}
+            )
+        }
     }
 }

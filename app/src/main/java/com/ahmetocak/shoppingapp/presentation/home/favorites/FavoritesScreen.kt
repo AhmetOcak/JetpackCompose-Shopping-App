@@ -36,8 +36,10 @@ import com.ahmetocak.shoppingapp.presentation.designsystem.components.FullScreen
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 
 @Composable
 fun FavoritesScreen(
@@ -146,6 +148,49 @@ private fun FavoritesScreenContent(
                     )
                 }
             }
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun FavoritesScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            FavoritesScreenContent(
+                modifier = Modifier,
+                isLoading = false,
+                favoriteProductList = listOf(
+                    ProductEntity(
+                        0,
+                        "This is a preview title",
+                        "10",
+                        description = "This is a preview description",
+                        category = "preview category",
+                        image = null,
+                        rating = 5.0,
+                        count = null
+                    )
+                ),
+                onRemoveFavoriteClicked = {},
+                onFavoriteItemClicked = {}
+            )
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun FavoritesScreenEmptyFavoriteListPreview() {
+    ShoppingAppTheme {
+        Surface {
+            FavoritesScreenContent(
+                modifier = Modifier,
+                isLoading = false,
+                favoriteProductList = listOf(),
+                onRemoveFavoriteClicked = {},
+                onFavoriteItemClicked = {}
+            )
         }
     }
 }

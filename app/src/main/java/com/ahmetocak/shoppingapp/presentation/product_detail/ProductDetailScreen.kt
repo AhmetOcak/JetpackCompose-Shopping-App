@@ -19,6 +19,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -41,6 +43,8 @@ import coil.request.ImageRequest
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 
 @Composable
 fun ProductDetailScreen(
@@ -111,7 +115,8 @@ private fun ProductDetailScreenContent(
                 .crossfade(true).build(),
             contentDescription = null,
             error = painterResource(id = R.drawable.error_image),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Fit,
+            placeholder = if (LocalInspectionMode.current) painterResource(id = R.drawable.debug_placeholder) else null
         )
         ProductDetails(
             modifier = Modifier
@@ -238,3 +243,49 @@ private fun ProductInfo(
         )
     }
 }
+
+@CustomPreview
+@Composable
+private fun ProductDetailScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            ProductDetailScreenContent(
+                modifier = Modifier,
+                title = "Product Title",
+                description = previewDescription,
+                price = 120.0,
+                rate = 4.3,
+                image = "",
+                isProductFavorite = false,
+                onFavoriteBtnClicked = {},
+                onAddToCartClicked = {},
+                cartButtonText = "Add to Cart"
+            )
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun ProductDetailScreenProductFavoritePreview() {
+    ShoppingAppTheme {
+        Surface {
+            ProductDetailScreenContent(
+                modifier = Modifier,
+                title = "Product Title",
+                description = previewDescription,
+                price = 120.0,
+                rate = 4.3,
+                image = "",
+                isProductFavorite = true,
+                onFavoriteBtnClicked = {},
+                onAddToCartClicked = {},
+                cartButtonText = "Go to Cart"
+            )
+        }
+    }
+}
+
+private const val previewDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, " +
+        "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."

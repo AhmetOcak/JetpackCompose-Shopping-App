@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,6 +38,8 @@ import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingBu
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingCreditCard
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
 
 @Composable
@@ -324,4 +327,60 @@ private fun interactionSource(
                 }
             }
         }
+}
+
+@CustomPreview
+@Composable
+private fun PaymentScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            PaymentScreenContent(
+                modifier = Modifier,
+                cardHolderName = "Ahmet Ocak",
+                cardNumber = "5425233430109903",
+                cardExpiryDate = "04/26",
+                cvc = "999",
+                onHolderNameChanged = {},
+                onCardNumberChanged = {},
+                onExpiryDateChanged = {},
+                onCvcChanged = {},
+                totalAmount = 120.0,
+                onCardInputClicked = {},
+                rotated = false,
+                onCardClick = {},
+                onPaymentClicked = {},
+                isPaymentDone = false,
+                isLoading = false,
+                onContinueShoppingClick = {}
+            )
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun PaymentDonePreview() {
+    ShoppingAppTheme {
+        Surface {
+            PaymentScreenContent(
+                modifier = Modifier,
+                cardHolderName = "Ahmet Ocak",
+                cardNumber = "5425233430109903",
+                cardExpiryDate = "0426",
+                cvc = "999",
+                onHolderNameChanged = {},
+                onCardNumberChanged = {},
+                onExpiryDateChanged = {},
+                onCvcChanged = {},
+                totalAmount = 120.0,
+                onCardInputClicked = {},
+                rotated = false,
+                onCardClick = {},
+                onPaymentClicked = {},
+                isPaymentDone = true,
+                isLoading = false,
+                onContinueShoppingClick = {}
+            )
+        }
+    }
 }

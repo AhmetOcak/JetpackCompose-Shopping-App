@@ -59,11 +59,13 @@ import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.formatDate
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
 import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.ImageCropper
 import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.UpdateAccountInfoDialog
 import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.VerifyPhoneNumberDialog
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -475,4 +477,43 @@ enum class InfoType {
     MOBILE,
     ADDRESS,
     BIRTHDATE
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@CustomPreview
+@Composable
+private fun ProfileScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            ProfileScreenContent(
+                modifier = Modifier,
+                userImgUrl = "",
+                userName = "Ahmet Ocak",
+                phoneNumber = "",
+                address = "Mars",
+                birthdate = "",
+                onAccountInfoClicked = {},
+                showUpdateDialog = false,
+                onDismissRequest = {},
+                updateValue = "",
+                onUpdateValueChange = {},
+                onUpdateClick = {},
+                dialogTitle = "",
+                infoType = InfoType.NAME,
+                onUserPhotoClicked = {},
+                imageUri = null,
+                showImageCropDialog = false,
+                uploadPhoto = {},
+                showVerifyPhoneNumberDialog = false,
+                codeValue = "",
+                onCodeValueChange = {},
+                verifyPhoneNumber = {},
+                onVerifyPhoneNumberDismiss = {},
+                datePickerState = rememberDatePickerState(),
+                onDatePickerDialogDismiss = {},
+                onDateConfirmClick = {},
+                onSignOutClicked = {}
+            )
+        }
+    }
 }

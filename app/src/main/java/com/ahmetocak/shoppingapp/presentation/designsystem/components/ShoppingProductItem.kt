@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -92,7 +93,8 @@ fun ShoppingProductItem(
                     .build(),
                 error = painterResource(id = R.drawable.error_image),
                 contentDescription = null,
-                contentScale = ContentScale.Fit
+                contentScale = ContentScale.Fit,
+                placeholder = if (LocalInspectionMode.current) painterResource(id = R.drawable.debug_placeholder) else null
             )
             MinLineText(
                 modifier = Modifier

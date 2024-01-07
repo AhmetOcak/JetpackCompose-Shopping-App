@@ -35,8 +35,10 @@ import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingSc
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.model.shopping.Product
 import com.ahmetocak.shoppingapp.model.shopping.ProductEntity
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 
 @Composable
 fun SearchScreen(
@@ -109,7 +111,7 @@ private fun SearchScreenContent(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.two_level_margin)),
                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.two_level_margin))
             ) {
-                items(searchResult, key =  { it.id }) {
+                items(searchResult, key = { it.id }) {
                     ShoppingProductItem(
                         id = it.id,
                         title = it.title,
@@ -164,5 +166,67 @@ private fun SearchResultEmptyView(
             text = stringResource(id = messageId),
             textAlign = TextAlign.Center
         )
+    }
+}
+
+@CustomPreview
+@Composable
+private fun SearchScreenNoSearchPreview() {
+    ShoppingAppTheme {
+        Surface {
+            SearchScreenContent(
+                modifier = Modifier,
+                searchValue = "",
+                onSearchValChanged = {},
+                searchResult = listOf(),
+                isSearchResultEmpty = false,
+                onProductClick = {}
+            )
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun SearchScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            SearchScreenContent(
+                modifier = Modifier,
+                searchValue = "",
+                onSearchValChanged = {},
+                searchResult = List(3) {
+                    ProductEntity(
+                        it,
+                        "Preview Title",
+                        (10 * it).toString(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    )
+                },
+                isSearchResultEmpty = false,
+                onProductClick = {}
+            )
+        }
+    }
+}
+
+@CustomPreview
+@Composable
+private fun SearchScreenEmptyPreview() {
+    ShoppingAppTheme {
+        Surface {
+            SearchScreenContent(
+                modifier = Modifier,
+                searchValue = "",
+                onSearchValChanged = {},
+                searchResult = listOf(),
+                isSearchResultEmpty = true,
+                onProductClick = {}
+            )
+        }
     }
 }

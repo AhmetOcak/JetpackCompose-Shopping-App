@@ -14,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,6 +40,8 @@ import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingBu
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.WelcomeText
+import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
+import com.ahmetocak.shoppingapp.utils.CustomPreview
 
 @Composable
 fun LoginScreen(
@@ -231,5 +234,33 @@ private fun RememberMeBox(
         }
         Spacer(modifier = Modifier.width(4.dp))
         Text(text = stringResource(id = R.string.remember_me))
+    }
+}
+
+@CustomPreview
+@Composable
+private fun LoginScreenPreview() {
+    ShoppingAppTheme {
+        Surface {
+            AuthBackground()
+            LoginScreenContent(
+                modifier = Modifier,
+                emailValue = "",
+                passwordValue = "",
+                onEmailValueChange = {},
+                onPasswordValueChange = {},
+                emailFieldError = false,
+                emailFieldLabel = "Email",
+                passwordFieldError = false,
+                passwordFieldLabel = "Password",
+                checked = false,
+                onCheckedChange = {},
+                onLoginClicked = {},
+                onRegisterClick = {},
+                onForgotPasswordClick = {},
+                isLoading = false,
+                isLoginEnd = false
+            )
+        }
     }
 }

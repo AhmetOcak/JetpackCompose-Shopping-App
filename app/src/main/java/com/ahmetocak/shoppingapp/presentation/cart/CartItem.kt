@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -160,7 +161,8 @@ private fun CartItemImg(imageUrl: String) {
             model = ImageRequest.Builder(LocalContext.current).data(imageUrl).crossfade(true)
                 .build(),
             contentDescription = null,
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Fit,
+            placeholder = if (LocalInspectionMode.current) painterResource(id = R.drawable.debug_placeholder) else null
         )
     }
 }
