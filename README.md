@@ -12,11 +12,11 @@ A new Firebase application has been created to store user addresses and date of 
 
 Enter the required information in the local.properties file as specified in the provided link.
 
-<img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/5939bc5b-e3c6-48ba-865a-a9f96e5b192b" />
+<img src="https://github.com/AhmetOcak/JetpackCompose-Shopping-App/assets/73544434/e5c89c09-5101-48a6-92d4-64544cfee748" />
 
-Creating the instance for the second Firebase application.
+Creating the instance for the second Firebase application. (di/AppModule)
 
-<img src="https://github.com/AhmetOcak/ShoppingApp/assets/73544434/bb0617f6-93e0-48a4-be5b-32ddecd00a7e" />
+<img src="https://github.com/AhmetOcak/JetpackCompose-Shopping-App/assets/73544434/15300f35-ab66-4909-b51f-7f974d4bd7c9" />
  
 ## Tech Stack 📚
 
