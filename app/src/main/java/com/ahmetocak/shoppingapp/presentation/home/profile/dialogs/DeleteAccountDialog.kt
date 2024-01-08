@@ -99,8 +99,8 @@ fun DeleteAccountDialog(
 @Composable
 private fun DeleteAccountDialogPreview() {
     DeleteAccountDialog(
-        onDismissRequest = { /*TODO*/ },
-        onDeleteClick = { /*TODO*/ },
+        onDismissRequest = {},
+        onDeleteClick = {},
         emailValue = "",
         passwordValue = "",
         onEmailValChange = {},
