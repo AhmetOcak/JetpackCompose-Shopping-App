@@ -23,7 +23,6 @@ import com.ahmetocak.shoppingapp.utils.ComponentPreview
 
 @Composable
 fun AuthEnterEmailOtf(
-    modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     isError: Boolean,
@@ -32,7 +31,7 @@ fun AuthEnterEmailOtf(
     val focusManager = LocalFocusManager.current
 
     OutlinedTextField(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = dimensionResource(id = R.dimen.one_level_margin)),
         value = value,
@@ -60,7 +59,6 @@ private fun AuthEnterEmailOtfPreview() {
     ShoppingAppTheme {
         Surface {
             AuthEnterEmailOtf(
-                modifier = Modifier,
                 value = "",
                 onValueChange = {},
                 isError = false,
@@ -76,7 +74,6 @@ private fun AuthEnterEmailOtfErrorPreview() {
     ShoppingAppTheme {
         Surface {
             AuthEnterEmailOtf(
-                modifier = Modifier,
                 value = "",
                 onValueChange = {},
                 isError = true,

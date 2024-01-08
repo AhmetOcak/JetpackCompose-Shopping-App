@@ -26,7 +26,6 @@ import com.ahmetocak.shoppingapp.utils.ComponentPreview
 
 @Composable
 fun AuthEnterPasswordOtf(
-    modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     isError: Boolean ,
@@ -35,7 +34,7 @@ fun AuthEnterPasswordOtf(
     var visibility by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = dimensionResource(id = R.dimen.one_level_margin)),
         value = value,
@@ -74,7 +73,6 @@ private fun AuthEnterPasswordOtfPreview() {
     ShoppingAppTheme {
         Surface {
             AuthEnterEmailOtf(
-                modifier = Modifier,
                 value = "",
                 onValueChange = {},
                 isError = false,
@@ -90,7 +88,6 @@ private fun AuthEnterPasswordOtfErrorPreview() {
     ShoppingAppTheme {
         Surface {
             AuthEnterEmailOtf(
-                modifier = Modifier,
                 value = "",
                 onValueChange = {},
                 isError = true,

@@ -96,21 +96,18 @@ private fun SignUpScreenContent(
         ) {
             WelcomeText(modifier = modifier, text = stringResource(id = R.string.welcome_register))
             AuthEnterEmailOtf(
-                modifier = modifier,
                 value = emailValue,
                 onValueChange = onEmailValueChange,
                 labelText = emailLabel,
                 isError = emailFieldError
             )
             AuthEnterPasswordOtf(
-                modifier = modifier,
                 value = passwordValue,
                 onValueChange = onPasswordChange,
                 labelText = passwordLabel,
                 isError = passwordFieldError
             )
             AuthEnterPasswordOtf(
-                modifier = modifier,
                 value = verifyPasswordValue,
                 onValueChange = onVerifyPasswordChange,
                 labelText = verifyPasswordLabel,

@@ -79,7 +79,6 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     AuthEnterEmailOtf(
-                        modifier = Modifier.fillMaxWidth(),
                         value = viewModel.passwordResetEmail,
                         onValueChange = viewModel::updatePasswordResetEmail,
                         isError = uiState.resetPasswordEmailFieldErrorMessage != null,
@@ -164,14 +163,12 @@ private fun LoginScreenContent(
         ) {
             WelcomeText(modifier = Modifier, text = stringResource(id = R.string.hello_again))
             AuthEnterEmailOtf(
-                modifier = Modifier,
                 value = emailValue,
                 onValueChange = onEmailValueChange,
                 isError = emailFieldError,
                 labelText = emailFieldLabel
             )
             AuthEnterPasswordOtf(
-                modifier = Modifier,
                 value = passwordValue,
                 onValueChange = onPasswordValueChange,
                 isError = passwordFieldError,
