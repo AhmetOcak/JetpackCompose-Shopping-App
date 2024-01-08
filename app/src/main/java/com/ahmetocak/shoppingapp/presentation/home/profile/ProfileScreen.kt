@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -70,7 +69,6 @@ import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.UpdateAccount
 import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.VerifyPhoneNumberDialog
 import com.ahmetocak.shoppingapp.utils.CustomPreview
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
@@ -80,17 +78,7 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    var showUpdateDialog by remember { mutableStateOf(false) }
-
-    var showVerifyPhoneNumberDialog by remember { mutableStateOf(false) }
-
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-
-    var showImageCropperDialog by remember { mutableStateOf(false) }
-
-    val datePickerState = rememberDatePickerState()
-
-    val activity = LocalContext.current as Activity
 
     if (uiState.errorMessages.isNotEmpty()) {
         ShoppingShowToastMessage(message = uiState.errorMessages.first().asString())
@@ -100,49 +88,40 @@ fun ProfileScreen(
     if (uiState.userMessages.isNotEmpty()) {
         ShoppingShowToastMessage(message = uiState.userMessages.first().asString())
         viewModel.consumedUserMessage()
-        showUpdateDialog = false
+        viewModel.endDialog(DialogType.UPDATE_ACCOUNT_INFO)
     }
 
     if (uiState.deleteAccountState.isDeleteSuccess) {
+        ShoppingShowToastMessage(message = stringResource(id = R.string.delete_account_success))
         onSignOutClicked()
     }
 
-    when (uiState.verifyPhoneNumber) {
-        VerifyPhoneNumberState.NOTHING -> {
-            showVerifyPhoneNumberDialog = false
-        }
+    when (uiState.verifyPhoneNumberState.verifyPhoneNumberUiEvent) {
+        VerifyPhoneNumberUiEvent.Nothing -> {}
 
-        VerifyPhoneNumberState.ON_VERIFICATION_COMPLETED -> {
-            showUpdateDialog = false
-            showVerifyPhoneNumberDialog = false
+        VerifyPhoneNumberUiEvent.OnVerificationComplete -> {
             ShoppingShowToastMessage(message = stringResource(id = R.string.verification_completed))
-            viewModel.setVerifyNumberStateNothing()
+            viewModel.resetVerifyNumberState()
         }
 
-        VerifyPhoneNumberState.ON_CODE_SENT -> {
-            showVerifyPhoneNumberDialog = true
+        VerifyPhoneNumberUiEvent.OnCodeSent -> {
+            viewModel.startDialog(DialogType.VERIFY_PHONE_NUMBER)
         }
     }
 
-    when (uiState.deleteAccountState.dialogState) {
-        DeleteAccountUiEvent.DialogActive -> {
-            DeleteAccountDialog(
-                onDismissRequest = remember(viewModel) { { viewModel.endDeleteAccountDialog() } },
-                onDeleteClick = remember(viewModel) { { viewModel.deleteAccount() } },
-                emailValue = viewModel.email,
-                passwordValue = viewModel.password,
-                onEmailValChange = remember(viewModel) { { viewModel.updateEmailValue(it) } },
-                onPasswordValChange = remember(viewModel) { { viewModel.updatePasswordValue(it) } }
-            )
-        }
-        DeleteAccountUiEvent.DialogInactive -> {}
-    }
+    DeleteAccountSection(uiState.deleteAccountState.dialogState, viewModel)
+
+    VerifyPhoneNumberDialogSection(uiState.verifyPhoneNumberState.dialogState, viewModel)
+
+    UpdateAccountInfoDialogSection(uiState.updateAccountInfoDialogState, viewModel)
+
+    ImageCropperDialogSection(uiState.imageCropperDialogUiState, imageUri.toString(), viewModel)
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUri = uri
-        showImageCropperDialog = true
+        viewModel.startDialog(DialogType.IMAGE_CROPPER)
     }
 
     ShoppingScaffold(
@@ -165,92 +144,44 @@ fun ProfileScreen(
             onAccountInfoClicked = remember(viewModel) {
                 {
                     viewModel.setAccountInfoType(it)
-                    showUpdateDialog = !showUpdateDialog
+                    viewModel.startDialog(DialogType.UPDATE_ACCOUNT_INFO)
                 }
             },
-            showUpdateDialog = showUpdateDialog,
-            updateValue = viewModel.updateValue,
-            onUpdateValueChange = viewModel::updateAccountInfoValue,
-            onDismissRequest = remember(viewModel) {
-                {
-                    viewModel.clearAccountInfoValue()
-                    showUpdateDialog = false
-                }
-            },
-            onUpdateClick = remember(viewModel) {
-                {
-                    when (viewModel.infoType) {
-                        InfoType.NAME -> {
-                            viewModel.updateUserName()
-                        }
-
-                        InfoType.MOBILE -> {
-                            viewModel.sendVerificationCode(activity)
-                        }
-
-                        InfoType.ADDRESS -> {
-                            viewModel.uploadUserAddress()
-                        }
-
-                        else -> {}
-                    }
-                }
-            },
-            dialogTitle = when (viewModel.infoType) {
-                InfoType.NAME -> {
-                    stringResource(id = R.string.name)
-                }
-
-                InfoType.MOBILE -> {
-                    stringResource(id = R.string.mobile)
-                }
-
-                InfoType.ADDRESS -> {
-                    stringResource(id = R.string.address)
-                }
-
-                InfoType.BIRTHDATE -> {
-                    stringResource(id = R.string.birthdate)
-                }
-            },
-            infoType = viewModel.infoType,
-            onUserPhotoClicked = remember {
-                { launcher.launch("image/*") }
-            },
-            imageUri = imageUri.toString(),
-            showImageCropDialog = showImageCropperDialog,
-            uploadPhoto = remember(viewModel) {
-                {
-                    if (it != null) {
-                        showImageCropperDialog = false
-                        viewModel.updateUserPhoto(it)
-                    }
-                }
-            },
-            showVerifyPhoneNumberDialog = showVerifyPhoneNumberDialog,
-            codeValue = viewModel.verificationCode,
-            onCodeValueChange = viewModel::updateVerificationCodeValue,
-            onVerifyPhoneNumberDismiss = remember { { showVerifyPhoneNumberDialog = false } },
-            verifyPhoneNumber = viewModel::verifyUserPhoneNumber,
-            datePickerState = datePickerState,
-            onDatePickerDialogDismiss = remember { { showUpdateDialog = false } },
-            onDateConfirmClick = remember(viewModel) {
-                {
-                    datePickerState.selectedDateMillis?.let { viewModel.updateUserBirthdate(it) }
-                    showUpdateDialog = false
-                }
-            },
+            onUserPhotoClicked = remember { { launcher.launch("image/*") } },
             onSignOutClicked = onSignOutClicked,
             onDeleteAccountClicked = remember(viewModel) {
-                {
-                    viewModel.startDeleteAccountDialog()
-                }
+                { viewModel.startDialog(DialogType.DELETE_ACCOUNT) }
             }
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ImageCropperDialogSection(
+    dialogState: DialogUiState,
+    imageUri: String?,
+    viewModel: ProfileViewModel
+) {
+    when (dialogState) {
+        DialogUiState.DialogInactive -> {}
+        DialogUiState.DialogActive -> {
+            ImageCropper(
+                imageUri = imageUri,
+                context = LocalContext.current,
+                uploadPhoto = remember(viewModel) {
+                    {
+                        if (it != null) {
+                            viewModel.endDialog(DialogType.IMAGE_CROPPER)
+                            viewModel.updateUserPhoto(it)
+                        }
+                    }
+                }
+            )
+        }
+    }
+}
+
+
 @Composable
 private fun ProfileScreenContent(
     modifier: Modifier,
@@ -260,79 +191,11 @@ private fun ProfileScreenContent(
     address: String,
     birthdate: String,
     onAccountInfoClicked: (InfoType) -> Unit,
-    showUpdateDialog: Boolean,
-    onDismissRequest: () -> Unit,
-    updateValue: String,
-    onUpdateValueChange: (String) -> Unit,
-    onUpdateClick: () -> Unit,
-    dialogTitle: String,
-    infoType: InfoType,
     onUserPhotoClicked: () -> Unit,
-    imageUri: String?,
-    showImageCropDialog: Boolean,
-    uploadPhoto: (Uri?) -> Unit,
-    showVerifyPhoneNumberDialog: Boolean,
-    codeValue: String,
-    onCodeValueChange: (String) -> Unit,
-    verifyPhoneNumber: () -> Unit,
-    onVerifyPhoneNumberDismiss: () -> Unit,
-    datePickerState: DatePickerState,
-    onDatePickerDialogDismiss: () -> Unit,
-    onDateConfirmClick: () -> Unit,
     onSignOutClicked: () -> Unit,
     onDeleteAccountClicked: () -> Unit
 ) {
     Surface(modifier = modifier.fillMaxSize()) {
-        if (showUpdateDialog) {
-            when (infoType) {
-                InfoType.BIRTHDATE -> {
-                    DatePickerDialog(
-                        onDismissRequest = onDatePickerDialogDismiss,
-                        confirmButton = {
-                            TextButton(onClick = onDateConfirmClick) {
-                                Text(text = stringResource(id = R.string.confirm))
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = onDatePickerDialogDismiss) {
-                                Text(text = stringResource(id = R.string.cancel))
-                            }
-                        }
-                    ) {
-                        DatePicker(state = datePickerState)
-                    }
-                }
-
-                else -> {
-                    UpdateAccountInfoDialog(
-                        onDismissRequest = onDismissRequest,
-                        updateValue = updateValue,
-                        onUpdateValueChange = onUpdateValueChange,
-                        onUpdateClick = onUpdateClick,
-                        title = dialogTitle,
-                        infoType = infoType
-                    )
-                }
-            }
-        }
-
-        if (showImageCropDialog) {
-            ImageCropper(
-                imageUri = imageUri,
-                context = LocalContext.current,
-                uploadPhoto = uploadPhoto
-            )
-        }
-
-        if (showVerifyPhoneNumberDialog) {
-            VerifyPhoneNumberDialog(
-                codeValue = codeValue,
-                onCodeValueChange = onCodeValueChange,
-                verifyPhoneNumber = verifyPhoneNumber,
-                onVerifyPhoneNumberDismiss = onVerifyPhoneNumberDismiss
-            )
-        }
-
         Column(modifier = Modifier.fillMaxSize()) {
             ProfileSection(
                 modifier = Modifier.weight(3f),
@@ -517,7 +380,140 @@ enum class InfoType {
     BIRTHDATE
 }
 
+@Composable
+private fun DeleteAccountSection(
+    dialogState: DialogUiState,
+    viewModel: ProfileViewModel
+) {
+    when (dialogState) {
+        DialogUiState.DialogActive -> {
+            DeleteAccountDialog(
+                onDismissRequest = remember(viewModel) { { viewModel.endDialog(DialogType.DELETE_ACCOUNT) } },
+                onDeleteClick = remember(viewModel) { { viewModel.deleteAccount() } },
+                emailValue = viewModel.email,
+                passwordValue = viewModel.password,
+                onEmailValChange = remember(viewModel) { { viewModel.updateEmailValue(it) } },
+                onPasswordValChange = remember(viewModel) { { viewModel.updatePasswordValue(it) } }
+            )
+        }
+
+        DialogUiState.DialogInactive -> {}
+    }
+}
+
+@Composable
+private fun VerifyPhoneNumberDialogSection(
+    dialogState: DialogUiState,
+    viewModel: ProfileViewModel
+) {
+    when (dialogState) {
+        DialogUiState.DialogInactive -> {}
+        DialogUiState.DialogActive -> {
+            VerifyPhoneNumberDialog(
+                codeValue = viewModel.verificationCode,
+                onCodeValueChange = viewModel::updateVerificationCodeValue,
+                verifyPhoneNumber = viewModel::verifyUserPhoneNumber,
+                onVerifyPhoneNumberDismiss = remember(viewModel) {
+                    { viewModel.endDialog(DialogType.VERIFY_PHONE_NUMBER) }
+                }
+            )
+        }
+    }
+}
+
+@Composable
 @OptIn(ExperimentalMaterial3Api::class)
+private fun UpdateAccountInfoDialogSection(
+    dialogState: DialogUiState,
+    viewModel: ProfileViewModel
+) {
+    val datePickerState = rememberDatePickerState()
+
+    val activity = LocalContext.current as Activity
+
+    when (dialogState) {
+        DialogUiState.DialogInactive -> {}
+        DialogUiState.DialogActive -> {
+            when (viewModel.infoType) {
+                InfoType.BIRTHDATE -> {
+                    DatePickerDialog(
+                        onDismissRequest = { viewModel.endDialog(DialogType.UPDATE_ACCOUNT_INFO) },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                datePickerState.selectedDateMillis?.let {
+                                    viewModel.updateUserBirthdate(it)
+                                }
+                                viewModel.endDialog(DialogType.UPDATE_ACCOUNT_INFO)
+                            }) {
+                                Text(text = stringResource(id = R.string.confirm))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+                                viewModel.endDialog(DialogType.UPDATE_ACCOUNT_INFO)
+                            }) {
+                                Text(text = stringResource(id = R.string.cancel))
+                            }
+                        }
+                    ) {
+                        DatePicker(state = datePickerState)
+                    }
+                }
+
+                else -> {
+                    UpdateAccountInfoDialog(
+                        onDismissRequest = remember(viewModel) {
+                            {
+                                viewModel.clearAccountInfoValue()
+                                viewModel.endDialog(DialogType.UPDATE_ACCOUNT_INFO)
+                            }
+                        },
+                        updateValue = viewModel.updateValue,
+                        onUpdateValueChange = viewModel::updateAccountInfoValue,
+                        onUpdateClick = remember(viewModel) {
+                            {
+                                when (viewModel.infoType) {
+                                    InfoType.NAME -> {
+                                        viewModel.updateUserName()
+                                    }
+
+                                    InfoType.MOBILE -> {
+                                        viewModel.sendVerificationCode(activity)
+                                    }
+
+                                    InfoType.ADDRESS -> {
+                                        viewModel.uploadUserAddress()
+                                    }
+
+                                    else -> {}
+                                }
+                            }
+                        },
+                        title = when (viewModel.infoType) {
+                            InfoType.NAME -> {
+                                stringResource(id = R.string.name)
+                            }
+
+                            InfoType.MOBILE -> {
+                                stringResource(id = R.string.mobile)
+                            }
+
+                            InfoType.ADDRESS -> {
+                                stringResource(id = R.string.address)
+                            }
+
+                            InfoType.BIRTHDATE -> {
+                                stringResource(id = R.string.birthdate)
+                            }
+                        },
+                        infoType = viewModel.infoType
+                    )
+                }
+            }
+        }
+    }
+}
+
 @CustomPreview
 @Composable
 private fun ProfileScreenPreview() {
@@ -531,25 +527,7 @@ private fun ProfileScreenPreview() {
                 address = "Mars",
                 birthdate = "",
                 onAccountInfoClicked = {},
-                showUpdateDialog = false,
-                onDismissRequest = {},
-                updateValue = "",
-                onUpdateValueChange = {},
-                onUpdateClick = {},
-                dialogTitle = "",
-                infoType = InfoType.NAME,
                 onUserPhotoClicked = {},
-                imageUri = null,
-                showImageCropDialog = false,
-                uploadPhoto = {},
-                showVerifyPhoneNumberDialog = false,
-                codeValue = "",
-                onCodeValueChange = {},
-                verifyPhoneNumber = {},
-                onVerifyPhoneNumberDismiss = {},
-                datePickerState = rememberDatePickerState(),
-                onDatePickerDialogDismiss = {},
-                onDateConfirmClick = {},
                 onSignOutClicked = {},
                 onDeleteAccountClicked = {}
             )

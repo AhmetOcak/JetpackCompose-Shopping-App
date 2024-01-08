@@ -58,9 +58,7 @@ class ProfileViewModel @Inject constructor(
         } else {
             _uiState.update {
                 it.copy(
-                    name = user.displayName,
-                    email = user.email,
-                    phoneNumber = user.phoneNumber
+                    name = user.displayName, email = user.email, phoneNumber = user.phoneNumber
                 )
             }
         }
@@ -134,23 +132,19 @@ class ProfileViewModel @Inject constructor(
                     if (task.isSuccessful) {
                         _uiState.update {
                             it.copy(
-                                name = auth.currentUser?.displayName,
-                                userMessages = listOf(
+                                name = auth.currentUser?.displayName, userMessages = listOf(
                                     UiText.StringResource(resId = R.string.name_updated_suc)
-                                )
+                                ),
+                                updateAccountInfoDialogState = DialogUiState.DialogInactive
                             )
                         }
                     } else {
                         _uiState.update {
-                            it.copy(
-                                errorMessages = listOf(
-                                    task.exception?.message?.let { message ->
-                                        UiText.DynamicString(message)
-                                    } ?: kotlin.run {
-                                        UiText.StringResource(resId = R.string.unknown_error)
-                                    }
-                                )
-                            )
+                            it.copy(errorMessages = listOf(task.exception?.message?.let { message ->
+                                UiText.DynamicString(message)
+                            } ?: kotlin.run {
+                                UiText.StringResource(resId = R.string.unknown_error)
+                            }))
                         }
                     }
                 }
@@ -172,13 +166,11 @@ class ProfileViewModel @Inject constructor(
                     getUserProfileImage()
                 } else {
                     _uiState.update {
-                        it.copy(errorMessages = listOf(
-                            task.exception?.message?.let { message ->
-                                UiText.DynamicString(message)
-                            } ?: kotlin.run {
-                                UiText.StringResource(resId = R.string.unknown_error)
-                            }
-                        ))
+                        it.copy(errorMessages = listOf(task.exception?.message?.let { message ->
+                            UiText.DynamicString(message)
+                        } ?: kotlin.run {
+                            UiText.StringResource(resId = R.string.unknown_error)
+                        }))
                     }
                 }
             }
@@ -206,14 +198,14 @@ class ProfileViewModel @Inject constructor(
                 override fun onVerificationFailed(e: FirebaseException) {
                     _uiState.update {
                         it.copy(
-                            errorMessages = listOf(
-                                e.message?.let { message ->
-                                    UiText.DynamicString(message)
-                                } ?: kotlin.run {
-                                    UiText.StringResource(resId = R.string.unknown_error)
-                                }
-                            ),
-                            verifyPhoneNumber = VerifyPhoneNumberState.NOTHING
+                            errorMessages = listOf(e.message?.let { message ->
+                                UiText.DynamicString(message)
+                            } ?: kotlin.run {
+                                UiText.StringResource(resId = R.string.unknown_error)
+                            }),
+                            verifyPhoneNumberState = VerifyPhoneNumberState(
+                                verifyPhoneNumberUiEvent = VerifyPhoneNumberUiEvent.Nothing
+                            )
                         )
                     }
                 }
@@ -224,7 +216,12 @@ class ProfileViewModel @Inject constructor(
                 ) {
                     storedVerificationId = verificationId
                     _uiState.update {
-                        it.copy(verifyPhoneNumber = VerifyPhoneNumberState.ON_CODE_SENT)
+                        it.copy(
+                            verifyPhoneNumberState = VerifyPhoneNumberState(
+                                verifyPhoneNumberUiEvent = VerifyPhoneNumberUiEvent.OnCodeSent,
+                                dialogState = DialogUiState.DialogActive
+                            )
+                        )
                     }
                 }
             }
@@ -236,28 +233,32 @@ class ProfileViewModel @Inject constructor(
     fun verifyUserPhoneNumber() {
         repository.verifyUserPhoneNumber(
             PhoneAuthProvider.getCredential(
-                storedVerificationId ?: "",
-                verificationCode
+                storedVerificationId ?: "", verificationCode
             )
         )?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 _uiState.update {
                     it.copy(
-                        verifyPhoneNumber = VerifyPhoneNumberState.ON_VERIFICATION_COMPLETED,
-                        phoneNumber = auth.currentUser?.phoneNumber
+                        verifyPhoneNumberState = VerifyPhoneNumberState(
+                            verifyPhoneNumberUiEvent = VerifyPhoneNumberUiEvent.OnVerificationComplete,
+                            dialogState = DialogUiState.DialogInactive
+                        ),
+                        phoneNumber = auth.currentUser?.phoneNumber,
+                        updateAccountInfoDialogState = DialogUiState.DialogInactive
                     )
                 }
             } else {
                 _uiState.update {
                     it.copy(
-                        verifyPhoneNumber = VerifyPhoneNumberState.NOTHING,
-                        errorMessages = listOf(
-                            task.exception?.message?.let { message ->
-                                UiText.DynamicString(message)
-                            } ?: kotlin.run {
-                                UiText.StringResource(resId = R.string.unknown_error)
-                            }
-                        )
+                        verifyPhoneNumberState = VerifyPhoneNumberState(
+                            verifyPhoneNumberUiEvent = VerifyPhoneNumberUiEvent.Nothing,
+                            dialogState = DialogUiState.DialogInactive
+                        ),
+                        errorMessages = listOf(task.exception?.message?.let { message ->
+                            UiText.DynamicString(message)
+                        } ?: kotlin.run {
+                            UiText.StringResource(resId = R.string.unknown_error)
+                        })
                     )
                 }
             }
@@ -266,61 +267,52 @@ class ProfileViewModel @Inject constructor(
 
     fun uploadUserAddress() {
         viewModelScope.launch(ioDispatcher) {
-            repository.uploadUserAddress(updateValue)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        _uiState.update {
-                            it.copy(
-                                userMessages = listOf(
-                                    UiText.StringResource(resId = R.string.upload_address_suc)
-                                )
-                            )
-                        }
-                        getUserDetails()
-                    } else {
-                        _uiState.update {
-                            it.copy(
-                                errorMessages = listOf(
-                                    task.exception?.message?.let { message ->
-                                        UiText.DynamicString(message)
-                                    } ?: kotlin.run {
-                                        UiText.StringResource(resId = R.string.unknown_error)
-                                    }
-                                )
-                            )
-                        }
+            repository.uploadUserAddress(updateValue).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _uiState.update {
+                        it.copy(
+                            userMessages = listOf(
+                                UiText.StringResource(resId = R.string.upload_address_suc)
+                            ),
+                            updateAccountInfoDialogState = DialogUiState.DialogInactive
+                        )
+                    }
+                    getUserDetails()
+                } else {
+                    _uiState.update {
+                        it.copy(errorMessages = listOf(task.exception?.message?.let { message ->
+                            UiText.DynamicString(message)
+                        } ?: kotlin.run {
+                            UiText.StringResource(resId = R.string.unknown_error)
+                        }))
                     }
                 }
+            }
         }
     }
 
     fun updateUserBirthdate(birthdate: Long) {
         viewModelScope.launch(ioDispatcher) {
-            repository.uploadUserBirthdate(birthdate)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        _uiState.update {
-                            it.copy(
-                                userMessages = listOf(
-                                    UiText.StringResource(resId = R.string.upload_birthdate_suc)
-                                )
+            repository.uploadUserBirthdate(birthdate).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    _uiState.update {
+                        it.copy(
+                            userMessages = listOf(
+                                UiText.StringResource(resId = R.string.upload_birthdate_suc)
                             )
-                        }
-                        getUserDetails()
-                    } else {
-                        _uiState.update {
-                            it.copy(
-                                errorMessages = listOf(
-                                    task.exception?.message?.let { message ->
-                                        UiText.DynamicString(message)
-                                    } ?: kotlin.run {
-                                        UiText.StringResource(resId = R.string.unknown_error)
-                                    }
-                                )
-                            )
-                        }
+                        )
+                    }
+                    getUserDetails()
+                } else {
+                    _uiState.update {
+                        it.copy(errorMessages = listOf(task.exception?.message?.let { message ->
+                            UiText.DynamicString(message)
+                        } ?: kotlin.run {
+                            UiText.StringResource(resId = R.string.unknown_error)
+                        }))
                     }
                 }
+            }
         }
     }
 
@@ -334,13 +326,11 @@ class ProfileViewModel @Inject constructor(
                 } else {
                     Log.e("GET USER DETAILS", task.exception?.stackTraceToString() ?: "error")
                     _uiState.update {
-                        it.copy(errorMessages = listOf(
-                            task.exception?.message?.let { message ->
-                                UiText.DynamicString(message)
-                            } ?: kotlin.run {
-                                UiText.StringResource(resId = R.string.unknown_error)
-                            }
-                        ))
+                        it.copy(errorMessages = listOf(task.exception?.message?.let { message ->
+                            UiText.DynamicString(message)
+                        } ?: kotlin.run {
+                            UiText.StringResource(resId = R.string.unknown_error)
+                        }))
                     }
                 }
             }
@@ -377,8 +367,7 @@ class ProfileViewModel @Inject constructor(
                                 _uiState.update {
                                     it.copy(
                                         deleteAccountState = DeleteAccountState(
-                                            DeleteAccountUiEvent.DialogInactive,
-                                            isDeleteSuccess = true
+                                            DialogUiState.DialogInactive, isDeleteSuccess = true
                                         )
                                     )
                                 }
@@ -392,25 +381,61 @@ class ProfileViewModel @Inject constructor(
 
     private fun handleFailure(throwable: Throwable) {
         _uiState.update {
-            it.copy(errorMessages = listOf(
-                throwable.message?.let { message ->
-                    UiText.DynamicString(message)
-                } ?: kotlin.run {
-                    UiText.StringResource(R.string.unknown_error)
+            it.copy(errorMessages = listOf(throwable.message?.let { message ->
+                UiText.DynamicString(message)
+            } ?: kotlin.run {
+                UiText.StringResource(R.string.unknown_error)
+            }))
+        }
+    }
+
+    fun startDialog(dialogType: DialogType) {
+        when (dialogType) {
+            DialogType.UPDATE_ACCOUNT_INFO -> {
+                _uiState.update {
+                    it.copy(updateAccountInfoDialogState = DialogUiState.DialogActive)
                 }
-            ))
+            }
+            DialogType.DELETE_ACCOUNT -> {
+                _uiState.update {
+                    it.copy(deleteAccountState = DeleteAccountState(DialogUiState.DialogActive))
+                }
+            }
+            DialogType.IMAGE_CROPPER -> {
+                _uiState.update {
+                    it.copy(imageCropperDialogUiState = DialogUiState.DialogActive)
+                }
+            }
+            DialogType.VERIFY_PHONE_NUMBER -> {
+                _uiState.update {
+                    it.copy(verifyPhoneNumberState = VerifyPhoneNumberState(dialogState = DialogUiState.DialogActive))
+                }
+            }
         }
     }
 
-    fun startDeleteAccountDialog() {
-        _uiState.update {
-            it.copy(deleteAccountState = DeleteAccountState(DeleteAccountUiEvent.DialogActive))
-        }
-    }
-
-    fun endDeleteAccountDialog() {
-        _uiState.update {
-            it.copy(deleteAccountState = DeleteAccountState(DeleteAccountUiEvent.DialogInactive))
+    fun endDialog(dialogType: DialogType) {
+        when (dialogType) {
+            DialogType.UPDATE_ACCOUNT_INFO -> {
+                _uiState.update {
+                    it.copy(updateAccountInfoDialogState = DialogUiState.DialogInactive)
+                }
+            }
+            DialogType.DELETE_ACCOUNT -> {
+                _uiState.update {
+                    it.copy(deleteAccountState = DeleteAccountState(DialogUiState.DialogInactive))
+                }
+            }
+            DialogType.IMAGE_CROPPER -> {
+                _uiState.update {
+                    it.copy(imageCropperDialogUiState = DialogUiState.DialogInactive)
+                }
+            }
+            DialogType.VERIFY_PHONE_NUMBER -> {
+                _uiState.update {
+                    it.copy(verifyPhoneNumberState = VerifyPhoneNumberState(dialogState = DialogUiState.DialogInactive))
+                }
+            }
         }
     }
 
@@ -426,9 +451,13 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun setVerifyNumberStateNothing() {
+    fun resetVerifyNumberState() {
         _uiState.update {
-            it.copy(verifyPhoneNumber = VerifyPhoneNumberState.NOTHING)
+            it.copy(
+                verifyPhoneNumberState = VerifyPhoneNumberState(
+                    verifyPhoneNumberUiEvent = VerifyPhoneNumberUiEvent.Nothing
+                )
+            )
         }
     }
 }
@@ -441,23 +470,37 @@ data class ProfileUiState(
     val email: String? = null,
     val photoUrl: Uri? = null,
     val phoneNumber: String? = null,
-    val verifyPhoneNumber: VerifyPhoneNumberState = VerifyPhoneNumberState.NOTHING,
+    val verifyPhoneNumberState: VerifyPhoneNumberState = VerifyPhoneNumberState(),
     val userDetail: UserDetail? = null,
-    val deleteAccountState: DeleteAccountState = DeleteAccountState()
+    val deleteAccountState: DeleteAccountState = DeleteAccountState(),
+    val updateAccountInfoDialogState: DialogUiState = DialogUiState.DialogInactive,
+    val imageCropperDialogUiState: DialogUiState = DialogUiState.DialogInactive
 )
 
-enum class VerifyPhoneNumberState {
-    NOTHING,
-    ON_CODE_SENT,
-    ON_VERIFICATION_COMPLETED
+data class VerifyPhoneNumberState(
+    val verifyPhoneNumberUiEvent: VerifyPhoneNumberUiEvent = VerifyPhoneNumberUiEvent.Nothing,
+    val dialogState: DialogUiState = DialogUiState.DialogInactive
+)
+
+sealed interface VerifyPhoneNumberUiEvent {
+    object Nothing : VerifyPhoneNumberUiEvent
+    object OnCodeSent : VerifyPhoneNumberUiEvent
+    object OnVerificationComplete : VerifyPhoneNumberUiEvent
 }
 
 data class DeleteAccountState(
-    val dialogState: DeleteAccountUiEvent = DeleteAccountUiEvent.DialogInactive,
+    val dialogState: DialogUiState = DialogUiState.DialogInactive,
     val isDeleteSuccess: Boolean = false
 )
 
-sealed interface DeleteAccountUiEvent {
-    object DialogActive : DeleteAccountUiEvent
-    object DialogInactive : DeleteAccountUiEvent
+sealed interface DialogUiState {
+    object DialogActive : DialogUiState
+    object DialogInactive : DialogUiState
+}
+
+enum class DialogType {
+    DELETE_ACCOUNT,
+    VERIFY_PHONE_NUMBER,
+    UPDATE_ACCOUNT_INFO,
+    IMAGE_CROPPER
 }
