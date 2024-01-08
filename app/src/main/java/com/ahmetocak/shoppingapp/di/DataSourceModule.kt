@@ -58,8 +58,11 @@ object DataSourceModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseFirestoreDataSource(firestoreDb: FirebaseFirestore): FirebaseFirestoreDataSource {
-        return FirebaseFirestoreDataSourceImpl(firestoreDb)
+    fun provideFirebaseFirestoreDataSource(
+        firestoreDb: FirebaseFirestore,
+        firebaseAuth: FirebaseAuth
+    ): FirebaseFirestoreDataSource {
+        return FirebaseFirestoreDataSourceImpl(firestoreDb, firebaseAuth)
     }
 
     @Provides
