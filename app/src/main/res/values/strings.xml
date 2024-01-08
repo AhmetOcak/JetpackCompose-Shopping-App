@@ -74,6 +74,8 @@
     <string name="shopping_channel_description" translatable="false">Daily shopping reminder</string>
     <string name="delete">Delete</string>
     <string name="delete_account_title">Delete Account</string>
+    <string name="delete_account_success">Your account deleted successfully</string>
+    <string name="delete_account_warning">When you delete your account, all your user information is also deleted. This process is irreversible.</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_channel</string>
 </resources>

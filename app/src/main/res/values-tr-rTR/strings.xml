@@ -71,4 +71,6 @@
     <string name="products">Ürünler</string>
     <string name="delete">Sil</string>
     <string name="delete_account_title">Hesabı Sil</string>
+    <string name="delete_account_success">Hesabın başarılı bir şekilde silindi</string>
+    <string name="delete_account_warning">Hesabınızı sildiğinde bütün kullanıcı bilgileriniz de silinir. Bu işlemin geri dönüşü yoktur.</string>
 </resources>
