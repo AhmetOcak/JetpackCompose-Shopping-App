@@ -8,6 +8,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -43,13 +44,13 @@ fun SignUpScreen(
         SignUpScreenContent(
             modifier = Modifier.padding(paddingValues),
             emailValue = viewModel.email,
-            onEmailValueChange = viewModel::updateEmailField,
+            onEmailValueChange = remember(viewModel) { viewModel::updateEmailField },
             emailFieldError = uiState.emailFieldErrorMessage != null,
             passwordValue = viewModel.password,
-            onPasswordChange = viewModel::updatePasswordField,
+            onPasswordChange = remember(viewModel) { viewModel::updatePasswordField },
             passwordFieldError = uiState.passwordFieldErrorMessage != null,
             verifyPasswordValue = viewModel.verifyPassword,
-            onVerifyPasswordChange = viewModel::updateVerifyPasswordField,
+            onVerifyPasswordChange = remember(viewModel) { viewModel::updateVerifyPasswordField },
             verifyPasswordFieldError = uiState.verifyPasFieldErrorMessage != null,
             emailLabel = uiState.emailFieldErrorMessage?.asString()
                 ?: stringResource(id = R.string.enter_email),
@@ -57,7 +58,7 @@ fun SignUpScreen(
                 ?: stringResource(id = R.string.enter_password),
             verifyPasswordLabel = uiState.verifyPasFieldErrorMessage?.asString()
                 ?: stringResource(id = R.string.verify_password),
-            onSignUpClick = { viewModel.signUp(upPress) },
+            onSignUpClick = remember(viewModel) { { viewModel.signUp(upPress) } },
             isLoading = uiState.isLoading,
             isSignUpEnd = uiState.isSignUpEnd
         )

@@ -63,15 +63,17 @@ fun CartScreen(
     ShoppingScaffold(
         modifier = modifier
     ) { paddingValues ->
-        CartScreenContent(modifier = Modifier.padding(paddingValues),
+        CartScreenContent(
+            modifier = Modifier.padding(paddingValues),
             cartList = uiState.cartList,
-            onRemoveItemClick = viewModel::removeProductFromCart,
+            onRemoveItemClick = remember(viewModel) { viewModel::removeProductFromCart },
             subtotal = uiState.subtotal,
-            onIncreaseClicked = viewModel::increaseProductCount,
-            onDecreaseClicked = viewModel::decreaseProductCount,
+            onIncreaseClicked = remember(viewModel) { viewModel::increaseProductCount },
+            onDecreaseClicked = remember(viewModel) { viewModel::decreaseProductCount },
             onCheckoutBtnClicked = remember {
                 { onPaymentClick((uiState.subtotal).toFloat()) }
-            })
+            }
+        )
     }
 }
 
@@ -124,9 +126,7 @@ private fun CartScreenContent(
                     )
                 }
             }
-            CheckOutButton(
-                subtotal = subtotal, onCheckoutBtnClicked = onCheckoutBtnClicked
-            )
+            CheckOutButton(subtotal = subtotal, onCheckoutBtnClicked = onCheckoutBtnClicked)
         }
     } else {
         EmptyCartListView(modifier = modifier, messageId = R.string.cart_empty)
@@ -251,7 +251,8 @@ private fun CartScreenPreview() {
 private fun CartScreenEmptyCartPreview() {
     ShoppingAppTheme {
         Surface {
-            CartScreenContent(modifier = Modifier,
+            CartScreenContent(
+                modifier = Modifier,
                 cartList = listOf(),
                 onRemoveItemClick = {},
                 subtotal = 0.0,
