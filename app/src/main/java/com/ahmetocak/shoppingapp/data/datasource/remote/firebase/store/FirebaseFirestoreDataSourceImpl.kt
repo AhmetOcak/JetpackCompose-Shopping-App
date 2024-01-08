@@ -35,4 +35,16 @@ class FirebaseFirestoreDataSourceImpl @Inject constructor(
             .document(firebaseAuth.currentUser?.uid ?: "")
             .set(hashMapOf("token" to token), SetOptions.merge())
     }
+
+    override fun deleteUserFCMToken(): Task<Void> {
+        return firestoreDb.collection(Firestore.FCM_COLLECTION_KEY)
+            .document(firebaseAuth.currentUser?.uid ?: "")
+            .delete()
+    }
+
+    override fun deleteUserData(): Task<Void> {
+        return firestoreDb.collection(Firestore.COLLECTION_KEY)
+            .document(firebaseAuth.currentUser?.uid ?: "")
+            .delete()
+    }
 }

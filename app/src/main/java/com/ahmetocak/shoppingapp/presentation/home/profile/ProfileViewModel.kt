@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahmetocak.shoppingapp.R
 import com.ahmetocak.shoppingapp.common.helpers.UiText
 import com.ahmetocak.shoppingapp.domain.repository.FirebaseRepository
+import com.ahmetocak.shoppingapp.model.auth.Auth
 import com.ahmetocak.shoppingapp.model.user_detail.UserDetail
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @Stable
@@ -73,6 +75,12 @@ class ProfileViewModel @Inject constructor(
     var infoType by mutableStateOf(InfoType.NAME)
         private set
 
+    var email by mutableStateOf("")
+        private set
+
+    var password by mutableStateOf("")
+        private set
+
     private var storedVerificationId: String? = null
 
     fun updateAccountInfoValue(value: String) {
@@ -81,6 +89,14 @@ class ProfileViewModel @Inject constructor(
 
     fun updateVerificationCodeValue(value: String) {
         verificationCode = value
+    }
+
+    fun updateEmailValue(value: String) {
+        email = value
+    }
+
+    fun updatePasswordValue(value: String) {
+        password = value
     }
 
     fun clearAccountInfoValue() {
@@ -147,8 +163,10 @@ class ProfileViewModel @Inject constructor(
             repository.uploadUserProfileImage(uri).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
-                        it.copy(userMessages = listOf(
-                            UiText.StringResource(resId = R.string.img_upload_suc))
+                        it.copy(
+                            userMessages = listOf(
+                                UiText.StringResource(resId = R.string.img_upload_suc)
+                            )
                         )
                     }
                     getUserProfileImage()
@@ -252,9 +270,11 @@ class ProfileViewModel @Inject constructor(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _uiState.update {
-                            it.copy(userMessages = listOf(
-                                UiText.StringResource(resId = R.string.upload_address_suc)
-                            ))
+                            it.copy(
+                                userMessages = listOf(
+                                    UiText.StringResource(resId = R.string.upload_address_suc)
+                                )
+                            )
                         }
                         getUserDetails()
                     } else {
@@ -280,9 +300,11 @@ class ProfileViewModel @Inject constructor(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _uiState.update {
-                            it.copy(userMessages = listOf(
-                                UiText.StringResource(resId = R.string.upload_birthdate_suc)
-                            ))
+                            it.copy(
+                                userMessages = listOf(
+                                    UiText.StringResource(resId = R.string.upload_birthdate_suc)
+                                )
+                            )
                         }
                         getUserDetails()
                     } else {
@@ -325,6 +347,73 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun deleteAccount() {
+        viewModelScope.launch(ioDispatcher) {
+            runCatching {
+                repository.reAuthenticate(Auth(email, password))?.await()
+            }.onFailure {
+                handleFailure(it)
+            }.onSuccess {
+                runCatching {
+                    repository.deleteUserFCMToken().await()
+                }.onFailure {
+                    handleFailure(it)
+                }.onSuccess {
+                    runCatching {
+                        repository.deleteUserData().await()
+                    }.onFailure {
+                        handleFailure(it)
+                    }.onSuccess {
+                        runCatching {
+                            repository.deleteUserProfileImage().await()
+                        }.onFailure {
+                            handleFailure(it)
+                        }.onSuccess {
+                            runCatching {
+                                repository.deleteAccount()?.await()
+                            }.onFailure {
+                                handleFailure(it)
+                            }.onSuccess {
+                                _uiState.update {
+                                    it.copy(
+                                        deleteAccountState = DeleteAccountState(
+                                            DeleteAccountUiEvent.DialogInactive,
+                                            isDeleteSuccess = true
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleFailure(throwable: Throwable) {
+        _uiState.update {
+            it.copy(errorMessages = listOf(
+                throwable.message?.let { message ->
+                    UiText.DynamicString(message)
+                } ?: kotlin.run {
+                    UiText.StringResource(R.string.unknown_error)
+                }
+            ))
+        }
+    }
+
+    fun startDeleteAccountDialog() {
+        _uiState.update {
+            it.copy(deleteAccountState = DeleteAccountState(DeleteAccountUiEvent.DialogActive))
+        }
+    }
+
+    fun endDeleteAccountDialog() {
+        _uiState.update {
+            it.copy(deleteAccountState = DeleteAccountState(DeleteAccountUiEvent.DialogInactive))
+        }
+    }
+
     fun consumedUserMessage() {
         _uiState.update {
             it.copy(userMessages = listOf())
@@ -353,11 +442,22 @@ data class ProfileUiState(
     val photoUrl: Uri? = null,
     val phoneNumber: String? = null,
     val verifyPhoneNumber: VerifyPhoneNumberState = VerifyPhoneNumberState.NOTHING,
-    val userDetail: UserDetail? = null
+    val userDetail: UserDetail? = null,
+    val deleteAccountState: DeleteAccountState = DeleteAccountState()
 )
 
 enum class VerifyPhoneNumberState {
     NOTHING,
     ON_CODE_SENT,
     ON_VERIFICATION_COMPLETED
+}
+
+data class DeleteAccountState(
+    val dialogState: DeleteAccountUiEvent = DeleteAccountUiEvent.DialogInactive,
+    val isDeleteSuccess: Boolean = false
+)
+
+sealed interface DeleteAccountUiEvent {
+    object DialogActive : DeleteAccountUiEvent
+    object DialogInactive : DeleteAccountUiEvent
 }

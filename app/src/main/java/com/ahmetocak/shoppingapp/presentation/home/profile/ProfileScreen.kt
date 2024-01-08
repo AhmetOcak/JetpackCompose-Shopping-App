@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
@@ -62,6 +64,7 @@ import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingSh
 import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
 import com.ahmetocak.shoppingapp.presentation.home.HomeSections
 import com.ahmetocak.shoppingapp.presentation.home.ShoppingAppBottomBar
+import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.DeleteAccountDialog
 import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.ImageCropper
 import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.UpdateAccountInfoDialog
 import com.ahmetocak.shoppingapp.presentation.home.profile.dialogs.VerifyPhoneNumberDialog
@@ -100,6 +103,10 @@ fun ProfileScreen(
         showUpdateDialog = false
     }
 
+    if (uiState.deleteAccountState.isDeleteSuccess) {
+        onSignOutClicked()
+    }
+
     when (uiState.verifyPhoneNumber) {
         VerifyPhoneNumberState.NOTHING -> {
             showVerifyPhoneNumberDialog = false
@@ -115,6 +122,20 @@ fun ProfileScreen(
         VerifyPhoneNumberState.ON_CODE_SENT -> {
             showVerifyPhoneNumberDialog = true
         }
+    }
+
+    when (uiState.deleteAccountState.dialogState) {
+        DeleteAccountUiEvent.DialogActive -> {
+            DeleteAccountDialog(
+                onDismissRequest = remember(viewModel) { { viewModel.endDeleteAccountDialog() } },
+                onDeleteClick = remember(viewModel) { { viewModel.deleteAccount() } },
+                emailValue = viewModel.email,
+                passwordValue = viewModel.password,
+                onEmailValChange = remember(viewModel) { { viewModel.updateEmailValue(it) } },
+                onPasswordValChange = remember(viewModel) { { viewModel.updatePasswordValue(it) } }
+            )
+        }
+        DeleteAccountUiEvent.DialogInactive -> {}
     }
 
     val launcher = rememberLauncherForActivityResult(
@@ -219,7 +240,12 @@ fun ProfileScreen(
                     showUpdateDialog = false
                 }
             },
-            onSignOutClicked = onSignOutClicked
+            onSignOutClicked = onSignOutClicked,
+            onDeleteAccountClicked = remember(viewModel) {
+                {
+                    viewModel.startDeleteAccountDialog()
+                }
+            }
         )
     }
 }
@@ -253,7 +279,8 @@ private fun ProfileScreenContent(
     datePickerState: DatePickerState,
     onDatePickerDialogDismiss: () -> Unit,
     onDateConfirmClick: () -> Unit,
-    onSignOutClicked: () -> Unit
+    onSignOutClicked: () -> Unit,
+    onDeleteAccountClicked: () -> Unit
 ) {
     Surface(modifier = modifier.fillMaxSize()) {
         if (showUpdateDialog) {
@@ -312,7 +339,8 @@ private fun ProfileScreenContent(
                 userImgUrl = userImgUrl,
                 userName = userName,
                 onUserPhotoClicked = onUserPhotoClicked,
-                onSignOutClicked = onSignOutClicked
+                onSignOutClicked = onSignOutClicked,
+                onDeleteAccountClicked = onDeleteAccountClicked
             )
             AccountInfoSection(
                 modifier = Modifier.weight(4f),
@@ -332,7 +360,8 @@ private fun ProfileSection(
     userImgUrl: String?,
     userName: String,
     onUserPhotoClicked: () -> Unit,
-    onSignOutClicked: () -> Unit
+    onSignOutClicked: () -> Unit,
+    onDeleteAccountClicked: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -350,12 +379,21 @@ private fun ProfileSection(
             ),
         contentAlignment = Alignment.TopEnd
     ) {
-        IconButton(onClick = onSignOutClicked) {
-            Icon(
-                imageVector = Icons.Filled.ExitToApp,
-                contentDescription = null,
-                tint = Color.Black
-            )
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            IconButton(onClick = onDeleteAccountClicked) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = null,
+                    tint = Color.Black
+                )
+            }
+            IconButton(onClick = onSignOutClicked) {
+                Icon(
+                    imageVector = Icons.Filled.ExitToApp,
+                    contentDescription = null,
+                    tint = Color.Black
+                )
+            }
         }
     }
     Column(
@@ -512,7 +550,8 @@ private fun ProfileScreenPreview() {
                 datePickerState = rememberDatePickerState(),
                 onDatePickerDialogDismiss = {},
                 onDateConfirmClick = {},
-                onSignOutClicked = {}
+                onSignOutClicked = {},
+                onDeleteAccountClicked = {}
             )
         }
     }

@@ -69,4 +69,6 @@
     <string name="shopping_notification_title">Alışveriş yapmayı unutma</string>
     <string name="shop_notification_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae odio in mauris elementum commodo id ut neque. Sed a blandit justo, eu porta libero.</string>
     <string name="products">Ürünler</string>
+    <string name="delete">Sil</string>
+    <string name="delete_account_title">Hesabı Sil</string>
 </resources>

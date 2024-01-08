@@ -12,4 +12,8 @@ interface FirebaseFirestoreDataSource {
     fun getAllUserDetails(): Task<DocumentSnapshot>
 
     fun uploadUserFCMToken(token: String): Task<Void>
+
+    fun deleteUserFCMToken(): Task<Void>
+
+    fun deleteUserData(): Task<Void>
 }

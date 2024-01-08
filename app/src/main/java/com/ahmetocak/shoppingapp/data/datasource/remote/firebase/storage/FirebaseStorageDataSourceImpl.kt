@@ -28,4 +28,9 @@ class FirebaseStorageDataSourceImpl @Inject constructor(
 
         return profileImagesRef.downloadUrl
     }
+
+    override fun deleteUserProfileImage(): Task<Void> {
+        return storageRef.child("${Storage.USER_PROFILE_IMG}/${firebaseAuth.currentUser?.uid}")
+            .delete()
+    }
 }

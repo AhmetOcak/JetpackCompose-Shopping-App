@@ -50,4 +50,10 @@ interface FirebaseRepository {
     fun uploadUserFCMToken(token: String): Task<Void>
 
     fun getFCMToken(): Task<String>
+
+    fun deleteUserFCMToken(): Task<Void>
+
+    fun deleteUserProfileImage(): Task<Void>
+
+    fun deleteUserData(): Task<Void>
 }

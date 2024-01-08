@@ -72,6 +72,8 @@
     <string name="shop_notification_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vitae odio in mauris elementum commodo id ut neque. Sed a blandit justo, eu porta libero.</string>
     <string name="shopping_channel_name" translatable="false">Shopping channel</string>
     <string name="shopping_channel_description" translatable="false">Daily shopping reminder</string>
+    <string name="delete">Delete</string>
+    <string name="delete_account_title">Delete Account</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_channel</string>
 </resources>

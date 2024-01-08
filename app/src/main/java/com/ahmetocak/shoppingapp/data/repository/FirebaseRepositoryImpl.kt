@@ -75,4 +75,16 @@ class FirebaseRepositoryImpl @Inject constructor(
     override fun getFCMToken(): Task<String> {
         return fcmDataSource.getFCMToken()
     }
+
+    override fun deleteUserFCMToken(): Task<Void> {
+        return firestoreDataSource.deleteUserFCMToken()
+    }
+
+    override fun deleteUserProfileImage(): Task<Void> {
+        return storageDataSource.deleteUserProfileImage()
+    }
+
+    override fun deleteUserData(): Task<Void> {
+        return firestoreDataSource.deleteUserData()
+    }
 }

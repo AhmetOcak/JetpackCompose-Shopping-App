@@ -9,4 +9,6 @@ interface FirebaseStorageDataSource {
     fun uploadUserProfileImage(imgUri: Uri): UploadTask
 
     fun getUserProfileImage(): Task<Uri>
+
+    fun deleteUserProfileImage(): Task<Void>
 }
