@@ -43,7 +43,9 @@ class ProductViewModel @Inject constructor(
                         it.copy(
                             categoryUiState = CategoryUiState(
                                 isLoading = false,
-                                categoryList = response.data
+                                categoryList = response.data.map { category ->
+                                    category.replaceFirstChar { char -> char.uppercase() }
+                                }
                             )
                         )
                     }

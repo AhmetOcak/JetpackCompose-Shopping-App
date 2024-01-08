@@ -10,9 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
@@ -40,9 +39,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ahmetocak.shoppingapp.R
+import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingScaffold
 import com.ahmetocak.shoppingapp.presentation.designsystem.components.ShoppingShowToastMessage
-import com.ahmetocak.shoppingapp.model.shopping.CartEntity
 import com.ahmetocak.shoppingapp.presentation.designsystem.theme.ShoppingAppTheme
 import com.ahmetocak.shoppingapp.utils.CustomPreview
 import com.ahmetocak.shoppingapp.utils.DELIVERY_FEE
@@ -141,7 +140,7 @@ private fun CartList(
     onIncreaseClicked: (Int) -> Unit,
     onDecreaseClicked: (Int) -> Unit
 ) {
-    LazyVerticalGrid(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .background(
@@ -152,7 +151,6 @@ private fun CartList(
                     ),
                 )
             ),
-        columns = GridCells.Fixed(1),
         contentPadding = PaddingValues(dimensionResource(id = R.dimen.two_level_margin)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.one_level_margin))
     ) {
