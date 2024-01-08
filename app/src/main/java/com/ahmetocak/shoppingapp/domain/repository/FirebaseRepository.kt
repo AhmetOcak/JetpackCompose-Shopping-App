@@ -41,13 +41,13 @@ interface FirebaseRepository {
 
     fun verifyUserPhoneNumber(phoneAuthCredential: PhoneAuthCredential): Task<Void>?
 
-    fun uploadUserAddress(address: String, userUid: String): Task<Void>
+    fun uploadUserAddress(address: String): Task<Void>
 
-    fun uploadUserBirthdate(birthdate: Long, userUid: String): Task<Void>
+    fun uploadUserBirthdate(birthdate: Long): Task<Void>
 
-    fun getAllUserDetails(userUid: String): Task<DocumentSnapshot>
+    fun getAllUserDetails(): Task<DocumentSnapshot>
 
-    fun uploadUserFCMToken(token: String, userUid: String): Task<Void>
+    fun uploadUserFCMToken(token: String): Task<Void>
 
     fun getFCMToken(): Task<String>
 }

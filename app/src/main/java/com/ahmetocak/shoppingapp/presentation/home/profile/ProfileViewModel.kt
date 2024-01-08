@@ -248,7 +248,7 @@ class ProfileViewModel @Inject constructor(
 
     fun uploadUserAddress() {
         viewModelScope.launch(ioDispatcher) {
-            repository.uploadUserAddress(updateValue, auth.uid ?: "null")
+            repository.uploadUserAddress(updateValue)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _uiState.update {
@@ -276,7 +276,7 @@ class ProfileViewModel @Inject constructor(
 
     fun updateUserBirthdate(birthdate: Long) {
         viewModelScope.launch(ioDispatcher) {
-            repository.uploadUserBirthdate(birthdate, auth.uid ?: "")
+            repository.uploadUserBirthdate(birthdate)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         _uiState.update {
@@ -304,7 +304,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch(ioDispatcher) {
-            repository.getAllUserDetails(auth.uid ?: "").addOnCompleteListener { task ->
+            repository.getAllUserDetails().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     _uiState.update {
                         it.copy(userDetail = task.result.toObject<UserDetail>())

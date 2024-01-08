@@ -9,7 +9,6 @@ import com.ahmetocak.shoppingapp.data.mapper.toProductEntity
 import com.ahmetocak.shoppingapp.domain.repository.FirebaseRepository
 import com.ahmetocak.shoppingapp.domain.repository.ShoppingRepository
 import com.ahmetocak.shoppingapp.model.shopping.Product
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +23,7 @@ import javax.inject.Inject
 class ProductViewModel @Inject constructor(
     private val shoppingRepository: ShoppingRepository,
     private val ioDispatcher: CoroutineDispatcher,
-    private val firebaseRepository: FirebaseRepository,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseRepository: FirebaseRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductScreenUiState())
@@ -106,12 +104,7 @@ class ProductViewModel @Inject constructor(
         viewModelScope.launch(ioDispatcher) {
             firebaseRepository.getFCMToken().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    firebaseAuth.uid?.let {
-                        firebaseRepository.uploadUserFCMToken(
-                            token = task.result,
-                            userUid = it
-                        )
-                    }
+                    firebaseRepository.uploadUserFCMToken(token = task.result)
                 }
             }
         }

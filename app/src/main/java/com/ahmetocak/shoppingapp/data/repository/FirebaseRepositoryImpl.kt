@@ -56,20 +56,20 @@ class FirebaseRepositoryImpl @Inject constructor(
         return authDataSource.verifyUserPhoneNumber(phoneAuthCredential)
     }
 
-    override fun uploadUserAddress(address: String, userUid: String): Task<Void> {
-        return firestoreDataSource.uploadUserAddress(address, userUid)
+    override fun uploadUserAddress(address: String): Task<Void> {
+        return firestoreDataSource.uploadUserAddress(address)
     }
 
-    override fun uploadUserBirthdate(birthdate: Long, userUid: String): Task<Void> {
-        return firestoreDataSource.uploadUserBirthdate(birthdate, userUid)
+    override fun uploadUserBirthdate(birthdate: Long): Task<Void> {
+        return firestoreDataSource.uploadUserBirthdate(birthdate)
     }
 
-    override fun getAllUserDetails(userUid: String): Task<DocumentSnapshot> {
-        return firestoreDataSource.getAllUserDetails(userUid)
+    override fun getAllUserDetails(): Task<DocumentSnapshot> {
+        return firestoreDataSource.getAllUserDetails()
     }
 
-    override fun uploadUserFCMToken(token: String, userUid: String): Task<Void> {
-        return firestoreDataSource.uploadUserFCMToken(token, userUid)
+    override fun uploadUserFCMToken(token: String): Task<Void> {
+        return firestoreDataSource.uploadUserFCMToken(token)
     }
 
     override fun getFCMToken(): Task<String> {
