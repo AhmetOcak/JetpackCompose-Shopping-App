@@ -72,7 +72,12 @@ fun UpdateAccountInfoDialog(
                                 KeyboardType.Text
                             }
                         }
-                    )
+                    ),
+                    placeholder = {
+                        if (infoType == InfoType.MOBILE) {
+                            Text(text = "e.g. +909999999999")
+                        }
+                    }
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -88,7 +93,13 @@ fun UpdateAccountInfoDialog(
                             isChangeRequestMade = true
                             onUpdateClick()
                         },
-                        enabled = updateValue.isNotBlank() && !isChangeRequestMade
+                        enabled = if (infoType == InfoType.MOBILE) {
+                            updateValue.isNotBlank() && !isChangeRequestMade && updateValue.matches(
+                                Regex("""^\+\d{12}$""")
+                            )
+                        } else {
+                            updateValue.isNotBlank() && !isChangeRequestMade
+                        }
                     ) {
                         if (isChangeRequestMade) {
                             CircularProgressIndicator(
