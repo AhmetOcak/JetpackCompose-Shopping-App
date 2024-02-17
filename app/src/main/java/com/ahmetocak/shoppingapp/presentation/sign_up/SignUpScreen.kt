@@ -90,7 +90,7 @@ private fun SignUpScreenContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(horizontal = dimensionResource(id = R.dimen.four_level_margin))
+                .padding(horizontal = dimensionResource(id = R.dimen.two_level_margin))
                 .padding(bottom = dimensionResource(id = R.dimen.eight_level_margin)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
